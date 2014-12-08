@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using System.Diagnostics;
 namespace GameRGSS
 {
     /// <summary>
@@ -18,6 +19,7 @@ namespace GameRGSS
         //camera properties
         float zNear;
         float zFar;
+        long frameCount;
 
         BasicEffect basicEffect;
         DynamicVertexBuffer vertexBuffer;
@@ -48,6 +50,7 @@ namespace GameRGSS
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            frameCount = 0;
         }
 
         /// <summary>
@@ -128,6 +131,7 @@ namespace GameRGSS
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            Debug.WriteLine("@" + gameTime.ElapsedGameTime.TotalMilliseconds);
             // Compute camera matrices.
             Matrix View = Matrix.CreateLookAt(eye, at, up);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameRGSSLibrary.Windows.GameTest;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,12 +11,14 @@ namespace GameRGSSLibrary.Windows.GameEngine
 {
     public class RGSSGame:Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+       // GraphicsDeviceManager graphics;
+       // SpriteBatch spriteBatch;
         GameControler _gameControler;
+        DrawManager _drawManager;
         public RGSSGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+           // graphics = new GraphicsDeviceManager(this);
+            _drawManager = new DrawManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -51,9 +54,10 @@ namespace GameRGSSLibrary.Windows.GameEngine
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
+           // spriteBatch = new SpriteBatch(GraphicsDevice);
+            
             // TODO: use this.Content to load your game content here
+            _drawManager.LoadContent();
         }
 
         /// <summary>
@@ -63,6 +67,7 @@ namespace GameRGSSLibrary.Windows.GameEngine
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            _drawManager.UnLoadContent();
         }
 
         /// <summary>
@@ -83,7 +88,7 @@ namespace GameRGSSLibrary.Windows.GameEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+           
 
             // TODO: Add your drawing code here
             switch(_gameControler.GameState)
@@ -92,7 +97,12 @@ namespace GameRGSSLibrary.Windows.GameEngine
                     break;
                 case GameState.Runging:
                     //drawing context;
+                    GraphicsDevice.Clear(Color.CornflowerBlue);
+                    _drawManager.Draw(_gameControler.FrameCount);
                     _gameControler.DrawOneFrameCompleted.Set();
+                    base.Draw(gameTime);
+                    break;
+                case GameState.Pending:
                     break;
                 case GameState.Transacting:
                     _gameControler.DrawOneFrameCompleted.Set();
@@ -100,7 +110,7 @@ namespace GameRGSSLibrary.Windows.GameEngine
                 default:
                     break;
             }
-            base.Draw(gameTime);
+            
         }
     }
 }

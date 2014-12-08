@@ -101,10 +101,14 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameEngine\DrawContext.cs" />
+    <Compile Include="GameEngine\DrawManager.cs" />
     <Compile Include="GameEngine\GameControler.cs" />
     <Compile Include="GameEngine\RGSSEngine.cs" />
     <Compile Include="GameEngine\RGSSGame.cs" />
+    <Compile Include="GameTest\ExampleDrawContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RGSS\Graphics.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows8.csproj">
@@ -112,9 +116,7 @@
       <Name>MonoGame.Framework.Windows8</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="RGSS\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

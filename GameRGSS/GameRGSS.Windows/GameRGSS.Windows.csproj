@@ -108,6 +108,10 @@
       <Project>{0518563c-acca-4a14-8c5d-ddbe93e2605f}</Project>
       <Name>MonoGame.Framework.Windows8</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\GameRGSSLibrary.Windows\GameRGSSLibrary.Windows.csproj">
+      <Project>{789ef9d0-a3b0-4f97-88ff-e6697dabe6a0}</Project>
+      <Name>GameRGSSLibrary.Windows</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

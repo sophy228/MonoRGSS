@@ -25,11 +25,12 @@ namespace GameRGSSLibrary.Windows.GameEngine
         private static EngineState state = EngineState.UnInitialized;
         public static void Init(string launchParameters, CoreWindow window, SwapChainBackgroundPanel swapChainBackgroundPanel)
         {
-            if (state != EngineState.UnInitialized)
+            if (state == EngineState.UnInitialized)
             {
                 game = XamlGame<RGSSGame>.Create(launchParameters, window, swapChainBackgroundPanel);
                 game.IsFixedTimeStep = true;
                 game.GameControler = (GameControler.CreateControler(game));
+                state = EngineState.Initialized;
             }
             else
                 throw new Exception("RGSSEngine has already been initialized");
@@ -51,6 +52,12 @@ namespace GameRGSSLibrary.Windows.GameEngine
             EntryCallback();
         }
 
-
+        public static RGSSGame GetGame()
+        {
+            if (state == EngineState.Initialized)
+                return game;
+            else
+                throw new Exception("RGSSEngine has already been initialized");
+        }
     }
 }

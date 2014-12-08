@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using MonoGame.Framework;
+using GameRGSSLibrary.Windows.RGSS;
+using GameRGSSLibrary.Windows.GameEngine;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace GameRGSS
@@ -30,7 +32,18 @@ namespace GameRGSS
 
             // Create the game.
 
-            _game = XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, this);
+           //_game = XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, this);
+            RGSSEngine.Init(launchArguments, Window.Current.CoreWindow, this);
+            RGSSEngine.Run(mainLoop);
+        }
+
+        private int mainLoop()
+        {
+            Graphics.Freeze();
+            while(true)
+            {
+                Graphics.Update();
+            }
         }
     }
 }
