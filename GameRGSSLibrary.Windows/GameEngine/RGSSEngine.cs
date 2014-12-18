@@ -23,6 +23,9 @@ namespace GameRGSSLibrary.Windows.GameEngine
         private static RGSSGame game;
         private static RGSSEntry EntryCallback;
         private static EngineState state = EngineState.UnInitialized;
+
+       
+
         public static void Init(string launchParameters, CoreWindow window, SwapChainBackgroundPanel swapChainBackgroundPanel)
         {
             if (state == EngineState.UnInitialized)
@@ -36,12 +39,13 @@ namespace GameRGSSLibrary.Windows.GameEngine
                 throw new Exception("RGSSEngine has already been initialized");
         }
 
+       
         public static Task Run(RGSSEntry entry)
         {
             if (state != EngineState.Runing)
             {
                 EntryCallback = entry;
-                IAsyncAction asyncAction = ThreadPool.RunAsync(Worker, WorkItemPriority.High);
+                IAsyncAction asyncAction = ThreadPool.RunAsync(Worker, WorkItemPriority.Low);
                 return asyncAction.AsTask();
             }
             return null;

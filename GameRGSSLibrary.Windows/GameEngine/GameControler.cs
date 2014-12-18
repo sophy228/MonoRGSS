@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace GameRGSSLibrary.Windows.GameEngine
 {
@@ -23,7 +24,6 @@ namespace GameRGSSLibrary.Windows.GameEngine
         public AutoResetEvent DrawOneFrameCompleted;
         private readonly int _frameRate;
         private int _frameCount;
-
         private GameControler()
         {
 
@@ -66,7 +66,7 @@ namespace GameRGSSLibrary.Windows.GameEngine
             _game = game;
             GameState = GameState.Freezed;
             DrawOneFrameCompleted = new AutoResetEvent(false);
-            _frameRate = 60;
+            _frameRate = 30;
             FrameCount = 0;
         }
 
@@ -83,19 +83,23 @@ namespace GameRGSSLibrary.Windows.GameEngine
                 _gameState = GameState.Runging;
                 Stopwatch _gameTimer = Stopwatch.StartNew();
                 DrawOneFrameCompleted.WaitOne();
-                _gameState = GameState.Pending;
                 long elapsedTicks = _gameTimer.Elapsed.Ticks;
-                if (1666667 > elapsedTicks)
+                _gameState = GameState.Pending;
+                
+#if false
+                double waitmills = _gameTimer.Elapsed.TotalMilliseconds - 1000f / FrameRate;
+                if (waitmills < 0)
                 {
-                    TimeSpan extrawait = TimeSpan.FromTicks(1666667 - elapsedTicks);
+                    TimeSpan extrawait = TimeSpan.FromMilliseconds(-waitmills);
                     Task.Delay(extrawait).Wait();
                 }
                 else
                 {
-                    //Debug.WriteLine("OverHead " + TimeSpan.FromTicks(elapsedTicks - 333334).ToString());
+                    Debug.WriteLine("OverHead " + TimeSpan.FromTicks(elapsedTicks - 333334).ToString());
                 }
+#endif
                 FrameCount++;
-                Debug.WriteLine("triger @" + _gameTimer.Elapsed.Ticks + "@" + _gameTimer.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("triger @" + elapsedTicks);
             }
         }
 

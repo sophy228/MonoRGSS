@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using MonoGame.Framework;
 using GameRGSSLibrary.Windows.RGSS;
 using GameRGSSLibrary.Windows.GameEngine;
+using RGSS.Libraries.RubyGraphics;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace GameRGSS
@@ -31,10 +32,14 @@ namespace GameRGSS
             this.InitializeComponent();
 
             // Create the game.
-
-           //_game = XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, this);
-            RGSSEngine.Init(launchArguments, Window.Current.CoreWindow, this);
-            RGSSEngine.Run(mainLoop);
+#if false
+           _game = XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, this);
+           _game.IsFixedTimeStep = true;
+#else
+           RubyEngine re = new RubyEngine();
+           RGSSEngine.Init(launchArguments, Window.Current.CoreWindow, this);
+           RGSSEngine.Run(re.RunRuby);
+#endif
         }
 
         private int mainLoop()

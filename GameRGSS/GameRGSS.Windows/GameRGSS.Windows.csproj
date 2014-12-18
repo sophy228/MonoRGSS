@@ -112,6 +112,10 @@
       <Project>{789ef9d0-a3b0-4f97-88ff-e6697dabe6a0}</Project>
       <Name>GameRGSSLibrary.Windows</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\RGSS.Libraries.Windows8\RGSS.Libraries.Windows8.csproj">
+      <Project>{70b3b8c8-0112-435d-8b14-0b65f5a8d29b}</Project>
+      <Name>RGSS.Libraries.Windows8</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,6 +131,20 @@
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="IronRuby">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

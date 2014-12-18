@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,8 +89,8 @@ namespace GameRGSSLibrary.Windows.GameEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-           
 
+            Debug.WriteLine("draw @" + gameTime.ElapsedGameTime.TotalMilliseconds);
             // TODO: Add your drawing code here
             switch(_gameControler.GameState)
             {
