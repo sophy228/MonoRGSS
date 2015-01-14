@@ -11,7 +11,7 @@ using Microsoft.Scripting.Hosting.Providers;
 using System.IO;
 using Microsoft.Scripting;
 using System.Reflection;
-namespace RGSS.Libraries.RubyGraphics
+namespace RGSS.Libraries
 {
     public class DlrHost : ScriptHost
     {
@@ -61,7 +61,7 @@ namespace RGSS.Libraries.RubyGraphics
             engine = Ruby.GetEngine(runtime);
             scope = engine.CreateScope();
             RubyContext context = (RubyContext)HostingHelpers.GetLanguageContext(engine);
-            context.Loader.LoadAssembly("RGSS.Libraries.Windows8", "RGSS.Libraries.RubyGraphics.RubyGraphicsLibraryInitializer", true, true);
+            context.Loader.LoadAssembly("RGSS.Libraries", "RGSS.Libraries.Builtins.BuiltinsLibraryInitializer", true, true);
         }
 
         public int RunRuby()

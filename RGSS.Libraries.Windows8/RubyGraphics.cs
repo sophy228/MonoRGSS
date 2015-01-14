@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameRGSSLibrary.Windows.RGSS;
+﻿using GameLibrary.RGSS;
 using IronRuby.Runtime;
 
-namespace RGSS.Libraries.RubyGraphics
+namespace RGSS.Libraries.Builtins
 {
     [RubyModule("Graphics")]
     public static class RubyGraphics

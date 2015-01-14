@@ -9,8 +9,8 @@
     <ProjectGuid>{70B3B8C8-0112-435D-8B14-0B65F5A8D29B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RGSS.Libraries.Windows8</RootNamespace>
-    <AssemblyName>RGSS.Libraries.Windows8</AssemblyName>
+    <RootNamespace>RGSS.Libraries</RootNamespace>
+    <AssemblyName>RGSS.Libraries</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -101,7 +101,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Initializers.Generated.cs" />
+    <Compile Include="Initializers.Generated.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RubyEngine.cs" />
     <Compile Include="RubyGraphics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

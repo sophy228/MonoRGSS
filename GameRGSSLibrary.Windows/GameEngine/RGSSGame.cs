@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameRGSSLibrary.Windows.GameTest;
+﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GameRGSSLibrary.Windows.GameEngine
+namespace GameLibrary.GameEngine
 {
     public class RGSSGame:Game
     {
@@ -21,6 +15,14 @@ namespace GameRGSSLibrary.Windows.GameEngine
            // graphics = new GraphicsDeviceManager(this);
             _drawManager = new DrawManager(this);
             Content.RootDirectory = "Content";
+        }
+
+        public DrawManager DrawManager
+        {
+            get
+            {
+                return _drawManager;
+            }
         }
 
         public GameControler GameControler

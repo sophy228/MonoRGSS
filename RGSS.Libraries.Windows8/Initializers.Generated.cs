@@ -14,33 +14,37 @@
  * ***************************************************************************/
 
 #pragma warning disable 169 // mcs: unused private method
-[assembly: IronRuby.Runtime.RubyLibraryAttribute(typeof(RGSS.Libraries.RubyGraphics.RubyGraphicsLibraryInitializer))]
+[assembly: IronRuby.Runtime.RubyLibraryAttribute(typeof(RGSS.Libraries.Builtins.BuiltinsLibraryInitializer))]
 
-namespace RGSS.Libraries.RubyGraphics {
+namespace RGSS.Libraries.Builtins
+{
     using System;
     using Microsoft.Scripting.Utils;
     using System.Runtime.InteropServices;
-    
-    public sealed class RubyGraphicsLibraryInitializer : IronRuby.Builtins.LibraryInitializer {
-        protected override void LoadModules() {
-            
-            
-            DefineGlobalModule("Graphics", typeof(RGSS.Libraries.RubyGraphics.RubyGraphics), 0x00000008, null, LoadGraphics_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
+
+    public sealed class BuiltinsLibraryInitializer : IronRuby.Builtins.LibraryInitializer
+    {
+        protected override void LoadModules()
+        {
+
+
+            DefineGlobalModule("Graphics", typeof(RGSS.Libraries.Builtins.RubyGraphics), 0x00000008, null, LoadGraphics_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
         }
-        
-        private static void LoadGraphics_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
-            DefineLibraryMethod(module, "freeze", 0x21, 
-                0x00000000U, 
-                new Action<System.Object>(RGSS.Libraries.RubyGraphics.RubyGraphics.Freeze)
+
+        private static void LoadGraphics_Class(IronRuby.Builtins.RubyModule/*!*/ module)
+        {
+            DefineLibraryMethod(module, "freeze", 0x21,
+                0x00000000U,
+                new Action<System.Object>(RGSS.Libraries.Builtins.RubyGraphics.Freeze)
             );
-            
-            DefineLibraryMethod(module, "update", 0x21, 
-                0x00000000U, 
-                new Action<System.Object>(RGSS.Libraries.RubyGraphics.RubyGraphics.Update)
+
+            DefineLibraryMethod(module, "update", 0x21,
+                0x00000000U,
+                new Action<System.Object>(RGSS.Libraries.Builtins.RubyGraphics.Update)
             );
-            
+
         }
-        
+
     }
 }
 

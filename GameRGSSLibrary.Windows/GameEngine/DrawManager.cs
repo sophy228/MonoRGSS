@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameRGSSLibrary.Windows.GameTest;
+using GameLibrary.RGSS;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GameRGSSLibrary.Windows.GameEngine
+namespace GameLibrary.GameEngine
 {
     public class DrawManager
     {
@@ -41,12 +41,20 @@ namespace GameRGSSLibrary.Windows.GameEngine
             }
         }
 
+        public DrawContext CurrentDrawContext
+        {
+            get
+            {
+                return _currentdrawContext;
+            }
+        }
+
         public  void LoadContent()
         {
             _content = _game.Content;
             _graphicsDevice = _game.GraphicsDevice;
             _spritBatch = new SpriteBatch(_graphicsDevice);
-            _currentdrawContext = new ExampleDrawContext(this);
+            _currentdrawContext = new RGSSDrawContext(this);
         }
 
         public void UnLoadContent()

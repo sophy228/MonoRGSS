@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameRGSSLibrary.Windows.GameEngine;
+﻿using GameLibrary.GameEngine;
 
-namespace GameRGSSLibrary.Windows.RGSS
+namespace GameLibrary.RGSS
 {
     public class Graphics
     {

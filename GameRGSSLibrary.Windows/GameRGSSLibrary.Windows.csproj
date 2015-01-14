@@ -9,8 +9,8 @@
     <ProjectGuid>{789EF9D0-A3B0-4F97-88FF-E6697DABE6A0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameRGSSLibrary.Windows</RootNamespace>
-    <AssemblyName>GameRGSSLibrary.Windows</AssemblyName>
+    <RootNamespace>GameLibrary</RootNamespace>
+    <AssemblyName>GameLibrary</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -106,10 +106,15 @@
     <Compile Include="GameEngine\GameControler.cs" />
     <Compile Include="GameEngine\RGSSEngine.cs" />
     <Compile Include="GameEngine\RGSSGame.cs" />
-    <Compile Include="GameEngine\test.cs" />
     <Compile Include="GameTest\ExampleDrawContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RGSS\Graphics.cs" />
+    <Compile Include="RGSS\Rect.cs" />
+    <Compile Include="RGSS\RGSSDrawContext.cs" />
+    <Compile Include="RGSS\Sprite.cs" />
+    <Compile Include="RGSS\Viewport.cs" />
+    <Compile Include="Ulitilies\IZorderable.cs" />
+    <Compile Include="Ulitilies\LinkNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows8.csproj">
@@ -131,6 +136,7 @@
       <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

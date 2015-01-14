@@ -9,7 +9,7 @@ using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
-namespace GameRGSSLibrary.Windows.GameEngine
+namespace GameLibrary.GameEngine
 {
     public delegate int RGSSEntry();
     enum EngineState
@@ -60,6 +60,14 @@ namespace GameRGSSLibrary.Windows.GameEngine
         {
             if (state == EngineState.Initialized)
                 return game;
+            else
+                throw new Exception("RGSSEngine has already been initialized");
+        }
+
+        public static DrawManager GetDrawManager()
+        {
+            if (state == EngineState.Initialized)
+                return game.DrawManager;
             else
                 throw new Exception("RGSSEngine has already been initialized");
         }

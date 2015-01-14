@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace GameRGSSLibrary.Windows.GameEngine
+namespace GameLibrary.GameEngine
 {
     public enum GameState
     {

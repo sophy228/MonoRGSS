@@ -1,21 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using MonoGame.Framework;
-using GameRGSSLibrary.Windows.RGSS;
-using GameRGSSLibrary.Windows.GameEngine;
-using RGSS.Libraries.RubyGraphics;
+using RGSS.Libraries;
+using GameLibrary.GameEngine;
+using GameLibrary.RGSS;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace GameRGSS
@@ -38,12 +25,19 @@ namespace GameRGSS
 #else
            RubyEngine re = new RubyEngine();
            RGSSEngine.Init(launchArguments, Window.Current.CoreWindow, this);
+           //RGSSEngine.Run(mainLoop);
            RGSSEngine.Run(re.RunRuby);
 #endif
         }
 
         private int mainLoop()
         {
+            Viewport vp1 = ViewportFactory.Create(0, 0, 520, 240);
+            Viewport vp2 = ViewportFactory.Create(0, 0, 200, 300);
+            vp1.Z = 20;
+            vp2.Z = 30;
+            Sprite sp1 = SpriteFactory.Create(vp1);
+            Sprite sp2 = SpriteFactory.Create(vp2);
             Graphics.Freeze();
             while(true)
             {

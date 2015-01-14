@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameRGSSLibrary.Windows.GameEngine;
+using GameLibrary.GameEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GameRGSSLibrary.Windows.GameTest
+namespace GameLibrary.Test
 {
     public class ExampleDrawContext: DrawContext
     {
