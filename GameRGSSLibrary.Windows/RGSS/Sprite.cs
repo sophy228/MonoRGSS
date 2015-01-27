@@ -10,6 +10,10 @@ namespace GameLibrary.RGSS
         private Viewport _viewport;
 
         private int id;
+        private Sprite()
+        {
+
+        }
         internal Sprite(Viewport viewport)
         {
             _viewport = viewport;
@@ -34,7 +38,7 @@ namespace GameLibrary.RGSS
         {
             foreach (Sprite n in header)
             {
-                if (this.Z >= n.Z)
+                if (this.Z < n.Z)
                 {
                     LinkNode.ListAddTail(this, n);
                     return;
@@ -58,6 +62,11 @@ namespace GameLibrary.RGSS
         private static int id;
         public static Sprite Create(Viewport vp)
         {
+            if (vp == null)
+            {
+                var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
+                vp = context.ViewPortHeaer;
+            }
             Sprite sp = new Sprite(vp);
             sp.InsertInZorder(vp.SpriteHeader);
             return sp;

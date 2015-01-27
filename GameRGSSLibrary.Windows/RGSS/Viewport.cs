@@ -17,6 +17,10 @@ namespace GameLibrary.RGSS
 
         private int id;
 
+        private Viewport()
+        {
+
+        }
         internal Viewport(DrawContext context, Rect rect)
         {
             _rect = rect;
@@ -65,7 +69,7 @@ namespace GameLibrary.RGSS
         {
             foreach (Viewport n in header)
             {
-                if (this.Z >= n.Z)
+                if (this.Z < n.Z)
                 {
                     LinkNode.ListAddTail(this, n);
                     return;
@@ -96,6 +100,14 @@ namespace GameLibrary.RGSS
         {
             var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
             Viewport vp = vp = new Viewport(context, x, y, width, height);
+            vp.InsertInZorder(context.ViewPortHeaer);
+            return vp;
+        }
+
+        public static Viewport Create(Rect rect)
+        {
+            var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
+            Viewport vp = vp = new Viewport(context,rect);
             vp.InsertInZorder(context.ViewPortHeaer);
             return vp;
         }

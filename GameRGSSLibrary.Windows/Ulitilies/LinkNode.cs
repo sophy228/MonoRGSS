@@ -49,10 +49,10 @@ namespace GameLibrary.Ulitilies
             get { throw new NotImplementedException(); }
         }
     }
-    public class LinkNode : IEnumerable<LinkNode>
+    public abstract class LinkNode : IEnumerable<LinkNode>
     {
-        public LinkNode Next;
-        public LinkNode Prev;
+        internal LinkNode Next;
+        internal LinkNode Prev;
         private LinkNodeEnumerator enumerator;
         public LinkNode()
         {

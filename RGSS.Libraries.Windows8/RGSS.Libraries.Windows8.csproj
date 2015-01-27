@@ -107,6 +107,9 @@
     <Compile Include="RubyEngine.cs" />
     <Compile Include="RubyGraphics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RubyRect.cs" />
+    <Compile Include="RubySprite.cs" />
+    <Compile Include="RubyViewport.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IronRuby">

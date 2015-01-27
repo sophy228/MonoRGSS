@@ -67,6 +67,14 @@ namespace RGSS.Libraries
         public int RunRuby()
         {
            string txt = @"
+  rect = Rect.new(0,0,30,40)
+  vp1 = Viewport.new(1,2,100,300)
+  vp1.z = 8
+  vp2 = Viewport.new(rect)
+  vp2.z = 3
+  sp1 = Sprite.new(vp1)
+  sp2 = Sprite.new(vp2)
+  sp3 = Sprite.new
   Graphics.freeze
   while true do 
   Graphics.update
