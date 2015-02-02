@@ -26,8 +26,9 @@ namespace GameLibrary.RGSS
             _rect = rect;
             _drawContext = context;
             _z = 0;
-            _spriteHeader = new Sprite(this);
             id = ViewportFactory.AllocateId();
+            _spriteHeader = new Sprite(this,true);
+            
         }
 
         internal Viewport(DrawContext context, int x, int y, int width, int height)

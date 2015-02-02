@@ -16,5 +16,14 @@ namespace GameLibrary.RGSS
             game.GameControler.FreezeFrame();
         }
 
+        public static int FrameCount
+        {
+            get
+            {
+                var game = RGSSEngine.GetGame();
+                return game.GameControler.FrameCount;
+            }
+        }
+
     }
 }

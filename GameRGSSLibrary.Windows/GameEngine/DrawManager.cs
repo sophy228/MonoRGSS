@@ -16,7 +16,7 @@ namespace GameLibrary.GameEngine
         private  GraphicsDevice _graphicsDevice;
         private  SpriteBatch _spritBatch;
         private DrawContext _currentdrawContext;
-        private ContentManager _content;
+        private RGSSContent _rgssContent;
         private readonly Game _game;
         public DrawManager(Game game)
         {
@@ -49,9 +49,26 @@ namespace GameLibrary.GameEngine
             }
         }
 
+        public RGSSContent Content
+        {
+            get
+            {
+                return _rgssContent;
+            }
+        }
+
+        public SpriteBatch SpriteBatch
+        {
+            get
+            {
+                return _spritBatch;
+            }
+        }
+
         public  void LoadContent()
         {
-            _content = _game.Content;
+            _rgssContent = new RGSSContent(_game.Content);
+            _rgssContent.LoadContent();
             _graphicsDevice = _game.GraphicsDevice;
             _spritBatch = new SpriteBatch(_graphicsDevice);
             _currentdrawContext = new RGSSDrawContext(this);
@@ -64,7 +81,9 @@ namespace GameLibrary.GameEngine
         
         public void Draw(int frameCount)
         {
+            _spritBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             _currentdrawContext.Draw(frameCount);
+            _spritBatch.End();
         }
     }
 }

@@ -104,10 +104,16 @@
     <Compile Include="GameEngine\DrawContext.cs" />
     <Compile Include="GameEngine\DrawManager.cs" />
     <Compile Include="GameEngine\GameControler.cs" />
+    <Compile Include="GameEngine\RGSSContent.cs" />
     <Compile Include="GameEngine\RGSSEngine.cs" />
     <Compile Include="GameEngine\RGSSGame.cs" />
     <Compile Include="GameTest\ExampleDrawContext.cs" />
+    <Compile Include="GameTest\SpriteTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RGSS\Bitmap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RGSS\Cache.cs" />
     <Compile Include="RGSS\Graphics.cs" />
     <Compile Include="RGSS\Rect.cs" />
     <Compile Include="RGSS\RGSSDrawContext.cs" />

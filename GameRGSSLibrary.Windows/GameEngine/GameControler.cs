@@ -83,8 +83,9 @@ namespace GameLibrary.GameEngine
                 _gameState = GameState.Runging;
                 Stopwatch _gameTimer = Stopwatch.StartNew();
                 DrawOneFrameCompleted.WaitOne();
+               // DrawOneFrameCompleted.Set();
                 long elapsedTicks = _gameTimer.Elapsed.Ticks;
-                _gameState = GameState.Pending;
+                
                 
 #if false
                 double waitmills = _gameTimer.Elapsed.TotalMilliseconds - 1000f / FrameRate;
