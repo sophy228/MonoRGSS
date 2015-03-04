@@ -24,6 +24,7 @@ namespace GameLibrary.GameEngine
         public void LoadContent()
         {
             //todo;
+            _content.Unload();
         }
     }
 }

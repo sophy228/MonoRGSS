@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Scripting.Hosting;
 using IronRuby;
 using IronRuby.Runtime;
-using Microsoft.Scripting.Hosting;
 using Microsoft.Scripting.Hosting.Providers;
 using System.IO;
 using Microsoft.Scripting;

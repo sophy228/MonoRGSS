@@ -34,13 +34,16 @@ namespace GameRGSS
 
         private int mainLoop()
         {
-           Viewport vp1 = ViewportFactory.Create(0, 0, 520, 240);
+            Viewport vp1 = ViewportFactory.Create(0, 0, 520, 240);
             Viewport vp2 = ViewportFactory.Create(0, 0, 200, 300);
-           vp1.Z = 20;
+            vp1.Z = 20;
             vp2.Z = 30;
             Bitmap bitmap = new Bitmap(100, 100);
-            bitmap.FillRect(0, 0, 100, 100, Color.Red);
-           SpriteTest sp1 = new SpriteTest(vp1);
+            bitmap.FillRect(0, 0, 100, 100, new GameLibrary.RGSS.Color(255,0,0,255));
+            Bitmap bitmap2 = new Bitmap(100, 100);
+            bitmap2.FillRect(0, 0, 100, 100, new GameLibrary.RGSS.Color(0, 255, 0, 255));
+            SpriteTest sp1 = new SpriteTest(vp1);
+            bitmap.Blt(50, 0, bitmap2, new Rect(0, 0, 50, 50),0);
             sp1.Bitmap = bitmap;
             Sprite sp2 = SpriteFactory.Create(vp2);
             Graphics.Freeze();

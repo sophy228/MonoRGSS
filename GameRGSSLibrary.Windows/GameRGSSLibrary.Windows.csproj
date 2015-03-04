@@ -114,6 +114,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RGSS\Cache.cs" />
+    <Compile Include="RGSS\Color.cs" />
     <Compile Include="RGSS\Graphics.cs" />
     <Compile Include="RGSS\Rect.cs" />
     <Compile Include="RGSS\RGSSDrawContext.cs" />

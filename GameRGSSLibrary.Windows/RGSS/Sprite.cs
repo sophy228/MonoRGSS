@@ -22,7 +22,7 @@ namespace GameLibrary.RGSS
         protected int m_pxDstX, m_pxDstY;
 
         // color tint (default = White = no tint)
-        protected Color m_cTint = Color.White;
+        protected Color m_cTint = Color.FormXnaColor(Microsoft.Xna.Framework.Color.White);
 
         /// <summary>
         /// Location of the sprite within the texture
@@ -255,7 +255,7 @@ namespace GameLibrary.RGSS
             Vector2 vDest = new Vector2(m_pxDstX, m_pxDstY);
             Vector2 vOrigin = new Vector2(m_pxOriginX, m_pxOriginY);
             Vector2 vScale = new Vector2(m_zoomX, m_zoomY);
-            dm.SpriteBatch.Draw(m_Bitmap.Texture, vDest, rSource, m_cTint, m_fpRotation, vOrigin, vScale, SpriteEffects.None, m_fpDepth);
+            dm.SpriteBatch.Draw(m_Bitmap.Texture, vDest, rSource, m_cTint.toXnaColor(), m_fpRotation, vOrigin, vScale, SpriteEffects.None, m_fpDepth);
         }
 
         public virtual void Update()

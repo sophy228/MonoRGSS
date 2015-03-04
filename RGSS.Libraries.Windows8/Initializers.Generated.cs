@@ -29,6 +29,14 @@ namespace RGSS.Libraries.Builtins
             IronRuby.Builtins.RubyClass classRef0 = GetClass(typeof(System.Object));
 
 
+            DefineGlobalClass("Bitmap", typeof(GameLibrary.RGSS.Bitmap), 0x00000000, classRef0, LoadBitmap_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray,
+                new Func<IronRuby.Builtins.RubyClass, IronRuby.Builtins.MutableString, GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Create),
+                new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Create)
+            );
+            DefineGlobalClass("Color", typeof(GameLibrary.RGSS.Color), 0x00000000, classRef0, LoadColor_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray,
+                new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyColorOps.Create),
+                new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyColorOps.Create)
+            );
             DefineGlobalModule("Graphics", typeof(RGSS.Libraries.Builtins.RubyGraphics), 0x00000008, null, LoadGraphics_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
             DefineGlobalClass("Rect", typeof(GameLibrary.RGSS.Rect), 0x00000000, classRef0, LoadRect_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray,
                 new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Rect>(RGSS.Libraries.Builtins.RubyRectOps.Create)
@@ -40,6 +48,98 @@ namespace RGSS.Libraries.Builtins
                 new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Viewport>(RGSS.Libraries.Builtins.RubyViewportOps.CreateViewPort),
                 new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Rect, GameLibrary.RGSS.Viewport>(RGSS.Libraries.Builtins.RubyViewportOps.CreateViewPort)
             );
+        }
+
+        private static void LoadBitmap_Instance(IronRuby.Builtins.RubyModule/*!*/ module)
+        {
+            DefineLibraryMethod(module, "blt", 0x11,
+                0x00000000U,
+                new Action<GameLibrary.RGSS.Bitmap, System.Int32, System.Int32, GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.Blt)
+            );
+
+            DefineLibraryMethod(module, "clear", 0x11,
+                0x00000000U, 0x00000000U, 0x00000000U,
+                new Action<GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Clear),
+                new Action<GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect>(RGSS.Libraries.Builtins.RubyBitmapOps.Clear),
+                new Action<GameLibrary.RGSS.Bitmap, System.Int32, System.Int32, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.Clear)
+            );
+
+            DefineLibraryMethod(module, "fill_rect", 0x11,
+                0x00000000U, 0x00000000U,
+                new Action<GameLibrary.RGSS.Bitmap, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyBitmapOps.FillRect),
+                new Action<GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyBitmapOps.FillRect)
+            );
+
+            DefineLibraryMethod(module, "height", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Bitmap, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.getHeight)
+            );
+
+            DefineLibraryMethod(module, "rect", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect>(RGSS.Libraries.Builtins.RubyBitmapOps.getRect)
+            );
+
+            DefineLibraryMethod(module, "stretch_blt", 0x11,
+                0x00000000U,
+                new Action<GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect, GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.Blt)
+            );
+
+            DefineLibraryMethod(module, "width", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Bitmap, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.getWidth)
+            );
+
+        }
+
+        private static void LoadColor_Instance(IronRuby.Builtins.RubyModule/*!*/ module)
+        {
+            DefineLibraryMethod(module, "alpha", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.GetAlpha)
+            );
+
+            DefineLibraryMethod(module, "alpha=", 0x11,
+                0x00000000U,
+                new Action<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.SetAlpha)
+            );
+
+            DefineLibraryMethod(module, "blue", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.GetBlue)
+            );
+
+            DefineLibraryMethod(module, "blue=", 0x11,
+                0x00000000U,
+                new Action<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.SetBlue)
+            );
+
+            DefineLibraryMethod(module, "green", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.GetGreen)
+            );
+
+            DefineLibraryMethod(module, "green=", 0x11,
+                0x00000000U,
+                new Action<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.SetGreen)
+            );
+
+            DefineLibraryMethod(module, "red", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.GetRed)
+            );
+
+            DefineLibraryMethod(module, "red=", 0x11,
+                0x00000000U,
+                new Action<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.SetRed)
+            );
+
+            DefineLibraryMethod(module, "set", 0x11,
+                0x00000000U, 0x00000000U,
+                new Action<GameLibrary.RGSS.Color, System.Int32, System.Int32, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.Set),
+                new Action<GameLibrary.RGSS.Color, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyColorOps.Set)
+            );
+
         }
 
         private static void LoadGraphics_Class(IronRuby.Builtins.RubyModule/*!*/ module)
@@ -107,6 +207,91 @@ namespace RGSS.Libraries.Builtins
 
         private static void LoadSprite_Instance(IronRuby.Builtins.RubyModule/*!*/ module)
         {
+            DefineLibraryMethod(module, "angle", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.GetAngle)
+            );
+
+            DefineLibraryMethod(module, "angle=", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.SetAngle)
+            );
+
+            DefineLibraryMethod(module, "bitmap", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubySpriteOps.GetBitmap)
+            );
+
+            DefineLibraryMethod(module, "bitmap=", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, GameLibrary.RGSS.Bitmap, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.SetBitmap)
+            );
+
+            DefineLibraryMethod(module, "height", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.getHeight)
+            );
+
+            DefineLibraryMethod(module, "ox", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.GetOX)
+            );
+
+            DefineLibraryMethod(module, "ox=", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.SetOX)
+            );
+
+            DefineLibraryMethod(module, "oy", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.GetOY)
+            );
+
+            DefineLibraryMethod(module, "oy=", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.SetOY)
+            );
+
+            DefineLibraryMethod(module, "src_rect", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, GameLibrary.RGSS.Rect>(RGSS.Libraries.Builtins.RubySpriteOps.GetSrcRect)
+            );
+
+            DefineLibraryMethod(module, "src_rect=", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, GameLibrary.RGSS.Rect, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.SetSrcRect)
+            );
+
+            DefineLibraryMethod(module, "visible", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Boolean>(RGSS.Libraries.Builtins.RubySpriteOps.GetVisible)
+            );
+
+            DefineLibraryMethod(module, "visible=", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Boolean, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.SetVisible)
+            );
+
+            DefineLibraryMethod(module, "width", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.getWidth)
+            );
+
+            DefineLibraryMethod(module, "x", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.GetX)
+            );
+
+            DefineLibraryMethod(module, "x=", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.SetX)
+            );
+
+            DefineLibraryMethod(module, "y", 0x11,
+                0x00000000U,
+                new Func<GameLibrary.RGSS.Sprite, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.GetY)
+            );
+
             DefineLibraryMethod(module, "z", 0x11,
                 0x00000000U,
                 new Func<GameLibrary.RGSS.Sprite, System.Int32>(RGSS.Libraries.Builtins.RubySpriteOps.GetZ)

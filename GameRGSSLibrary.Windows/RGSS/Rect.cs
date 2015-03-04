@@ -25,5 +25,10 @@ namespace GameLibrary.RGSS
             Width = iwidth;
             Height = iheight;
         }
+        internal Microsoft.Xna.Framework.Rectangle toXnaRect()
+        {
+            Microsoft.Xna.Framework.Rectangle rect = new Microsoft.Xna.Framework.Rectangle(X, Y, Width, Height);
+            return rect;
+        }
     }
 }

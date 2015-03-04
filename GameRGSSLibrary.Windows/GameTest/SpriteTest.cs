@@ -19,8 +19,8 @@ namespace GameLibrary.GameTest
         {
             base.Update();
             int frame = Graphics.FrameCount;
-            if (Graphics.FrameCount % 10 == 0)
-                this.X += 5;
+          //  if (Graphics.FrameCount % 5 == 0)
+                this.X += 20;
         }
     }
 }
