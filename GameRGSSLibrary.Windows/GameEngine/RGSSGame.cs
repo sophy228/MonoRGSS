@@ -14,7 +14,7 @@ namespace GameLibrary.GameEngine
         {
            // graphics = new GraphicsDeviceManager(this);
             _drawManager = new DrawManager(this);
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "GameLibrary/Content";
         }
 
         public DrawManager DrawManager

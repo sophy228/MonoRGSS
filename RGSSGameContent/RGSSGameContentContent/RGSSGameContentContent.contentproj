@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectGuid>{E6A04BD7-B0F5-4268-8302-6BAE04440B80}</ProjectGuid>
+    <ProjectTypeGuids>{96E2B04D-8817-42c6-938A-82C39BA4D311};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Windows</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RGSSGameContentContentContent</RootNamespace>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Configuration)</OutputPath>
+    <ContentRootDirectory>Content</ContentRootDirectory>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Windows' ">
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Windows8' ">
+    <MonoGamePlatform>Windows8</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Android' ">
+    <MonoGamePlatform>Android</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'iOS' ">
+    <MonoGamePlatform>iOS</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'OSX' ">
+    <MonoGamePlatform>OSX</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Linux' ">
+    <MonoGamePlatform>Linux</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'PSM' ">
+    <MonoGamePlatform>PSM</MonoGamePlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.FBXImporter" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.TextureImporter" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters" />
+    <Reference Include="MonoGameContentProcessors">
+      <HintPath>$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGameContentProcessors.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphic\Characters\!%24Gate1.png">
+      <Name>!%24Gate1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!%24Gate2.png">
+      <Name>!%24Gate2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Chest.png">
+      <Name>!Chest</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Crystal.png">
+      <Name>!Crystal</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Door1.png">
+      <Name>!Door1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Door2.png">
+      <Name>!Door2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Door3.png">
+      <Name>!Door3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Flame.png">
+      <Name>!Flame</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Hexagram.png">
+      <Name>!Hexagram</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Other1.png">
+      <Name>!Other1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Other2.png">
+      <Name>!Other2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Other3.png">
+      <Name>!Other3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Switch1.png">
+      <Name>!Switch1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\!Switch2.png">
+      <Name>!Switch2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Actor1.png">
+      <Name>Actor1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Actor2.png">
+      <Name>Actor2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Actor3.png">
+      <Name>Actor3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Animal.png">
+      <Name>Animal</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Evil.png">
+      <Name>Evil</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Monster.png">
+      <Name>Monster</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\People1.png">
+      <Name>People1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\People2.png">
+      <Name>People2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\People3.png">
+      <Name>People3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\People4.png">
+      <Name>People4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\People5.png">
+      <Name>People5</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Spiritual.png">
+      <Name>Spiritual</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Characters\Vehicle.png">
+      <Name>Vehicle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\Actor1.png">
+      <Name>Actor1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\Actor2.png">
+      <Name>Actor2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\Actor3.png">
+      <Name>Actor3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\Evil.png">
+      <Name>Evil</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\Monster.png">
+      <Name>Monster</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\People1.png">
+      <Name>People1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\People2.png">
+      <Name>People2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\People3.png">
+      <Name>People3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\People4.png">
+      <Name>People4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\Faces\Spiritual.png">
+      <Name>Spiritual</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\Border.png">
+      <Name>Border</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\IconSet.png">
+      <Name>IconSet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\Thumbstick.png">
+      <Name>Thumbstick</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\ThumbstickBall.png">
+      <Name>ThumbstickBall</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\ThumbstickDirection.png">
+      <Name>ThumbstickDirection</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\Title.png">
+      <Name>Title</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\Window.png">
+      <Name>Window</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphic\System\摇杆1.png">
+      <Name>摇杆1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Font\default.spritefont">
+      <Name>default</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>ContentProcessor1</Processor>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

@@ -30,5 +30,10 @@ namespace RGSS.Libraries.Builtins
             self.Z = z;
             return z;
         }
+        [RubyMethod("dispose")]
+        public static void Dispose(Viewport self)
+        {
+            self.Dispose();
+        }
     }
 }

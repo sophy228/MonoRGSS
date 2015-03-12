@@ -40,6 +40,7 @@ namespace GameLibrary.RGSS
         private Bitmap m_Bitmap;
 
         private Rect mSrcRect;
+        private bool _internalUsage;
         public Sprite()
         {
             Inialize();
@@ -48,7 +49,8 @@ namespace GameLibrary.RGSS
         public Sprite(Viewport viewport, bool internalusage=false):this()
         {
             _viewport = viewport;
-            if(!internalusage)
+            _internalUsage = internalusage;
+            if (!_internalUsage)
             {
                 if (viewport == null)
                 {
@@ -261,6 +263,15 @@ namespace GameLibrary.RGSS
         public virtual void Update()
         {
 
+        }
+
+        public void Dispose()
+        {
+            if (!_internalUsage)
+            {
+                LinkNode.ListDel(this);
+                //todo what about bitmap？
+            }
         }
 
     }

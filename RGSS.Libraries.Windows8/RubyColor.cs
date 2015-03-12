@@ -8,7 +8,7 @@ namespace RGSS.Libraries.Builtins
     public static class RubyColorOps
     {
         [RubyConstructor]
-        public static Color Create(RubyClass self, int r, int g, int b, [Optional]int alpha)
+        public static Color Create(RubyClass self, int r, int g, int b, int alpha=255)
         {
             Color color = new Color(r,g,b,alpha);
             return color;

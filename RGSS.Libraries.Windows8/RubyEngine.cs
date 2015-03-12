@@ -70,10 +70,18 @@ namespace RGSS.Libraries
   vp2.z = 3
   sp1 = Sprite.new(vp1)
   sp2 = Sprite.new(vp2)
+  bp2 = Bitmap.new(100,100)
+  bp3 = Bitmap.new(""Graphic/Faces/Actor1"")
+  color2 = Color.new(255,0,0)
+  bp2.fill_rect(0,0,100,100,color2)
+  sp2.bitmap = bp2
   sp3 = Sprite.new
+sp3.bitmap = bp3
+  vp1.dispose
   Graphics.freeze
   while true do 
   Graphics.update
+sp3.x = (sp3.x + 20) % 1000
   end";
             string outputText;
             object result;

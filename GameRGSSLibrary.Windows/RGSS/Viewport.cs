@@ -92,6 +92,18 @@ namespace GameLibrary.RGSS
                 sp.Draw(dm, frameCount);
             }
         }
+
+        public void Dispose()
+        {
+            Sprite link;
+            for (link = (Sprite)SpriteHeader.Next; link != SpriteHeader;)
+            {
+                Sprite tmp = (Sprite)link.Next;
+                link.Dispose();
+                link = tmp;
+            }
+            LinkNode.ListDel(this);
+        }
     }
 
     public class ViewportFactory

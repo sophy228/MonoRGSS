@@ -27,8 +27,8 @@ namespace GameRGSS
 #else
            RubyEngine re = new RubyEngine();
            RGSSEngine.Init(launchArguments, Window.Current.CoreWindow, this);
-           RGSSEngine.Run(mainLoop);
-           //RGSSEngine.Run(re.RunRuby);
+           //RGSSEngine.Run(mainLoop);
+           RGSSEngine.Run(re.RunRuby);
 #endif
         }
 

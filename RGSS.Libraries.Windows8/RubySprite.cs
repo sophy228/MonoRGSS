@@ -118,5 +118,10 @@ namespace RGSS.Libraries.Builtins
             self.Angle = angle;
             return angle;
         }
+        [RubyMethod("dispose")]
+        public static void Dispose(Sprite self)
+        {
+            self.Dispose();
+        }
     }
 }

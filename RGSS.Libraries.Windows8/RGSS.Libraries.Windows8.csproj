@@ -135,6 +135,9 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>D:\study\项目\C#\main-master\main-master\bin\Debug\ClassInitGenerator.exe -libraries:RGSS.Libraries.Builtins -out:$(ProjectDir)Initializers.Generated.cs D:\study\项目\MonoGame\GameRGSS\RGSS.Libraries.Windows8\bin\Debug\RGSS.Libraries.dll</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
