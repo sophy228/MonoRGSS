@@ -46,6 +46,10 @@
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\XNA\WindowsPhoneGameTest\FontPipeline\FontPipeline.csproj">
+      <Project>{ddbf5f7c-e7a7-46d0-bbd9-ce45b75f39f9}</Project>
+      <Name>FontPipeline</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RGSSGameContentContent\RGSSGameContentContent.contentproj">
       <Name>RGSSGameContentContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

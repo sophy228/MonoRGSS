@@ -105,13 +105,17 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RubyBitmap.cs" />
+    <Compile Include="RubyCache.cs" />
     <Compile Include="RubyColor.cs" />
+    <Compile Include="RubyDatabase.cs" />
     <Compile Include="RubyEngine.cs" />
+    <Compile Include="RubyExtensions.cs" />
     <Compile Include="RubyGraphics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RubyRect.cs" />
     <Compile Include="RubySprite.cs" />
     <Compile Include="RubyViewport.cs" />
+    <Compile Include="RubyWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IronRuby">
@@ -130,6 +134,11 @@
       <Project>{789ef9d0-a3b0-4f97-88ff-e6697dabe6a0}</Project>
       <Name>GameRGSSLibrary.Windows</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RubyScript\RPG.rb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

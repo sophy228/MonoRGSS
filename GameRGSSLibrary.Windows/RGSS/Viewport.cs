@@ -13,6 +13,8 @@ namespace GameLibrary.RGSS
 
         private Sprite _spriteHeader;
 
+        private LinkNode _windowHeader;
+
         public bool Visible;
 
         private int id;
@@ -28,6 +30,7 @@ namespace GameLibrary.RGSS
             _z = 0;
             id = ViewportFactory.AllocateId();
             _spriteHeader = new Sprite(this,true);
+            _windowHeader = new LinkNode();
             
         }
 
@@ -44,6 +47,16 @@ namespace GameLibrary.RGSS
                 return _spriteHeader;
             }
         }
+
+        public LinkNode WindowHeader
+        {
+            get
+            {
+                return _windowHeader;
+            }
+        }
+
+
         public int Z
         {
             get
@@ -78,7 +91,19 @@ namespace GameLibrary.RGSS
             }
             LinkNode.ListAddTail(this, header);
         }
-
+        public void PreBlend(DrawManager dm, int frameCount)
+        {
+            if (_rect != null)
+                Debug.WriteLine(string.Format("ViewPort#{0}({1},{2},{3},{4})- Z:({5}), blend@frameCount:{6}",
+                             id, _rect.X, _rect.Y, _rect.Width, _rect.Height, Z, frameCount));
+            else
+                Debug.WriteLine(string.Format("ViewPort#{0}- Z:({1}), blend@frameCount:{2}",
+                             id, Z, frameCount));
+            foreach (Window wd in WindowHeader)
+            {
+                wd.PreBlend(dm, frameCount);
+            }
+        }
         public void Draw(DrawManager dm, int frameCount)
         {
             if(_rect != null )
@@ -90,6 +115,11 @@ namespace GameLibrary.RGSS
             foreach(Sprite sp in SpriteHeader)
             {
                 sp.Draw(dm, frameCount);
+            }
+
+            foreach(Window wd in WindowHeader)
+            {
+                wd.Draw(dm, frameCount);
             }
         }
 

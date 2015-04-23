@@ -40,12 +40,12 @@ namespace RGSS.Libraries.Builtins
             return self.Rect;
         }
         [RubyMethod("blt")]
-        public static void Blt(Bitmap self, int x, int y, Bitmap src, Rect srcRect,[Optional]int opacity)
+        public static void Blt(Bitmap self, int x, int y, Bitmap src, Rect srcRect, [Optional, DefaultParameterValue(255)]int opacity)
         {
             self.Blt(x, y, src, srcRect, opacity);
         }
         [RubyMethod("stretch_blt")]
-        public static void Blt(Bitmap self, Rect desRect, Bitmap src, Rect srcRect, [Optional]int opacity)
+        public static void Blt(Bitmap self, Rect desRect, Bitmap src, Rect srcRect, [Optional, DefaultParameterValue(255)]int opacity)
         {
             self.StretchBlt(desRect, src, srcRect, opacity);
         }
@@ -69,10 +69,21 @@ namespace RGSS.Libraries.Builtins
         {
             self.Clear(rect);
         }
+        [RubyMethod("draw_text")]
+        public static void DrawText(RubyContext context, Bitmap self, int x, int y, int width, int height, MutableString/*!*/text, [Optional]int aligen)
+        {
+            var txt = context.DecodePath(text);
+            self.DrawText(x, y, width, height, txt);
+        }
         [RubyMethod("clear")]
         public static void Clear(Bitmap self, int x, int y, int width, int height)
         {
             self.Clear(x, y, width,height);
+        }
+        [RubyMethod("get_pixel")]
+        public static Color GetPixel(Bitmap self, int x, int y)
+        {
+            return self.GetPixel(x,y);
         }
     }
 }

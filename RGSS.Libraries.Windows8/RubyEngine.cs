@@ -7,6 +7,7 @@ using Microsoft.Scripting.Hosting.Providers;
 using System.IO;
 using Microsoft.Scripting;
 using System.Reflection;
+using System.Threading.Tasks;
 namespace RGSS.Libraries
 {
     public class DlrHost : ScriptHost
@@ -41,6 +42,7 @@ namespace RGSS.Libraries
     {
         private  ScriptEngine engine;
         private  ScriptScope scope;
+        private string scritptText;
 
         public RubyEngine()
         {
@@ -58,31 +60,50 @@ namespace RGSS.Libraries
             scope = engine.CreateScope();
             RubyContext context = (RubyContext)HostingHelpers.GetLanguageContext(engine);
             context.Loader.LoadAssembly("RGSS.Libraries", "RGSS.Libraries.Builtins.BuiltinsLibraryInitializer", true, true);
+            PreLoadRPGModule();
+        }
+         private async Task<Stream> OpenStreamAsync(string name)
+         {
+             var package = Windows.ApplicationModel.Package.Current;
+
+             try
+             {
+                 var storageFile = await package.InstalledLocation.GetFileAsync(name);
+                 var randomAccessStream = await storageFile.OpenReadAsync();
+                 return randomAccessStream.AsStreamForRead();
+             }
+             catch (IOException)
+             {
+                 // The file must not exist... return a null stream.
+                 return null;
+             }
+         }
+        private void PreLoadRPGModule()
+        {
+            var stream = Task.Run(() => OpenStreamAsync(@"RGSS.Libraries\RubyScript\RPG.rb").Result).Result;
+            if (stream == null)
+                throw new FileNotFoundException(@"RGSS.Libraries\RubyScript\RPG.rb");
+            StreamReader reader = new StreamReader(stream);
+            scritptText = reader.ReadToEnd();
+            scritptText += "\n";
+            stream.Dispose();
+        }
+
+        public void ReadRPGScript(string name)
+        {
+            var stream = Task.Run(() => OpenStreamAsync(name).Result).Result;
+            if (stream == null)
+                throw new FileNotFoundException(name);
+            StreamReader reader = new StreamReader(stream);
+            scritptText += reader.ReadToEnd();
+            scritptText += "\n";
+            stream.Dispose();
         }
 
         public int RunRuby()
         {
-           string txt = @"
-  rect = Rect.new(0,0,30,40)
-  vp1 = Viewport.new(1,2,100,300)
-  vp1.z = 8
-  vp2 = Viewport.new(rect)
-  vp2.z = 3
-  sp1 = Sprite.new(vp1)
-  sp2 = Sprite.new(vp2)
-  bp2 = Bitmap.new(100,100)
-  bp3 = Bitmap.new(""Graphic/Faces/Actor1"")
-  color2 = Color.new(255,0,0)
-  bp2.fill_rect(0,0,100,100,color2)
-  sp2.bitmap = bp2
-  sp3 = Sprite.new
-sp3.bitmap = bp3
-  vp1.dispose
-  Graphics.freeze
-  while true do 
-  Graphics.update
-sp3.x = (sp3.x + 20) % 1000
-  end";
+
+            string txt = scritptText;
             string outputText;
             object result;
             using (var stream = new MemoryStream())

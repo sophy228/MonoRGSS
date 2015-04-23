@@ -100,7 +100,8 @@ namespace GameLibrary.GameEngine
                     break;
                 case GameState.Runging:
                     //drawing context;
-                    GraphicsDevice.Clear(Color.CornflowerBlue);
+                    _drawManager.Blend(_gameControler.FrameCount);
+                    GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
                     _drawManager.Draw(_gameControler.FrameCount);
                     _gameControler.DrawOneFrameCompleted.Set();
                     base.Draw(gameTime);

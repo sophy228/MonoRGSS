@@ -113,13 +113,16 @@
     <Compile Include="RGSS\Bitmap.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RGSS\Border.cs" />
     <Compile Include="RGSS\Cache.cs" />
     <Compile Include="RGSS\Color.cs" />
+    <Compile Include="RGSS\DataBase.cs" />
     <Compile Include="RGSS\Graphics.cs" />
     <Compile Include="RGSS\Rect.cs" />
     <Compile Include="RGSS\RGSSDrawContext.cs" />
     <Compile Include="RGSS\Sprite.cs" />
     <Compile Include="RGSS\Viewport.cs" />
+    <Compile Include="RGSS\Window.cs" />
     <Compile Include="Ulitilies\IZorderable.cs" />
     <Compile Include="Ulitilies\LinkNode.cs" />
   </ItemGroup>
@@ -149,227 +152,278 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!%24Gate1.xnb">
+    <Content Include="Content\Graphics\Characters\!%24Gate1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!%24Gate2.xnb">
+    <Content Include="Content\Graphics\Characters\!%24Gate2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Chest.xnb">
+    <Content Include="Content\Graphics\Characters\!Chest.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Crystal.xnb">
+    <Content Include="Content\Graphics\Characters\!Crystal.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Door1.xnb">
+    <Content Include="Content\Graphics\Characters\!Door1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Door2.xnb">
+    <Content Include="Content\Graphics\Characters\!Door2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Door3.xnb">
+    <Content Include="Content\Graphics\Characters\!Door3.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Flame.xnb">
+    <Content Include="Content\Graphics\Characters\!Flame.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Hexagram.xnb">
+    <Content Include="Content\Graphics\Characters\!Hexagram.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Other1.xnb">
+    <Content Include="Content\Graphics\Characters\!Other1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Other2.xnb">
+    <Content Include="Content\Graphics\Characters\!Other2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Other3.xnb">
+    <Content Include="Content\Graphics\Characters\!Other3.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Switch1.xnb">
+    <Content Include="Content\Graphics\Characters\!Switch1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\!Switch2.xnb">
+    <Content Include="Content\Graphics\Characters\!Switch2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Actor1.xnb">
+    <Content Include="Content\Graphics\Characters\Actor1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Actor2.xnb">
+    <Content Include="Content\Graphics\Characters\Actor2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Actor3.xnb">
+    <Content Include="Content\Graphics\Characters\Actor3.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Animal.xnb">
+    <Content Include="Content\Graphics\Characters\Animal.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Evil.xnb">
+    <Content Include="Content\Graphics\Characters\Evil.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Monster.xnb">
+    <Content Include="Content\Graphics\Characters\Monster.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\People1.xnb">
+    <Content Include="Content\Graphics\Characters\People1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\People2.xnb">
+    <Content Include="Content\Graphics\Characters\People2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\People3.xnb">
+    <Content Include="Content\Graphics\Characters\People3.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\People4.xnb">
+    <Content Include="Content\Graphics\Characters\People4.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\People5.xnb">
+    <Content Include="Content\Graphics\Characters\People5.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Spiritual.xnb">
+    <Content Include="Content\Graphics\Characters\Spiritual.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Characters\Vehicle.xnb">
+    <Content Include="Content\Graphics\Characters\Vehicle.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\Actor1.xnb">
+    <Content Include="Content\Graphics\Faces\Actor1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\Actor2.xnb">
+    <Content Include="Content\Graphics\Faces\Actor2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\Actor3.xnb">
+    <Content Include="Content\Graphics\Faces\Actor3.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\Evil.xnb">
+    <Content Include="Content\Graphics\Faces\Evil.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\Monster.xnb">
+    <Content Include="Content\Graphics\Faces\Monster.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\People1.xnb">
+    <Content Include="Content\Graphics\Faces\People1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\People2.xnb">
+    <Content Include="Content\Graphics\Faces\People2.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\People3.xnb">
+    <Content Include="Content\Graphics\Faces\People3.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\People4.xnb">
+    <Content Include="Content\Graphics\Faces\People4.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\Faces\Spiritual.xnb">
+    <Content Include="Content\Graphics\Faces\Spiritual.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\Border.xnb">
+    <Content Include="Content\Graphics\System\Border.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\IconSet.xnb">
+    <Content Include="Content\Graphics\System\IconSet.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\Thumbstick.xnb">
+    <Content Include="Content\Graphics\System\Thumbstick.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\ThumbstickBall.xnb">
+    <Content Include="Content\Graphics\System\ThumbstickBall.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\ThumbstickDirection.xnb">
+    <Content Include="Content\Graphics\System\ThumbstickDirection.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\Title.xnb">
+    <Content Include="Content\Graphics\System\Title.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\Window.xnb">
+    <Content Include="Content\Graphics\System\Window.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphic\System\摇杆1.xnb">
+    <Content Include="Content\Graphics\System\摇杆1.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Data\Actors.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Animations.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Areas.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Armors.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Classes.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\CommonEvents.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Enemies.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Items.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Map001.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\MapInfos.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Scripts.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Skills.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\States.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\System.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Troops.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Weapons.rvdata">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -78,6 +78,11 @@ namespace GameLibrary.GameEngine
         {
 
         }
+
+        public void Blend(int frameCount)
+        {
+            _currentdrawContext.PreBlend(frameCount);
+        }
         
         public void Draw(int frameCount)
         {

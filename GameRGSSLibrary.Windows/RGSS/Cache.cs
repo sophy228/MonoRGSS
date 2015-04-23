@@ -14,13 +14,13 @@ namespace GameLibrary.RGSS
             String path = String.Format("Graphic\\System\\{0}", fileName);
             return GetBitmap(path);
         }
-        private static Bitmap Character(String fileName)
+        public static Bitmap Character(String fileName)
         {
             String path = String.Format("Graphic\\Characters\\{0}", fileName);
             return GetBitmap(path);
         }
 
-        private static Bitmap Face(String fileName)
+        public  static Bitmap Face(String fileName)
         {
             String path = String.Format("Graphic\\Faces\\{0}", fileName);
             return GetBitmap(path);

@@ -30,5 +30,19 @@ namespace GameLibrary.RGSS
             Microsoft.Xna.Framework.Rectangle rect = new Microsoft.Xna.Framework.Rectangle(X, Y, Width, Height);
             return rect;
         }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return (Width == 0) && (Height == 0);
+            }
+        }
+
+        public void Empty()
+        {
+            Width = 0;
+            Height = 0;
+        }
     }
 }

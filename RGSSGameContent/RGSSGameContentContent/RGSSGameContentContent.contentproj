@@ -281,6 +281,12 @@
       <Processor>ContentProcessor1</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\XNA\WindowsPhoneGameTest\FontPipeline\FontPipeline.csproj">
+      <Project>{ddbf5f7c-e7a7-46d0-bbd9-ce45b75f39f9}</Project>
+      <Name>FontPipeline</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--
       To modify your build process, add your task inside one of the targets below and uncomment it. 

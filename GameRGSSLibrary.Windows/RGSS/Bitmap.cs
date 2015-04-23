@@ -36,8 +36,9 @@ namespace GameLibrary.RGSS
         public Bitmap(String path)
         {
             drm = RGSSEngine.GetDrawManager();
+            path = path.Replace("/", "\\");
             mTexture = drm.Content.Load<Texture2D>(path);
-            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height);
+            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
             mWidth = mTexture.Width;
             mHeight = mTexture.Height;
             mRect = new Rectangle(0, 0, mWidth, mHeight);
@@ -51,10 +52,11 @@ namespace GameLibrary.RGSS
             mWidth = width;
             mHeight = height;
            // mTexture = new Texture2D(drm.GraphicsDevice, width, height);
-            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, width, height);
+            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
             mRect = new Rectangle(0, 0, mWidth, mHeight);
             mTexture = (Texture2D)mRenderTexture;
-          //  Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+            Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+            RenderTexture();
         }
 
         public Texture2D Texture
@@ -85,16 +87,20 @@ namespace GameLibrary.RGSS
         {
             get
             {
-                return new Rect(mRect.X, mRect.Y, mRect.Width, mRect.Y);
+                return new Rect(mRect.X, mRect.Y, mRect.Width, mRect.Height);
             }
         }
 
         private void RenderTexture()
         {
             drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
-            drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
-            drm.SpriteBatch.End();
+            drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+            if (mTexture != null)
+            {
+                drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
+                drm.SpriteBatch.End();
+            }
             drm.GraphicsDevice.SetRenderTarget(null);
             mTexture = (Texture2D)mRenderTexture;
         }
@@ -243,26 +249,41 @@ namespace GameLibrary.RGSS
 
             float xscale = (float)width / (text.Length * (spriteFont.Spacing + 25));
             float yscale = (float)height / ((spriteFont.LineSpacing));
-            xscale = 1f;
+
+            if (xscale > 1)
+                xscale = 1;
+            if(yscale > 1)
+                yscale = 1;
+            if(xscale < 0.6)
+                xscale = 0.6f;
+            if (yscale < 0.6)
+                yscale = 0.6f;
+           // xscale = 1f;
             Vector2 scale = new Vector2(xscale, yscale);
             SpriteEffects effects = SpriteEffects.None;
             float layerDepth = 0;
 
 
             drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
+            //drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
             drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
             drm.SpriteBatch.DrawString(spriteFont, text, position, color.toXnaColor(), rotation, origin, scale, effects, layerDepth);
             drm.SpriteBatch.End();
             drm.GraphicsDevice.SetRenderTarget(null);
         }
-        public void Blt(int x, int y, Bitmap srcBitmap, Rect srcRect, int opacity=0)
+        public void Blt(int x, int y, Bitmap srcBitmap, Rect srcRect, int opacity=255)
         {
             //RenderTarget2D rendertarget = new RenderTarget2D(drm.GraphicsDevice,mTexture.Width,mTexture.Height);
+            if (opacity > 255)
+                opacity = 255;
+            if (opacity < 0)
+                opacity = 0;
+            var color = new Microsoft.Xna.Framework.Color(opacity, opacity, opacity);
             drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
             drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
-            drm.SpriteBatch.Draw(srcBitmap.Texture, new Vector2(x, y), srcRect.toXnaRect(), Microsoft.Xna.Framework.Color.White);
+            //drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
+            drm.SpriteBatch.Draw(srcBitmap.Texture, new Vector2(x, y), srcRect.toXnaRect(), color);
             drm.SpriteBatch.End();
             drm.GraphicsDevice.SetRenderTarget(null);
         }
@@ -271,7 +292,7 @@ namespace GameLibrary.RGSS
             //RenderTarget2D rendertarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height);
             drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
             drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
+            //drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
             drm.SpriteBatch.Draw(srcBitmap.Texture, dest_rect.toXnaRect(), srcRect.toXnaRect(), Microsoft.Xna.Framework.Color.White);
             drm.SpriteBatch.End();
             drm.GraphicsDevice.SetRenderTarget(null);

@@ -24,6 +24,15 @@ namespace GameLibrary.GameEngine
                 vp.Draw(_drawMagager, frameCount);
             }
         }
+
+        virtual public void PreBlend(int frameCount)
+        {
+            _viewportHeader.PreBlend(_drawMagager, frameCount);
+            foreach (Viewport vp in ViewPortHeaer)
+            {
+                vp.PreBlend(_drawMagager, frameCount);
+            }
+        }
         virtual public void AddSprit(Viewport viewport, Sprite sprite)
         {
 

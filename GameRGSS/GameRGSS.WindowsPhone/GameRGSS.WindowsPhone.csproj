@@ -96,9 +96,32 @@
     <Content Include="Assets\WideLogo.scale-240.png" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework">
+    <Reference Include="IronRuby">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.3.0.2210, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsPhone81\MonoGame.Framework.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\GameRGSSLibrary.WindowsPhone81\GameRGSSLibrary.WindowsPhone81.csproj">
+      <Project>{6e143171-57cf-4772-95d8-c675c54965a1}</Project>
+      <Name>GameRGSSLibrary.WindowsPhone81</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RGSS.Libraries.WindowsPhone81\RGSS.Libraries.WindowsPhone81.csproj">
+      <Project>{481025ac-c72c-4764-a0c8-87ec59bce45c}</Project>
+      <Name>RGSS.Libraries.WindowsPhone81</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

@@ -40,24 +40,26 @@ namespace GameLibrary.RGSS
         private Bitmap m_Bitmap;
 
         private Rect mSrcRect;
-        private bool _internalUsage;
-        public Sprite()
+        private bool _drawBySelf;
+        
+        private void initialSprite()
         {
             Inialize();
             id = SpriteFactory.AllocateId();
         }
-        public Sprite(Viewport viewport, bool internalusage=false):this()
+        public Sprite(Viewport viewport = null, bool drawBySelf = false)
         {
+            initialSprite();
             _viewport = viewport;
-            _internalUsage = internalusage;
-            if (!_internalUsage)
+            _drawBySelf = drawBySelf;
+            if (!_drawBySelf)
             {
-                if (viewport == null)
+                if (_viewport == null)
                 {
                     var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
-                    viewport = context.ViewPortHeaer;
+                    _viewport = context.ViewPortHeaer;
                 }
-                this.InsertInZorder(viewport.SpriteHeader);
+                this.InsertInZorder(_viewport.SpriteHeader);
             }
         }
 
@@ -85,9 +87,34 @@ namespace GameLibrary.RGSS
             }
             set
             {
-                LinkNode.ListDel(this);
                 z = value;
-                InsertInZorder(_viewport.SpriteHeader);
+                if (!_drawBySelf)
+                {
+                    LinkNode.ListDel(this);
+                    InsertInZorder(_viewport.SpriteHeader);
+                }
+            }
+        }
+
+        public Viewport Viewport
+        {
+            get
+            {
+                return _viewport;
+            }
+            set
+            {
+                _viewport = value;
+                if (!_drawBySelf)
+                { 
+                    LinkNode.ListDel(this);
+                    if(_viewport == null)
+                    {
+                        var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
+                        _viewport = context.ViewPortHeaer;
+                    }
+                    this.InsertInZorder(_viewport.SpriteHeader);
+                }
             }
         }
 
@@ -267,7 +294,7 @@ namespace GameLibrary.RGSS
 
         public void Dispose()
         {
-            if (!_internalUsage)
+            if (!_drawBySelf)
             {
                 LinkNode.ListDel(this);
                 //todo what about bitmap？

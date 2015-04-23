@@ -26,32 +26,27 @@ namespace GameRGSS
            _game.IsFixedTimeStep = true;
 #else
            RubyEngine re = new RubyEngine();
-           RGSSEngine.Init(launchArguments, Window.Current.CoreWindow, this);
-           //RGSSEngine.Run(mainLoop);
-           RGSSEngine.Run(re.RunRuby);
+
+           RGSSEngine.Init(launchArguments, Windows.UI.Xaml.Window.Current.CoreWindow, this);
+          // RGSSEngine.Run(mainLoop);
+           re.ReadRPGScript(@"Script\rpgmaker.rb");
+            RGSSEngine.Run(re.RunRuby);
 #endif
         }
 
         private int mainLoop()
         {
-            Viewport vp1 = ViewportFactory.Create(0, 0, 520, 240);
-            Viewport vp2 = ViewportFactory.Create(0, 0, 200, 300);
-            vp1.Z = 20;
-            vp2.Z = 30;
-            Bitmap bitmap = new Bitmap(100, 100);
-            bitmap.FillRect(0, 0, 100, 100, new GameLibrary.RGSS.Color(255,0,0,255));
-            Bitmap bitmap2 = new Bitmap(100, 100);
-            bitmap2.FillRect(0, 0, 100, 100, new GameLibrary.RGSS.Color(0, 255, 0, 255));
-            SpriteTest sp1 = new SpriteTest(vp1);
-            bitmap.Blt(50, 0, bitmap2, new Rect(0, 0, 50, 50),0);
-            sp1.Bitmap = bitmap;
-            Sprite sp2 = SpriteFactory.Create(vp2);
-            Graphics.Freeze();
+            GameLibrary.RGSS.Window wd = new GameLibrary.RGSS.Window(10, 10, 500, 200);
+            Bitmap bp =  Cache.Face("Actor1");
+            wd.Contents.DrawText(100, 30, 200, 20, "莉果大人是我们必要的人才啊！");
+            wd.Contents.Blt(0, 0, bp, new Rect(0, 0, 96, 96)); ;
+            wd.Oy = 0;
+            wd.CursorRect = new Rect(100, 30, 400, 30);
+            wd.Contents.DrawText(10, 130, 200, 20, "不愧是莉果sama~！");
+            wd.Contents.Blt(300, 120, bp, new Rect(96, 0, 96, 96));
             while(true)
             {
                 Graphics.Update();
-                sp1.Update();
-                
             }
         }
     }

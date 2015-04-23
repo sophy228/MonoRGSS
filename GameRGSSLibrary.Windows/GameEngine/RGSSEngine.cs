@@ -61,7 +61,7 @@ namespace GameLibrary.GameEngine
             if (state == EngineState.Initialized)
                 return game;
             else
-                throw new Exception("RGSSEngine has already been initialized");
+                throw new Exception("RGSSEngine has not been initialized");
         }
 
         public static DrawManager GetDrawManager()
@@ -69,7 +69,7 @@ namespace GameLibrary.GameEngine
             if (state == EngineState.Initialized)
                 return game.DrawManager;
             else
-                throw new Exception("RGSSEngine has already been initialized");
+                throw new Exception("RGSSEngine has not been initialized");
         }
     }
 }
