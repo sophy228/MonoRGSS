@@ -29,12 +29,14 @@ namespace GameLibrary.RGSS
         Microsoft.Xna.Framework.Color backGroud = Microsoft.Xna.Framework.Color.Transparent;
         private RenderTarget2D mRenderTexture;
         private Texture2D curseTexture;
+        private int openness;
         public Window(int x, int y, int width, int height)
         {
             ox = 0;
             oy = 0;
             pxLocX = x;
             pxLocY = y;
+            openness = 255;
             pWidth = width;
             pHeight = height;
             
@@ -55,6 +57,7 @@ namespace GameLibrary.RGSS
         public Window()
         {
             curseortep = 9;
+            openness = 255;
             content = new Bitmap(10,10);
             var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
             _viewport = context.ViewPortHeaer;
@@ -216,6 +219,22 @@ namespace GameLibrary.RGSS
             }
         }
 
+        public int Openness
+        {
+            get
+            {
+                return openness;
+            }
+            set
+            {
+                if (value > 255)
+                    value = 255;
+                if (value < 0)
+                    value = 0;
+                openness = value;
+            }
+        }
+
         private void updateCursor()
         {
 
@@ -225,7 +244,7 @@ namespace GameLibrary.RGSS
         {
             if (border != null)
                 border.dispose();
-            border = new Border(_viewport, pxLocX, pxLocY, pWidth, pHeight, "Graphics/System/Border");
+            border = new Border(_viewport, pxLocX, pxLocY, pWidth * openness / 255, pHeight * openness / 255, "Graphics/System/Border");
             padding = border.BorderMargin;
         }
 
@@ -297,6 +316,8 @@ namespace GameLibrary.RGSS
         internal void PreBlend(DrawManager dm, int frameCount)
         {
             updateBorder();
+            if (openness < 255)
+                return;
             if (!CursorRect.IsEmpty)
             {
                 Microsoft.Xna.Framework.Color darkCurse = new Microsoft.Xna.Framework.Color(220, 220, 220, 255);
@@ -315,6 +336,8 @@ namespace GameLibrary.RGSS
         internal void Draw(DrawManager dm, int frameCount)
         {
             border.Draw(dm, frameCount);
+            if (openness < 255)
+                return;
             Texture2D texture = null;
             if (mRenderTexture != null)
             {
@@ -325,8 +348,8 @@ namespace GameLibrary.RGSS
                 texture = Contents.Texture;
             }
             if(texture != null)
-            dm.SpriteBatch.Draw(texture, new Rectangle(pxLocX + padding, pxLocY + padding, pWidth - (padding - border.BorderMargin), pHeight - (padding - border.BorderMargin)), 
-                new Rectangle(ox, oy, pWidth, pHeight), Microsoft.Xna.Framework.Color.White);
+                dm.SpriteBatch.Draw(texture, new Rectangle(pxLocX + padding, pxLocY + padding, pWidth - 2 * padding, pHeight - 2 * padding),
+                new Rectangle(ox, oy, texture.Width, texture.Height), Microsoft.Xna.Framework.Color.White);
         }
 
         public void Dispose()

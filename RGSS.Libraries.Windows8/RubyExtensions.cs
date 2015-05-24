@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,13 @@ namespace RGSS.Libraries.Builtins
             RubyIO io = new RubyIO(sites.Context, db.GetStream(), IOMode.ReadOnly);
             var obj = RubyMarshal.Load(sites, scope, null, io);
             return obj;
+        }
+
+        [RubyMethod("debugp", RubyMethodAttributes.PrivateInstance)]
+        [RubyMethod("debugp", RubyMethodAttributes.PublicSingleton)]
+        public static void DebugPrint(RubyScope/*!*/ scope,object/*!*/ self, object/*!*/ value)
+        {
+            Debug.WriteLine(value);
         }
     }
 }

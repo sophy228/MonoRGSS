@@ -26,6 +26,7 @@ namespace RGSS.Libraries.Builtins {
             
             
             DefineGlobalModule("Graphics", typeof(RGSS.Libraries.Builtins.RubyGraphics), 0x00000008, null, LoadGraphics_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
+            DefineGlobalModule("Input", typeof(RGSS.Libraries.Builtins.RubyInputOps), 0x00000008, null, LoadInput_Class, LoadInput_Constants, IronRuby.Builtins.RubyModule.EmptyArray);
             ExtendClass(typeof(System.Object), 0x00000000, null, LoadSystem__Object_Instance, LoadSystem__Object_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
             DefineGlobalClass("Bitmap", typeof(GameLibrary.RGSS.Bitmap), 0x00000000, Context.ObjectClass, LoadBitmap_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, IronRuby.Builtins.MutableString, GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Create), 
@@ -60,15 +61,20 @@ namespace RGSS.Libraries.Builtins {
             );
             
             DefineLibraryMethod(module, "clear", 0x11, 
-                0x00000000U, 0x00000000U, 0x00000000U, 
-                new Action<GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Clear), 
+                0x00000000U, 
+                new Action<GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Clear)
+            );
+            
+            DefineLibraryMethod(module, "clear_rect", 0x11, 
+                0x00000000U, 0x00000000U, 
                 new Action<GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect>(RGSS.Libraries.Builtins.RubyBitmapOps.Clear), 
                 new Action<GameLibrary.RGSS.Bitmap, System.Int32, System.Int32, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.Clear)
             );
             
             DefineLibraryMethod(module, "draw_text", 0x11, 
-                0x00000000U, 
-                new Action<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Bitmap, System.Int32, System.Int32, System.Int32, System.Int32, IronRuby.Builtins.MutableString, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.DrawText)
+                0x00000000U, 0x00000000U, 
+                new Action<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Bitmap, System.Int32, System.Int32, System.Int32, System.Int32, IronRuby.Builtins.MutableString, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.DrawText), 
+                new Action<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Rect, IronRuby.Builtins.MutableString, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.DrawText)
             );
             
             DefineLibraryMethod(module, "fill_rect", 0x11, 
@@ -175,6 +181,37 @@ namespace RGSS.Libraries.Builtins {
             DefineLibraryMethod(module, "update", 0x21, 
                 0x00000000U, 
                 new Action<System.Object>(RGSS.Libraries.Builtins.RubyGraphics.Update)
+            );
+            
+        }
+        
+        private static void LoadInput_Constants(IronRuby.Builtins.RubyModule/*!*/ module) {
+            SetConstant(module, "DOWN", RGSS.Libraries.Builtins.RubyInputOps.DOWN);
+            SetConstant(module, "LEFT", RGSS.Libraries.Builtins.RubyInputOps.LEFT);
+            SetConstant(module, "RIGHT", RGSS.Libraries.Builtins.RubyInputOps.RIGHT);
+            SetConstant(module, "UP", RGSS.Libraries.Builtins.RubyInputOps.UP);
+            
+        }
+        
+        private static void LoadInput_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "press?", 0x21, 
+                0x00000000U, 
+                new Func<System.Object, System.Int32, System.Boolean>(RGSS.Libraries.Builtins.RubyInputOps.IsPress)
+            );
+            
+            DefineLibraryMethod(module, "repeat?", 0x21, 
+                0x00000000U, 
+                new Func<System.Object, System.Int32, System.Boolean>(RGSS.Libraries.Builtins.RubyInputOps.IsRepeat)
+            );
+            
+            DefineLibraryMethod(module, "trigger?", 0x21, 
+                0x00000000U, 
+                new Func<System.Object, System.Int32, System.Boolean>(RGSS.Libraries.Builtins.RubyInputOps.IsTrigger)
+            );
+            
+            DefineLibraryMethod(module, "update", 0x21, 
+                0x00000000U, 
+                new Action<System.Object>(RGSS.Libraries.Builtins.RubyInputOps.Update)
             );
             
         }
@@ -351,6 +388,11 @@ namespace RGSS.Libraries.Builtins {
         }
         
         private static void LoadSystem__Object_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "debugp", 0x12, 
+                0x00000000U, 
+                new Action<IronRuby.Runtime.RubyScope, System.Object, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.DebugPrint)
+            );
+            
             DefineLibraryMethod(module, "load_data", 0x12, 
                 0x00000000U, 
                 new Func<IronRuby.Builtins.RubyMarshal.ReaderSites, IronRuby.Runtime.RubyScope, System.Object, IronRuby.Builtins.MutableString, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.Load_Data)
@@ -359,6 +401,11 @@ namespace RGSS.Libraries.Builtins {
         }
         
         private static void LoadSystem__Object_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "debugp", 0x21, 
+                0x00000000U, 
+                new Action<IronRuby.Runtime.RubyScope, System.Object, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.DebugPrint)
+            );
+            
             DefineLibraryMethod(module, "load_data", 0x21, 
                 0x00000000U, 
                 new Func<IronRuby.Builtins.RubyMarshal.ReaderSites, IronRuby.Runtime.RubyScope, System.Object, IronRuby.Builtins.MutableString, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.Load_Data)
@@ -385,6 +432,11 @@ namespace RGSS.Libraries.Builtins {
         }
         
         private static void LoadWindow_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "active", 0x11, 
+                0x00000000U, 
+                new Func<RGSS.Libraries.Builtins.RubyWindow, System.Boolean>(RGSS.Libraries.Builtins.RubyWindow.GetActive)
+            );
+            
             DefineLibraryMethod(module, "back_opacity", 0x11, 
                 0x00000000U, 
                 new Func<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.GetBackOpacity)
@@ -447,12 +499,12 @@ namespace RGSS.Libraries.Builtins {
             
             DefineLibraryMethod(module, "openness", 0x11, 
                 0x00000000U, 
-                new Func<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.GetBackOpacity)
+                new Func<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.GetOpenness)
             );
             
             DefineLibraryMethod(module, "openness=", 0x11, 
                 0x00000000U, 
-                new Action<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.SetBackOpacity)
+                new Action<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.SetOpenness)
             );
             
             DefineLibraryMethod(module, "ox=", 0x11, 
@@ -473,6 +525,11 @@ namespace RGSS.Libraries.Builtins {
             DefineLibraryMethod(module, "update", 0x11, 
                 0x00000000U, 
                 new Action<RGSS.Libraries.Builtins.RubyWindow>(RGSS.Libraries.Builtins.RubyWindow.Update)
+            );
+            
+            DefineLibraryMethod(module, "visible", 0x11, 
+                0x00000000U, 
+                new Func<RGSS.Libraries.Builtins.RubyWindow, System.Boolean>(RGSS.Libraries.Builtins.RubyWindow.GetActive)
             );
             
             DefineLibraryMethod(module, "width", 0x11, 

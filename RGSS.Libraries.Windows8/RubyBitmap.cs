@@ -64,7 +64,7 @@ namespace RGSS.Libraries.Builtins
         {
             self.Clear();
         }
-        [RubyMethod("clear")]
+        [RubyMethod("clear_rect")]
         public static void Clear(Bitmap self, Rect rect)
         {
             self.Clear(rect);
@@ -73,9 +73,16 @@ namespace RGSS.Libraries.Builtins
         public static void DrawText(RubyContext context, Bitmap self, int x, int y, int width, int height, MutableString/*!*/text, [Optional]int aligen)
         {
             var txt = context.DecodePath(text);
-            self.DrawText(x, y, width, height, txt);
+            self.DrawText(x, y, width, height, txt, aligen);
         }
-        [RubyMethod("clear")]
+
+        [RubyMethod("draw_text")]
+        public static void DrawText(RubyContext context, Bitmap self, Rect rect, MutableString/*!*/text, [Optional]int aligen)
+        {
+            var txt = context.DecodePath(text);
+            self.DrawText(rect.X, rect.Y, rect.Width, rect.Height, txt, aligen);
+        }
+        [RubyMethod("clear_rect")]
         public static void Clear(Bitmap self, int x, int y, int width, int height)
         {
             self.Clear(x, y, width,height);

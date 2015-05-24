@@ -303,12 +303,332 @@ class Window_Base < Window
     end
   end
 end
-items = load_data("Data/Items.rvdata")
-wd = Window_Base.new(10,10,400,200)
-wd.draw_character("Actor1",2,10,30)
-wd.draw_item_name(items[1],30,30,false)
-Graphics.freeze
-while true do
-  wd.update
+#==============================================================================
+# ■ Window_Selectable
+#------------------------------------------------------------------------------
+# 　拥有光标的移动以及滚动功能的窗口类。
+#==============================================================================
+
+class Window_Selectable < Window_Base
+  #--------------------------------------------------------------------------
+  # ● 定义实例变量
+  #--------------------------------------------------------------------------
+  attr_reader   :item_max                 # 选项数
+  attr_reader   :column_max               # 行数
+  attr_reader   :index                    # 光标位置
+  attr_reader   :help_window              # 帮助窗口
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #     width  : 窗口宽度
+  #     height : 窗口高度
+  #     spacing : 横向排列时栏间空格
+  #--------------------------------------------------------------------------
+  def initialize(x, y, width, height, spacing = 32)
+    @item_max = 1
+    @column_max = 1
+    @index = -1
+    @spacing = spacing
+    super(x, y, width, height)
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成窗口内容
+  #--------------------------------------------------------------------------
+  def create_contents
+    self.contents.dispose
+    self.contents = Bitmap.new(width - 32, [height - 32, row_max * WLH].max)
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置光标位置
+  #     index : 新光标位置
+  #--------------------------------------------------------------------------
+  def index=(index)
+    @index = index
+    update_cursor
+    call_update_help
+  end
+  #--------------------------------------------------------------------------
+  # ● 计算行数
+  #--------------------------------------------------------------------------
+  def row_max
+    return (@item_max + @column_max - 1) / @column_max
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取首行
+  #--------------------------------------------------------------------------
+  def top_row
+    return self.oy / WLH
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置首行
+  #     row : 显示在最上的行
+  #--------------------------------------------------------------------------
+  def top_row=(row)
+    row = 0 if row < 0
+    row = row_max - 1 if row > row_max - 1
+    self.oy = row * WLH
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取一页能显示的行数
+  #--------------------------------------------------------------------------
+  def page_row_max
+    return (self.height - 32) / WLH
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取一页能显示的选项
+  #--------------------------------------------------------------------------
+  def page_item_max
+    return page_row_max * @column_max
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取末行
+  #--------------------------------------------------------------------------
+  def bottom_row
+    return top_row + page_row_max - 1
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置末行
+  #     row : 显示在最底的行
+  #--------------------------------------------------------------------------
+  def bottom_row=(row)
+    self.top_row = row - (page_row_max - 1)
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置选项矩形
+  #     index : 项目编号
+  #--------------------------------------------------------------------------
+  def item_rect(index)
+    rect = Rect.new(0, 0, 0, 0)
+    rect.width = (contents.width + @spacing) / @column_max - @spacing
+    rect.height = WLH
+    rect.x = index % @column_max * (rect.width + @spacing)
+    rect.y = index / @column_max * WLH
+    return rect
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置帮助窗口
+  #     help_window : 新帮助窗口
+  #--------------------------------------------------------------------------
+  def help_window=(help_window)
+    @help_window = help_window
+    call_update_help
+  end
+  #--------------------------------------------------------------------------
+  # ● 判断光标是否能够移动
+  #--------------------------------------------------------------------------
+  def cursor_movable?
+    return false if (not visible or not active)
+    return false if (index < 0 or index > @item_max or @item_max == 0)
+    return false if (@opening or @closing)
+    return true
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标下移
+  #     wrap : 允许循环
+  #--------------------------------------------------------------------------
+  def cursor_down(wrap = false)
+    if (@index < @item_max - @column_max) or (wrap and @column_max == 1)
+      @index = (@index + @column_max) % @item_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标上移
+  #     wrap : 允许循环
+  #--------------------------------------------------------------------------
+  def cursor_up(wrap = false)
+    if (@index >= @column_max) or (wrap and @column_max == 1)
+      @index = (@index - @column_max + @item_max) % @item_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标右移
+  #     wrap : 允许循环
+  #--------------------------------------------------------------------------
+  def cursor_right(wrap = false)
+    if (@column_max >= 2) and
+        (@index < @item_max - 1 or (wrap and page_row_max == 1))
+      @index = (@index + 1) % @item_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标左移
+  #     wrap : 允许循环
+  #--------------------------------------------------------------------------
+  def cursor_left(wrap = false)
+    if (@column_max >= 2) and
+        (@index > 0 or (wrap and page_row_max == 1))
+      @index = (@index - 1 + @item_max) % @item_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标移至下一页
+  #--------------------------------------------------------------------------
+  def cursor_pagedown
+    if top_row + page_row_max < row_max
+      @index = [@index + page_item_max, @item_max - 1].min
+      self.top_row += page_row_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标移至上一页
+  #--------------------------------------------------------------------------
+  def cursor_pageup
+    if top_row > 0
+      @index = [@index - page_item_max, 0].max
+      self.top_row -= page_row_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    if cursor_movable?
+      last_index = @index
+      if Input.repeat?(Input::DOWN)
+        cursor_down(Input.trigger?(Input::DOWN))
+      end
+      if Input.repeat?(Input::UP)
+        cursor_up(Input.trigger?(Input::UP))
+      end
+      if Input.repeat?(Input::RIGHT)
+        cursor_right(Input.trigger?(Input::RIGHT))
+      end
+      if Input.repeat?(Input::LEFT)
+        cursor_left(Input.trigger?(Input::LEFT))
+      end
+=begin
+      if Input.repeat?(Input::R)
+        cursor_pagedown
+      end
+      if Input.repeat?(Input::L)
+        cursor_pageup
+      end
+      if @index != last_index
+        Sound.play_cursor
+      end
+=end
+    end
+    update_cursor
+    call_update_help
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新光标
+  #--------------------------------------------------------------------------
+  def update_cursor
+    if @index < 0                   # 当光标位置小于0
+      self.cursor_rect.empty        # 隐藏光标
+    else                            # 当光标位置为0或大于
+      row = @index / @column_max    # 获取当前行
+      if row < top_row              # 若先于首行
+        self.top_row = row          # 向上滚动
+      end
+      if row > bottom_row           # 若後于末行
+        self.bottom_row = row       # 向下滚动
+      end
+      rect = item_rect(@index)      # 获取所选项目矩形
+      rect.y -= self.oy             # 设矩形为滚动位置
+      self.cursor_rect = rect       # 更新光标矩形
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 呼叫更新帮助窗口
+  #--------------------------------------------------------------------------
+  def call_update_help
+    if self.active and @help_window != nil
+      update_help
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新帮助窗口（子类定义）
+  #--------------------------------------------------------------------------
+  def update_help
+  end
+end
+
+#==============================================================================
+# ■ Window_Command
+#------------------------------------------------------------------------------
+# 　一般的命令选择行窗口。
+#==============================================================================
+
+class Window_Command < Window_Selectable
+  #--------------------------------------------------------------------------
+  # ● 定义实例变量
+  #--------------------------------------------------------------------------
+  attr_reader   :commands                 # 命令
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #     width  : 窗口宽度
+  #     height : 窗口高度
+  #     spacing : 横向排列时栏间空格
+  #--------------------------------------------------------------------------
+  def initialize(width, commands, column_max = 1, row_max = 0, spacing = 32)
+    if row_max == 0
+      row_max = (commands.size + column_max - 1) / column_max
+    end
+    super(0, 0, width, row_max * WLH + 32, spacing)
+
+    @commands = commands
+    @item_max = commands.size
+    @column_max = column_max
+    refresh
+    self.index = 0
+
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    for i in 0...@item_max
+     draw_item(i)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制项目
+  #     index   : 项目位置
+  #     enabled : 有效标志，false时项目半透明化
+  #--------------------------------------------------------------------------
+  def draw_item(index, enabled = true)
+    rect = item_rect(index)
+    rect.x += 4
+    rect.width -= 8
+    self.contents.clear_rect(rect)
+    #self.contents.font.color = normal_color
+    #self.contents.font.color.alpha = enabled ? 255 : 128
+    debugp(@commands[index])
+    self.contents.draw_text(rect, @commands[index])
+  end
+end
+
+s1 = "abc"
+s2 = "bbb"
+s3 = "ccc"
+s4 = "ddd"
+s5 = "eee"
+s6 = "fff"
+
+
+command_window = Window_Command.new(160, [s1, s2, s3, s4, s5, s6])
+command_window.draw_item(1, false)
+command_window.openness=0
+command_window.open
+begin
+  command_window.update
   Graphics.update
+end until command_window.openness == 255
+#command_window.draw_item(0, false)     # 无效化物品选项
+#command_window.draw_item(1, false)     # 无效化技能选项
+#command_window.draw_item(2, false)     # 无效化装备选项
+#command_window.draw_item(3, false)     # 无效化状态选项
+Graphics.freeze
+Input.update
+while true do
+  Graphics.update
+  Input.update
+  command_window.update
 end

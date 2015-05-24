@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input.Touch;
+using RPGVXLibrary.Input;
 
 namespace GameLibrary.GameEngine
 {
@@ -15,6 +17,7 @@ namespace GameLibrary.GameEngine
            // graphics = new GraphicsDeviceManager(this);
             _drawManager = new DrawManager(this);
             Content.RootDirectory = "GameLibrary/Content";
+            TouchPanel.EnabledGestures = GestureType.Tap | GestureType.VerticalDrag;
         }
 
         public DrawManager DrawManager
@@ -81,7 +84,14 @@ namespace GameLibrary.GameEngine
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-
+           // Input.Update();
+            switch (_gameControler.GameState)
+            {
+                case GameState.Freezed:
+                    this.SuppressDraw();
+                    break;
+                    
+            }
             base.Update(gameTime);
         }
 
@@ -93,6 +103,7 @@ namespace GameLibrary.GameEngine
         {
 
             Debug.WriteLine("draw @" + gameTime.ElapsedGameTime.TotalMilliseconds);
+            
             // TODO: Add your drawing code here
             switch(_gameControler.GameState)
             {
@@ -100,11 +111,14 @@ namespace GameLibrary.GameEngine
                     break;
                 case GameState.Runging:
                     //drawing context;
+                    
                     _drawManager.Blend(_gameControler.FrameCount);
                     GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
                     _drawManager.Draw(_gameControler.FrameCount);
                     _gameControler.DrawOneFrameCompleted.Set();
+                    
                     base.Draw(gameTime);
+                    Input.Draw(_drawManager, _gameControler.FrameCount);
                     break;
                 case GameState.Pending:
                     break;
@@ -114,6 +128,7 @@ namespace GameLibrary.GameEngine
                 default:
                     break;
             }
+            
         }
     }
 }

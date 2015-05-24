@@ -46,6 +46,8 @@ namespace GameLibrary.RGSS
             boarderBitmap = new Bitmap(boardTexturePath);
             m_pxLeft = m_pxRight = (boarderBitmap.Width - 1) / 2;
             m_pxTop = m_pxBottom = (boarderBitmap.Height - 1) / 2;
+            pxWidth -= 2 * BorderMargin;
+            pxHeight -= 2 * BorderMargin;
             AddBorderSprite(viewPort, BorderPieces.TopLeft);
             AddBorderSprite(viewPort, BorderPieces.Top);
             AddBorderSprite(viewPort, BorderPieces.TopRight);

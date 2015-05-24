@@ -118,6 +118,7 @@
     <Compile Include="RGSS\Color.cs" />
     <Compile Include="RGSS\DataBase.cs" />
     <Compile Include="RGSS\Graphics.cs" />
+    <Compile Include="RGSS\Input.cs" />
     <Compile Include="RGSS\Rect.cs" />
     <Compile Include="RGSS\RGSSDrawContext.cs" />
     <Compile Include="RGSS\Sprite.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="RGSS\Window.cs" />
     <Compile Include="Ulitilies\IZorderable.cs" />
     <Compile Include="Ulitilies\LinkNode.cs" />
+    <Compile Include="Ulitilies\VirtualThumbsticks.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows8.csproj">
