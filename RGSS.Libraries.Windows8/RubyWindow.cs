@@ -149,17 +149,48 @@ namespace RGSS.Libraries.Builtins
         }
         [RubyMethod("contents_opacity=")]
         [RubyMethod("back_opacity=")]
+        [RubyMethod("opacity=")]
         public static void SetBackOpacity(RubyWindow self,int backopacity)
         {
             //todo
         }
 
+        
+        
         [RubyMethod("active")]
-        [RubyMethod("visible")]
         public static bool GetActive(RubyWindow self)
         {
-            return true;
+            return self.window.Active;
         }
+        [RubyMethod("active=")]
+        public static void SetActive(RubyWindow self, bool b)
+        {
+            self.window.Active = b;
+        }
+        
+        [RubyMethod("pause")]
+        public static bool GetPause(RubyWindow self)
+        {
+            return self.window.Pause;
+        }
+
+        [RubyMethod("pause=")]
+        public static void SetPause(RubyWindow self, bool b)
+        {
+            self.window.Pause = b;
+        }
+
+        [RubyMethod("visible")]
+        public static bool GetVisible(RubyWindow self)
+        {
+            return self.window.Visible;
+        }
+        [RubyMethod("visible=")]
+        public static void SetVisible(RubyWindow self, bool b)
+        {
+            self.window.Visible = b;
+        }
+        
         [RubyMethod("update")]
         public static void Update(RubyWindow self)
         {

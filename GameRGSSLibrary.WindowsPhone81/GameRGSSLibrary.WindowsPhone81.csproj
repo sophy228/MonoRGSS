@@ -34,25 +34,103 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameEngine\DrawContext.cs" />
-    <Compile Include="GameEngine\DrawManager.cs" />
-    <Compile Include="GameEngine\GameControler.cs" />
-    <Compile Include="GameEngine\RGSSContent.cs" />
-    <Compile Include="GameEngine\RGSSEngine.cs" />
-    <Compile Include="GameEngine\RGSSGame.cs" />
-    <Compile Include="GameTest\ExampleDrawContext.cs" />
-    <Compile Include="GameTest\SpriteTest.cs" />
+    <Compile Include="..\GameRGSSLibrary.Windows\GameEngine\DrawContext.cs">
+      <Link>GameEngine\DrawContext.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\GameEngine\DrawManager.cs">
+      <Link>GameEngine\DrawManager.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\GameEngine\GameControler.cs">
+      <Link>GameEngine\GameControler.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\GameEngine\RGSSContent.cs">
+      <Link>GameEngine\RGSSContent.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\GameEngine\RGSSEngine.cs">
+      <Link>GameEngine\RGSSEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\GameEngine\RGSSGame.cs">
+      <Link>GameEngine\RGSSGame.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\GameTest\ExampleDrawContext.cs">
+      <Link>GameTest\ExampleDrawContext.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\GameTest\SpriteTest.cs">
+      <Link>GameTest\SpriteTest.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Bitmap.cs">
+      <Link>RGSS\Bitmap.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Border.cs">
+      <Link>RGSS\Border.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Cache.cs">
+      <Link>RGSS\Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Color.cs">
+      <Link>RGSS\Color.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\ContentFont.cs">
+      <Link>RGSS\ContentFont.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\DataBase.cs">
+      <Link>RGSS\DataBase.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Graphics.cs">
+      <Link>RGSS\Graphics.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Input.cs">
+      <Link>RGSS\Input.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Plane.cs">
+      <Link>RGSS\Plane.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Rect.cs">
+      <Link>RGSS\Rect.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\RGSSDrawContext.cs">
+      <Link>RGSS\RGSSDrawContext.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Sprite.cs">
+      <Link>RGSS\Sprite.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Table.cs">
+      <Link>RGSS\Table.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\TileManager.cs">
+      <Link>RGSS\TileManager.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Tilemap.cs">
+      <Link>RGSS\Tilemap.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\TilePic.cs">
+      <Link>RGSS\TilePic.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Tileset.cs">
+      <Link>RGSS\Tileset.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\TileStyle.cs">
+      <Link>RGSS\TileStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Tone.cs">
+      <Link>RGSS\Tone.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Viewport.cs">
+      <Link>RGSS\Viewport.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Window.cs">
+      <Link>RGSS\Window.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\Ulitilies\IZorderable.cs">
+      <Link>Ulitilies\IZorderable.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\Ulitilies\LinkNode.cs">
+      <Link>Ulitilies\LinkNode.cs</Link>
+    </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\Ulitilies\VirtualThumbsticks.cs">
+      <Link>Ulitilies\VirtualThumbsticks.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RGSS\Bitmap.cs" />
-    <Compile Include="RGSS\Cache.cs" />
-    <Compile Include="RGSS\Color.cs" />
-    <Compile Include="RGSS\Graphics.cs" />
-    <Compile Include="RGSS\Rect.cs" />
-    <Compile Include="RGSS\RGSSDrawContext.cs" />
-    <Compile Include="RGSS\Sprite.cs" />
-    <Compile Include="RGSS\Viewport.cs" />
-    <Compile Include="Ulitilies\IZorderable.cs" />
-    <Compile Include="Ulitilies\LinkNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IronRuby">
@@ -72,145 +150,318 @@
       <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsPhone81\MonoGame.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Content\Font\default.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Font\default.xnb">
+      <Link>Content\Font\default.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Actors.rvdata">
+      <Link>Data\Actors.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!%24Gate1.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Animations.rvdata">
+      <Link>Data\Animations.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!%24Gate2.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Areas.rvdata">
+      <Link>Data\Areas.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Chest.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Armors.rvdata">
+      <Link>Data\Armors.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Crystal.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Classes.rvdata">
+      <Link>Data\Classes.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Door1.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\CommonEvents.rvdata">
+      <Link>Data\CommonEvents.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Door2.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Enemies.rvdata">
+      <Link>Data\Enemies.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Door3.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Items.rvdata">
+      <Link>Data\Items.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Flame.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Map001.rvdata">
+      <Link>Data\Map001.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Hexagram.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\MapInfos.rvdata">
+      <Link>Data\MapInfos.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Other1.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Scripts.rvdata">
+      <Link>Data\Scripts.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Other2.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Skills.rvdata">
+      <Link>Data\Skills.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Other3.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\States.rvdata">
+      <Link>Data\States.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Switch1.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\System.rvdata">
+      <Link>Data\System.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\!Switch2.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Troops.rvdata">
+      <Link>Data\Troops.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Actor1.xnb">
+    <Content Include="..\GameRGSSLibrary.Windows\Data\Weapons.rvdata">
+      <Link>Data\Weapons.rvdata</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Actor2.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!%24Gate1.xnb">
+      <Link>Content\Graphics\Characters\!%24Gate1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Actor3.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!%24Gate2.xnb">
+      <Link>Content\Graphics\Characters\!%24Gate2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Animal.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Chest.xnb">
+      <Link>Content\Graphics\Characters\!Chest.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Evil.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Crystal.xnb">
+      <Link>Content\Graphics\Characters\!Crystal.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Monster.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Door1.xnb">
+      <Link>Content\Graphics\Characters\!Door1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\People1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Door2.xnb">
+      <Link>Content\Graphics\Characters\!Door2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\People2.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Door3.xnb">
+      <Link>Content\Graphics\Characters\!Door3.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\People3.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Flame.xnb">
+      <Link>Content\Graphics\Characters\!Flame.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\People4.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Hexagram.xnb">
+      <Link>Content\Graphics\Characters\!Hexagram.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\People5.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Other1.xnb">
+      <Link>Content\Graphics\Characters\!Other1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Spiritual.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Other2.xnb">
+      <Link>Content\Graphics\Characters\!Other2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Characters\Vehicle.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Other3.xnb">
+      <Link>Content\Graphics\Characters\!Other3.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\Actor1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Switch1.xnb">
+      <Link>Content\Graphics\Characters\!Switch1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\Actor2.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\!Switch2.xnb">
+      <Link>Content\Graphics\Characters\!Switch2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\Actor3.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Actor1.xnb">
+      <Link>Content\Graphics\Characters\Actor1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\Evil.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Actor2.xnb">
+      <Link>Content\Graphics\Characters\Actor2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\Monster.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Actor3.xnb">
+      <Link>Content\Graphics\Characters\Actor3.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\People1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Animal.xnb">
+      <Link>Content\Graphics\Characters\Animal.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\People2.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Evil.xnb">
+      <Link>Content\Graphics\Characters\Evil.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\People3.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Monster.xnb">
+      <Link>Content\Graphics\Characters\Monster.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\People4.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\People1.xnb">
+      <Link>Content\Graphics\Characters\People1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\Faces\Spiritual.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\People2.xnb">
+      <Link>Content\Graphics\Characters\People2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\Border.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\People3.xnb">
+      <Link>Content\Graphics\Characters\People3.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\IconSet.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\People4.xnb">
+      <Link>Content\Graphics\Characters\People4.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\Thumbstick.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\People5.xnb">
+      <Link>Content\Graphics\Characters\People5.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\ThumbstickBall.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Spiritual.xnb">
+      <Link>Content\Graphics\Characters\Spiritual.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\ThumbstickDirection.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Characters\Vehicle.xnb">
+      <Link>Content\Graphics\Characters\Vehicle.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\Title.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\Actor1.xnb">
+      <Link>Content\Graphics\Faces\Actor1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\Window.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\Actor2.xnb">
+      <Link>Content\Graphics\Faces\Actor2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Graphic\System\摇杆1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\Actor3.xnb">
+      <Link>Content\Graphics\Faces\Actor3.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\Evil.xnb">
+      <Link>Content\Graphics\Faces\Evil.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\Monster.xnb">
+      <Link>Content\Graphics\Faces\Monster.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\People1.xnb">
+      <Link>Content\Graphics\Faces\People1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\People2.xnb">
+      <Link>Content\Graphics\Faces\People2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\People3.xnb">
+      <Link>Content\Graphics\Faces\People3.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\People4.xnb">
+      <Link>Content\Graphics\Faces\People4.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\Faces\Spiritual.xnb">
+      <Link>Content\Graphics\Faces\Spiritual.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\Balloon.xnb">
+      <Link>Content\Graphics\System\Balloon.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\BattleFloor.xnb">
+      <Link>Content\Graphics\System\BattleFloor.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\BattleStart.xnb">
+      <Link>Content\Graphics\System\BattleStart.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\Border.xnb">
+      <Link>Content\Graphics\System\Border.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\GameOver.xnb">
+      <Link>Content\Graphics\System\GameOver.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\IconSet.xnb">
+      <Link>Content\Graphics\System\IconSet.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\MessageBack.xnb">
+      <Link>Content\Graphics\System\MessageBack.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\Shadow.xnb">
+      <Link>Content\Graphics\System\Shadow.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\Thumbstick.xnb">
+      <Link>Content\Graphics\System\Thumbstick.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\ThumbstickBall.xnb">
+      <Link>Content\Graphics\System\ThumbstickBall.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\ThumbstickDirection.xnb">
+      <Link>Content\Graphics\System\ThumbstickDirection.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\ThumbstickKey.xnb">
+      <Link>Content\Graphics\System\ThumbstickKey.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileA1.xnb">
+      <Link>Content\Graphics\System\TileA1.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileA2.xnb">
+      <Link>Content\Graphics\System\TileA2.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileA3.xnb">
+      <Link>Content\Graphics\System\TileA3.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileA4.xnb">
+      <Link>Content\Graphics\System\TileA4.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileA5.xnb">
+      <Link>Content\Graphics\System\TileA5.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileB.xnb">
+      <Link>Content\Graphics\System\TileB.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileC.xnb">
+      <Link>Content\Graphics\System\TileC.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileD.xnb">
+      <Link>Content\Graphics\System\TileD.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\TileE.xnb">
+      <Link>Content\Graphics\System\TileE.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\Title.xnb">
+      <Link>Content\Graphics\System\Title.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\Window.xnb">
+      <Link>Content\Graphics\System\Window.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />

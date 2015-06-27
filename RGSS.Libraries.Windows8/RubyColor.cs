@@ -69,5 +69,12 @@ namespace RGSS.Libraries.Builtins
         {
             self.SetColor(c);
         }
+
+        [RubyMethod("_load", RubyMethodAttributes.PublicSingleton)]
+        public static Color Load(RubyContext/*!*/ context, RubyClass/*!*/ self, [DefaultProtocol]MutableString/*!*/ str)
+        {
+            byte[] colors = str.ConvertToBytes();
+            return Color.Load(colors);
+        }
     }
 }

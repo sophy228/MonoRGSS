@@ -35,5 +35,46 @@ namespace RGSS.Libraries.Builtins
         {
             self.Dispose();
         }
+
+        [RubyMethod("color")]
+        [RubyMethod("tone")]
+        public static Tone GetTone(Viewport self)
+        {
+            return null;
+        }
+
+        [RubyMethod("color=")]
+        [RubyMethod("tone=")]
+        public static void SetTone(Viewport self, object tone)
+        {
+
+        }
+
+        [RubyMethod("ox")]
+        public static int GetOX(Viewport self)
+        {
+            return 0;
+        }
+        [RubyMethod("ox=")]
+        public static void SetOX(Viewport self, int ox)
+        {
+
+        }
+        [RubyMethod("oy")]
+        public static int GetOY(Viewport self)
+        {
+            return 0;
+        }
+        [RubyMethod("oy=")]
+        public static void SetOY(Viewport self, int oy)
+        {
+
+        }
+
+        [RubyMethod("update")]
+        public static void Update(Viewport self)
+        {
+            
+        }
     }
 }

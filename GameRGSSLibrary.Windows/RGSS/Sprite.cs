@@ -275,8 +275,8 @@ namespace GameLibrary.RGSS
         public void Draw(DrawManager dm, int frameCount)
         {
             
-            Debug.WriteLine(string.Format("Sprinte#{0}- Z:({1}), draw@frameCount:{2}",
-                             id, Z, frameCount));
+      //      Debug.WriteLine(string.Format("Sprinte#{0}- Z:({1}), draw@frameCount:{2}",
+     //                        id, Z, frameCount));
             if (!Visible || m_Bitmap == null)
                 return;
             Rectangle rSource;
@@ -316,6 +316,18 @@ namespace GameLibrary.RGSS
             Sprite sp = new Sprite(vp);
             //sp.InsertInZorder(vp.SpriteHeader);
             return sp;
+        }
+
+        public static Plane CreatePlane(Viewport vp)
+        {
+            if (vp == null)
+            {
+                var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
+                vp = context.ViewPortHeaer;
+            }
+            Plane plane = new Plane(vp);
+            //sp.InsertInZorder(vp.SpriteHeader);
+            return plane;
         }
 
         public static int AllocateId()

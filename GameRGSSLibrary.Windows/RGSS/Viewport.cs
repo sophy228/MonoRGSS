@@ -106,12 +106,14 @@ namespace GameLibrary.RGSS
         }
         public void Draw(DrawManager dm, int frameCount)
         {
+#if DEBUGOUT
             if(_rect != null )
                 Debug.WriteLine(string.Format("ViewPort#{0}({1},{2},{3},{4})- Z:({5}), draw@frameCount:{6}",
                              id, _rect.X, _rect.Y, _rect.Width, _rect.Height, Z, frameCount));
             else
                 Debug.WriteLine(string.Format("ViewPort#{0}- Z:({1}), draw@frameCount:{2}",
                              id, Z, frameCount));
+#endif
             foreach(Sprite sp in SpriteHeader)
             {
                 sp.Draw(dm, frameCount);

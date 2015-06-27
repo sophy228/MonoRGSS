@@ -9,17 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameLibrary.RGSS
 {
-    public struct ContentFont
-    {
-        public SpriteFont font;
-        public Color color;
-        public ContentFont(SpriteFont ft)
-        {
-            font = ft;
-            color = Color.FormXnaColor(Microsoft.Xna.Framework.Color.White);
-        }
-
-    };
+ 
 
     public class Bitmap
     {
@@ -31,6 +21,7 @@ namespace GameLibrary.RGSS
         public ContentFont Font;
         private DrawManager drm;
         private RenderTarget2D mRenderTexture;
+        private bool isDisposed;
 
 
         public Bitmap(String path)
@@ -44,6 +35,7 @@ namespace GameLibrary.RGSS
             mRect = new Rectangle(0, 0, mWidth, mHeight);
             Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
             RenderTexture();
+            isDisposed = false;
         }
 
         public Bitmap(int width, int height)
@@ -57,6 +49,20 @@ namespace GameLibrary.RGSS
             mTexture = (Texture2D)mRenderTexture;
             Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
             RenderTexture();
+            isDisposed = false;
+        }
+
+        internal Bitmap(Texture2D texture)
+        {
+            drm = RGSSEngine.GetDrawManager();
+            mTexture = texture;
+            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            mWidth = mTexture.Width;
+            mHeight = mTexture.Height;
+            mRect = new Rectangle(0, 0, mWidth, mHeight);
+            Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+            RenderTexture();
+            isDisposed = false;
         }
 
         public Texture2D Texture
@@ -88,6 +94,14 @@ namespace GameLibrary.RGSS
             get
             {
                 return new Rect(mRect.X, mRect.Y, mRect.Width, mRect.Height);
+            }
+        }
+
+        public bool IsDisposed
+        {
+            get
+            {
+                return isDisposed;
             }
         }
 
@@ -247,7 +261,7 @@ namespace GameLibrary.RGSS
             float rotation = 0;
             Vector2 origin = new Vector2(0, 0);
 
-            float xscale = (float)width / (text.Length * (spriteFont.Spacing + 25));
+            float xscale = (float)width / (text.Length * (spriteFont.Spacing + 14));
             float yscale = (float)height / ((spriteFont.LineSpacing));
 
             if (xscale > 1)
@@ -300,6 +314,7 @@ namespace GameLibrary.RGSS
         public void Dispose()
         {
             mRenderTexture.Dispose();
+            isDisposed = true;
         }
     }
 

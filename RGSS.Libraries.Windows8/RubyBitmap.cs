@@ -92,5 +92,16 @@ namespace RGSS.Libraries.Builtins
         {
             return self.GetPixel(x,y);
         }
+        [RubyMethod("dispose")]
+        public static void Dispose(Bitmap self)
+        {
+            self.Dispose();
+        }
+
+        [RubyMethod("disposed?")]
+        public static bool IsDisposed(Bitmap self)
+        {
+            return self.IsDisposed;
+        }
     }
 }

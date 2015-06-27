@@ -15,11 +15,12 @@ namespace GameRGSS
     public sealed partial class GamePage : SwapChainBackgroundPanel
     {
         readonly Game1 _game;
+        private bool isNative;
 
         public GamePage(string launchArguments)
         {
             this.InitializeComponent();
-
+           // isNative = true;
             // Create the game.
 #if false
            _game = XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, this);
@@ -28,26 +29,36 @@ namespace GameRGSS
            RubyEngine re = new RubyEngine();
 
            RGSSEngine.Init(launchArguments, Windows.UI.Xaml.Window.Current.CoreWindow, this);
-          // RGSSEngine.Run(mainLoop);
-           re.ReadRPGScript(@"Script\rpgmaker.rb");
-            RGSSEngine.Run(re.RunRuby);
+           if (isNative)
+           {
+               RGSSEngine.Run(mainLoop);
+           }
+           else
+           {
+               re.ReadRPGScript(@"Script\rpgmaker.rb");
+               RGSSEngine.Run(re.RunRuby);
+           }
 #endif
         }
 
         private int mainLoop()
         {
-            GameLibrary.RGSS.Window wd = new GameLibrary.RGSS.Window(10, 10, 500, 200);
-            Bitmap bp =  Cache.Face("Actor1");
-            wd.Contents.DrawText(100, 30, 200, 20, "莉果大人是我们必要的人才啊！");
-            wd.Contents.Blt(0, 0, bp, new Rect(0, 0, 96, 96)); ;
-            wd.Oy = 0;
-            wd.CursorRect = new Rect(100, 30, 400, 30);
-            wd.Contents.DrawText(10, 130, 200, 20, "不愧是莉果sama~！");
-            wd.Contents.Blt(300, 120, bp, new Rect(96, 0, 96, 96));
+            Table mapdata = new Table(17, 16, 3);
+            for (int i = 0; i < 17; i++)
+                for (int j = 0; j < 16;j++ )
+                {
+                    mapdata[i, j, 0] = 2816 + j;
+                }
+            Tilemap tilemap = new Tilemap();
+            tilemap.MapData = mapdata;
+            tilemap.Bitmaps[0] = Cache.System("TileA1");
+            tilemap.Bitmaps[1] = Cache.System("TileA2");
             while(true)
             {
+                tilemap.Update();
                 Graphics.Update();
             }
+                    return 0;
         }
     }
 }

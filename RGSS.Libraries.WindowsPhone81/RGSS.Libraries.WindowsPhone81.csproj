@@ -34,15 +34,61 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Initializers.Generated.cs" />
+    <Compile Include="..\RGSS.Libraries.Windows8\Initializers.Generated.cs">
+      <Link>Initializers.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyBitmap.cs">
+      <Link>RubyBitmap.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyCache.cs">
+      <Link>RubyCache.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyColor.cs">
+      <Link>RubyColor.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyDatabase.cs">
+      <Link>RubyDatabase.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyDebug.cs">
+      <Link>RubyDebug.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyEngine.cs">
+      <Link>RubyEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyExtensions.cs">
+      <Link>RubyExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyGraphics.cs">
+      <Link>RubyGraphics.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyInput.cs">
+      <Link>RubyInput.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyPlane.cs">
+      <Link>RubyPlane.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyRect.cs">
+      <Link>RubyRect.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubySprite.cs">
+      <Link>RubySprite.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyTable.cs">
+      <Link>RubyTable.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyTilemap.cs">
+      <Link>RubyTilemap.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyTone.cs">
+      <Link>RubyTone.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyViewport.cs">
+      <Link>RubyViewport.cs</Link>
+    </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyWindow.cs">
+      <Link>RubyWindow.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RubyBitmap.cs" />
-    <Compile Include="RubyColor.cs" />
-    <Compile Include="RubyEngine.cs" />
-    <Compile Include="RubyGraphics.cs" />
-    <Compile Include="RubyRect.cs" />
-    <Compile Include="RubySprite.cs" />
-    <Compile Include="RubyViewport.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IronRuby">
@@ -63,6 +109,12 @@
       <Project>{6e143171-57cf-4772-95d8-c675c54965a1}</Project>
       <Name>GameRGSSLibrary.WindowsPhone81</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\RGSS.Libraries.Windows8\RubyScript\RPG.rb">
+      <Link>RubyScript\RPG.rb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

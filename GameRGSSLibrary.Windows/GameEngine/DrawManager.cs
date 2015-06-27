@@ -90,5 +90,20 @@ namespace GameLibrary.GameEngine
             _currentdrawContext.Draw(frameCount);
             _spritBatch.End();
         }
+
+        public Texture2D SnapToTexture(int frameCount)
+        {
+            Blend(frameCount);
+            int w, h;
+            w = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            h = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            RenderTarget2D screenshot;
+            screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Bgra32, DepthFormat.None);
+            _graphicsDevice.SetRenderTarget(screenshot);
+            Draw(frameCount);
+            _graphicsDevice.Present();
+            _graphicsDevice.SetRenderTarget(null);
+            return screenshot;
+        }
     }
 }

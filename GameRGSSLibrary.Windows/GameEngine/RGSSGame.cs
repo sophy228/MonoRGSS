@@ -116,7 +116,7 @@ namespace GameLibrary.GameEngine
                     GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
                     _drawManager.Draw(_gameControler.FrameCount);
                     _gameControler.DrawOneFrameCompleted.Set();
-                    
+                    _gameControler.GameState = GameState.Freezed;
                     base.Draw(gameTime);
                     Input.Draw(_drawManager, _gameControler.FrameCount);
                     break;

@@ -116,12 +116,21 @@
     <Compile Include="RGSS\Border.cs" />
     <Compile Include="RGSS\Cache.cs" />
     <Compile Include="RGSS\Color.cs" />
+    <Compile Include="RGSS\ContentFont.cs" />
     <Compile Include="RGSS\DataBase.cs" />
     <Compile Include="RGSS\Graphics.cs" />
     <Compile Include="RGSS\Input.cs" />
+    <Compile Include="RGSS\Plane.cs" />
     <Compile Include="RGSS\Rect.cs" />
     <Compile Include="RGSS\RGSSDrawContext.cs" />
     <Compile Include="RGSS\Sprite.cs" />
+    <Compile Include="RGSS\Table.cs" />
+    <Compile Include="RGSS\TileManager.cs" />
+    <Compile Include="RGSS\Tilemap.cs" />
+    <Compile Include="RGSS\TilePic.cs" />
+    <Compile Include="RGSS\Tileset.cs" />
+    <Compile Include="RGSS\TileStyle.cs" />
+    <Compile Include="RGSS\Tone.cs" />
     <Compile Include="RGSS\Viewport.cs" />
     <Compile Include="RGSS\Window.cs" />
     <Compile Include="Ulitilies\IZorderable.cs" />
@@ -374,11 +383,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Graphics\System\摇杆1.xnb">
+    <Content Include="Data\摇杆1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Content\Graphics\System\TileA1.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Actors.rvdata">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -426,6 +439,61 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Weapons.rvdata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Graphics\System\TileA2.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\TileA3.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\TileA4.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\TileA5.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Graphics\System\ThumbstickKey.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Graphics\System\TileB.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\TileC.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\TileD.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\TileE.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Graphics\System\Shadow.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Graphics\System\Balloon.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\BattleFloor.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\BattleStart.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\GameOver.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\System\MessageBack.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

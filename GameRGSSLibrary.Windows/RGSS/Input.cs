@@ -67,8 +67,8 @@ namespace RPGVXLibrary.Input
         }
         public bool IsHold()
         {
-            if (downNumber > 5)
-                Debug.WriteLine("{0} downNumber is {1}",key,downNumber);
+         //   if (downNumber > 5)
+         //       Debug.WriteLine("{0} downNumber is {1}",key,downNumber);
             return IsClicked() || ( IsDown() && downNumber > 5 && downNumber % 5 == 1);
         }
         public bool IsClicked()
@@ -152,6 +152,7 @@ namespace RPGVXLibrary.Input
         private static StickInputState InputState = new StickInputState(8);
         private static Texture2D stickTexture;
         private static Texture2D stickBallTexture;
+        private static Texture2D stickTextureKey;
         public static void Update()
         {
             VirtualThumbsticks.Update();
@@ -173,7 +174,7 @@ namespace RPGVXLibrary.Input
                 else if (angle > -135 && angle < -45)
                     InputState.SetKeyDown(Keys.Down);
                 else
-                    InputState.SetKeyDown(Keys.RIGHT);
+                    InputState.SetKeyDown(Keys.LEFT);
             }
             else
             {
@@ -204,7 +205,7 @@ namespace RPGVXLibrary.Input
         }
         public static bool IsPressed(Keys key)
         {
-            return InputState.IsKeyPressed(key);
+            return InputState.IsKeyDown(key);
         }
         public static bool IsTrigger(Keys key)
         {
@@ -220,6 +221,7 @@ namespace RPGVXLibrary.Input
         {
             stickTexture = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickDirection");
             stickBallTexture = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickBall");
+            stickTextureKey = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickKey");
             float scalefactor = 0.3f;
 
 #if !VTSSHOW
@@ -254,6 +256,43 @@ namespace RPGVXLibrary.Input
 
                 dm.SpriteBatch.Draw(
                     stickTexture,
+                    origenCenter - new Vector2(stickTexture.Width / 2f, stickTexture.Height / 2f),
+                    Color.Orange);
+
+
+                dm.SpriteBatch.Draw(
+                    stickBallTexture,
+                    ballCenter - new Vector2(stickBallTexture.Width / 2f, stickBallTexture.Height / 2f),
+                    Color.Orange);
+
+
+
+                dm.SpriteBatch.End();
+            }
+
+               if (VirtualThumbsticks.RightThumbstickCenter.HasValue)
+            {
+                Vector2 origenCenter = VirtualThumbsticks.RightThumbstickCenter.Value;
+               Vector2 offCenter = VirtualThumbsticks.RightThumbstick;
+
+               Vector2 ballCenter = origenCenter + 60f * offCenter;
+
+                Matrix origenoffset = Matrix.CreateTranslation(-origenCenter.X, -origenCenter.Y, 0);
+                Matrix scaleTranslation = Matrix.CreateScale(scalefactor);
+                Matrix origenoffsetback = Matrix.CreateTranslation(origenCenter.X, origenCenter.Y, 0);
+
+
+                dm.SpriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                SamplerState.LinearClamp,
+                DepthStencilState.Default,
+                RasterizerState.CullNone,
+                null,
+                origenoffset * scaleTranslation * origenoffsetback);
+
+                dm.SpriteBatch.Draw(
+                    stickTextureKey,
                     origenCenter - new Vector2(stickTexture.Width / 2f, stickTexture.Height / 2f),
                     Color.Orange);
 

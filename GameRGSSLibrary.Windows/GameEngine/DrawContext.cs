@@ -10,7 +10,7 @@ namespace GameLibrary.GameEngine
         public DrawContext(DrawManager drawManager)
         {
             _drawMagager = drawManager;
-            _viewportHeader = new Viewport(this, null);
+            _viewportHeader = new Viewport(this, new Rect(0,0,1024,768));
         }
         public DrawContext()
         {

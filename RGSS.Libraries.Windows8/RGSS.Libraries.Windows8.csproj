@@ -108,15 +108,22 @@
     <Compile Include="RubyCache.cs" />
     <Compile Include="RubyColor.cs" />
     <Compile Include="RubyDatabase.cs" />
+    <Compile Include="RubyDebug.cs" />
     <Compile Include="RubyEngine.cs" />
     <Compile Include="RubyExtensions.cs" />
     <Compile Include="RubyGraphics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RubyInput.cs" />
+    <Compile Include="RubyPlane.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RubyRect.cs" />
     <Compile Include="RubySprite.cs" />
+    <Compile Include="RubyTable.cs" />
+    <Compile Include="RubyTone.cs" />
     <Compile Include="RubyViewport.cs" />
     <Compile Include="RubyWindow.cs" />
+    <Compile Include="RubyTilemap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IronRuby">

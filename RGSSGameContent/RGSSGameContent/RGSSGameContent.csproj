@@ -58,6 +58,9 @@
   <ItemGroup>
     <None Include="FontString\StringSets.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="FontString\Hanzi.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

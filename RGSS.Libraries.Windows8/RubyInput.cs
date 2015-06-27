@@ -20,6 +20,16 @@ namespace RGSS.Libraries.Builtins
         [RubyConstant]
         public const int DOWN = (int)Keys.Down;
 
+        [RubyConstant]
+        public const int A = (int)Keys.A;
+        [RubyConstant]
+        public const int B = (int)Keys.B;
+        [RubyConstant]
+        public const int C = (int)Keys.C;
+        [RubyConstant]
+        public const int D = (int)Keys.D;
+
+
         [RubyMethodAttribute("update", RubyMethodAttributes.PublicSingleton)]
         public static void Update(object self)
         {
@@ -42,6 +52,21 @@ namespace RGSS.Libraries.Builtins
         public static bool IsRepeat(object self, int num)
         {
             return Input.IsRepeat((Keys)num);
+        }
+
+        [RubyMethodAttribute("dir4", RubyMethodAttributes.PublicSingleton)]
+        public static int Dir4(object self)
+        {
+            if (Input.IsPressed(Keys.UP))
+                return 8;
+            if (Input.IsPressed(Keys.Down))
+                return 2;
+            if (Input.IsPressed(Keys.LEFT))
+                return 4;
+            if (Input.IsPressed(Keys.RIGHT))
+                return 6;
+
+            return 0;
         }
 
     }

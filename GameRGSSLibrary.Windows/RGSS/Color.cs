@@ -1,4 +1,5 @@
 ﻿
+using System.IO;
 namespace GameLibrary.RGSS
 {
     public class Color
@@ -106,6 +107,18 @@ namespace GameLibrary.RGSS
         {
             Color color = new Color(xcolor.R, xcolor.G, xcolor.B, xcolor.A);
             return color;
+        }
+
+        public static Color Load(byte[] data)
+        {
+            
+            Stream stream = new MemoryStream(data);
+            BinaryReader reader = new BinaryReader(stream);
+            double r = reader.ReadDouble();
+            int g = (int)reader.ReadDouble();
+            int b = (int)reader.ReadDouble();
+            int a = (int)reader.ReadDouble();
+            return new Color((int)r, g, b, a);
         }
     }
 }

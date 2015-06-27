@@ -1,3 +1,6 @@
+
+tbl = Table.new(17,17,3)
+tbl[0,0,0] = 1
 items = load_data("Data/Items.rvdata")
 #wd = Window.new(10, 10, 500, 200)
 wd = Window.new()

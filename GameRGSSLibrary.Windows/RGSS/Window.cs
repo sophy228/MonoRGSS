@@ -52,6 +52,8 @@ namespace GameLibrary.RGSS
             cursorRect = new Rect(-16, -16, 0, 0);
            // border = new Border(_viewport, pxLocX, pxLocY, pWidth, pHeight, "Graphic/System/Border");
            // padding = border.BorderMargin;
+            this.Visible = true;
+            this.Active = true;
         }
 
         public Window()
@@ -63,6 +65,8 @@ namespace GameLibrary.RGSS
             _viewport = context.ViewPortHeaer;
             this.InsertInZorder(_viewport.WindowHeader);
             cursorRect = new Rect(-16, -16, 0, 0);
+            this.Visible = true;
+            this.Active = true;
         }
 
         public int Z
@@ -235,6 +239,12 @@ namespace GameLibrary.RGSS
             }
         }
 
+        public bool Active { get; set;}
+
+        public bool Visible { get; set; }
+
+        public bool Pause { get; set; }
+
         private void updateCursor()
         {
 
@@ -315,9 +325,12 @@ namespace GameLibrary.RGSS
 
         internal void PreBlend(DrawManager dm, int frameCount)
         {
-            updateBorder();
+            if (!Visible)
+                return;
+            
             if (openness < 255)
                 return;
+            updateBorder();
             if (!CursorRect.IsEmpty)
             {
                 Microsoft.Xna.Framework.Color darkCurse = new Microsoft.Xna.Framework.Color(220, 220, 220, 255);
@@ -335,9 +348,12 @@ namespace GameLibrary.RGSS
 
         internal void Draw(DrawManager dm, int frameCount)
         {
-            border.Draw(dm, frameCount);
+            if (!Visible)
+                return;
+            
             if (openness < 255)
                 return;
+            border.Draw(dm, frameCount);
             Texture2D texture = null;
             if (mRenderTexture != null)
             {
@@ -359,6 +375,7 @@ namespace GameLibrary.RGSS
                 curseTexture.Dispose();
             if (content != null)
                 content.Dispose();
+            LinkNode.ListDel(this);
         }
     }
 }
