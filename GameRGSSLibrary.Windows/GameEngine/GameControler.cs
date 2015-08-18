@@ -100,7 +100,7 @@ namespace GameLibrary.GameEngine
                 }
 #endif
                 FrameCount++;
-                Debug.WriteLine("triger @" + elapsedTicks);
+               // Debug.WriteLine("triger @" + elapsedTicks);
             }
         }
 

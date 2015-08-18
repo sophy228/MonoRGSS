@@ -109,6 +109,14 @@ namespace GameLibrary.RGSS
             return color;
         }
 
+        public bool isSame(Color color)
+        {
+            if (Red == color.Red && Green == color.Green && Blue == color.Blue && Alpha == color.Alpha)
+                return true;
+            else
+                return false;
+        }
+
         public static Color Load(byte[] data)
         {
             

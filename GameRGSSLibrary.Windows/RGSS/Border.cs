@@ -141,6 +141,7 @@ namespace GameLibrary.RGSS
                sp.Y = MAPY(m_pxTop + pxHeight);
                sp.SrcRect = new Rect(m_pxLeft + 1, m_pxTop + 1, m_pxRight, m_pxBottom);
            }
+           
         }
 
         public void Draw(DrawManager dm, int frameCount)
@@ -158,6 +159,7 @@ namespace GameLibrary.RGSS
                 if (sp != null)
                     sp.Dispose();
             }
+            boarderBitmap.Dispose();
         }
     }
 }

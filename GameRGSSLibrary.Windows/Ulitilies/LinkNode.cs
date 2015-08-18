@@ -69,8 +69,9 @@ namespace GameLibrary.Ulitilies
 
         private static void __list_del(LinkNode prev, LinkNode next)
         {
-            next.Prev = prev;
-            prev.Next = next;
+              next.Prev = prev;
+                prev.Next = next;
+           
         }
 
         public static void ListAdd(LinkNode newnode, LinkNode head)

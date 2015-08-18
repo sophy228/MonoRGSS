@@ -76,7 +76,7 @@ namespace GameLibrary.Test
 
             drawManager.GraphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
         }
-        public override void Draw(int frameCount)
+        public override void Draw(int frameCount, bool renderOnly)
         {
             var game = RGSSEngine.GetGame();
             // Compute camera matrices.

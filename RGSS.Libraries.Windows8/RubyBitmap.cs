@@ -59,6 +59,18 @@ namespace RGSS.Libraries.Builtins
         {
             self.FillRect(rect, color);
         }
+        [RubyMethod("gradient_fill_rect")]
+        public static void GradientFillRect(Bitmap self, int x, int y, int width, int height, Color color1, Color color2, [Optional, DefaultParameterValue(false)]bool vertical)
+        {
+            self.GradientFillRect(x, y, width, height, color1, color2, vertical);
+        }
+
+        [RubyMethod("gradient_fill_rect")]
+        public static void GradientFillRect(Bitmap self, Rect rect, Color color1, Color color2, [Optional, DefaultParameterValue(false)]bool vertical)
+        {
+            self.GradientFillRect(rect.X,rect.Y,rect.Width,rect.Height, color1, color2, vertical);
+        }
+        
         [RubyMethod("clear")]
         public static void Clear(Bitmap self)
         {
@@ -70,18 +82,49 @@ namespace RGSS.Libraries.Builtins
             self.Clear(rect);
         }
         [RubyMethod("draw_text")]
-        public static void DrawText(RubyContext context, Bitmap self, int x, int y, int width, int height, MutableString/*!*/text, [Optional]int aligen)
+        public static void DrawText(RubyContext context, Bitmap self, int x, int y, int width, int height, object/*!*/text, [Optional]int aligen)
         {
-            var txt = context.DecodePath(text);
+            string txt = "";
+            if (text is MutableString)
+            {
+                txt = context.DecodePath((MutableString)text);
+                MutableString ms = (MutableString)text;
+                var bbs = ms.ToByteArray();
+            }
+            else
+                txt = text.ToString();
             self.DrawText(x, y, width, height, txt, aligen);
         }
 
+        //[RubyMethod("draw_text")]
+        //public static void DrawText(RubyContext context, Bitmap self, Rect rect, MutableString/*!*/text, [Optional]int aligen)
+        //{
+        //    var txt = context.DecodePath(text);
+        //    self.DrawText(rect.X, rect.Y, rect.Width, rect.Height, txt, aligen);
+        //}
+
         [RubyMethod("draw_text")]
-        public static void DrawText(RubyContext context, Bitmap self, Rect rect, MutableString/*!*/text, [Optional]int aligen)
+        public static void DrawText(RubyContext context, Bitmap self, Rect rect, object/*!*/text, [Optional]int aligen)
         {
-            var txt = context.DecodePath(text);
+            string txt="";
+            if(text is MutableString)
+                txt = context.DecodePath((MutableString)text);
+            else
+                txt = text.ToString();
             self.DrawText(rect.X, rect.Y, rect.Width, rect.Height, txt, aligen);
         }
+
+        [RubyMethod("text_size")]
+        public static Rect TextSize(RubyContext context, Bitmap self, object/*!*/text)
+        {
+            string txt = "";
+            if (text is MutableString)
+                txt = context.DecodePath((MutableString)text);
+            else
+                txt = text.ToString();
+            return self.TextSize(txt);
+        }
+
         [RubyMethod("clear_rect")]
         public static void Clear(Bitmap self, int x, int y, int width, int height)
         {
@@ -92,6 +135,31 @@ namespace RGSS.Libraries.Builtins
         {
             return self.GetPixel(x,y);
         }
+
+        [RubyMethod("font")]
+        public static Font GetFont(Bitmap self)
+        {
+            return self.Font;
+        }
+
+        [RubyMethod("font=")]
+        public static void SetFont(Bitmap self, Font value)
+        {
+            self.Font = value;
+        }
+        
+        [RubyMethod("blur")]
+        public static void Blur(Bitmap self)
+        {
+            self.Blur();
+        }
+
+        [RubyMethod("radial_blur")]
+        public static void RadialBlur(Bitmap self, int angle, int division)
+        {
+            self.RadialBlur(angle, division);
+        }
+
         [RubyMethod("dispose")]
         public static void Dispose(Bitmap self)
         {

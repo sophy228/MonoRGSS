@@ -111,6 +111,7 @@
     <Compile Include="RubyDebug.cs" />
     <Compile Include="RubyEngine.cs" />
     <Compile Include="RubyExtensions.cs" />
+    <Compile Include="RubyFont.cs" />
     <Compile Include="RubyGraphics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RubyInput.cs" />

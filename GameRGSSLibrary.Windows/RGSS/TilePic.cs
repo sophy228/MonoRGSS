@@ -49,5 +49,13 @@ namespace GameLibrary.RGSS
                 return height;
             }
         }
+
+        public string Name
+        {
+            get
+            {
+                return tilePicName;
+            }
+        }
     }
 }

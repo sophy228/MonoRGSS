@@ -1,3 +1,4 @@
+using System;
 //-----------------------------------------------------------------------------
 // VirtualThumbsticks.cs
 //
@@ -54,18 +55,25 @@ namespace GameLibrary.Ulitilies
 			get
 			{
 				// if there is no left thumbstick center, return a value of (0, 0)
-				if (!LeftThumbstickCenter.HasValue)
-					return Vector2.Zero;
+                try
+                {
+                    if (!LeftThumbstickCenter.HasValue)
+                        return Vector2.Zero;
 
-				// calculate the scaled vector from the touch position to the center,
-				// scaled by the maximum thumbstick distance
-				Vector2 l = (leftPosition - LeftThumbstickCenter.Value) / maxThumbstickDistance;
+                    // calculate the scaled vector from the touch position to the center,
+                    // scaled by the maximum thumbstick distance
+                    Vector2 l = (leftPosition - LeftThumbstickCenter.Value) / maxThumbstickDistance;
 
-				// if the length is more than 1, normalize the vector
-				if (l.LengthSquared() > 1f)
-					l.Normalize();
+                    // if the length is more than 1, normalize the vector
+                    if (l.LengthSquared() > 1f)
+                        l.Normalize();
 
-				return l;
+                    return l;
+                }
+                catch
+                {
+                    return Vector2.Zero;
+                }
 			}
 		}
 
@@ -77,7 +85,9 @@ namespace GameLibrary.Ulitilies
 			get
 			{
 				// if there is no left thumbstick center, return a value of (0, 0)
-				if (!RightThumbstickCenter.HasValue)
+				try
+                { 
+                if (!RightThumbstickCenter.HasValue)
 					return Vector2.Zero;
 
 				// calculate the scaled vector from the touch position to the center,
@@ -89,7 +99,11 @@ namespace GameLibrary.Ulitilies
 					r.Normalize();
 
 				return r;
-
+                    }
+                catch(Exception e)
+                {
+                    return new Vector2(0,0);
+                }
 			}
 		}
 

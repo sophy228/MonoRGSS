@@ -89,12 +89,22 @@ namespace GameLibrary.RGSS
             Min = tileID * 48 + 2048;
             Max = Min + 47;
         }
-        public static int GetTileSetID(int tileDataID)
+        public static int GetAutoTileSetID(int tileDataID)
         {
             if (tileDataID >= 2048)
                 return (tileDataID - ((tileDataID - 2048) % 48) - 2048) / 48;
             else
                 return -1;
+        }
+
+        public static int GetTileSetA5ID(int tileDataID)
+        {
+            return tileDataID - 1536;
+        }
+
+        public static int GetTileSetNormalID(int tileDataID)
+        {
+            return tileDataID;
         }
     }
     internal class Tileset
@@ -112,7 +122,15 @@ namespace GameLibrary.RGSS
             tileID = id;
             animateStyle = aStyle;
             tileStyle = tStyle;
-            range = new TileDataIDRange(id);
+            if (tilepic.Name == "TileA5")
+                range = new TileDataIDRange(id + 1536, id + 1536);
+            else if (tilepic.Name == "TileB" ||
+                tilepic.Name == "TileC" ||
+                tilepic.Name == "TileD" ||
+                tilepic.Name == "TileE" )
+                range = new TileDataIDRange(id, id);
+            else
+                range = new TileDataIDRange(id);
             areaInPic = area;
         }
 

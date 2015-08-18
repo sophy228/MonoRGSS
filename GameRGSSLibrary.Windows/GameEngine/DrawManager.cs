@@ -65,13 +65,21 @@ namespace GameLibrary.GameEngine
             }
         }
 
+        public Microsoft.Xna.Framework.Graphics.Viewport DefaultViewport
+        {
+            get;
+           private set;
+        }
+
         public  void LoadContent()
         {
             _rgssContent = new RGSSContent(_game.Content);
             _rgssContent.LoadContent();
             _graphicsDevice = _game.GraphicsDevice;
             _spritBatch = new SpriteBatch(_graphicsDevice);
+            DefaultViewport = _graphicsDevice.Viewport;
             _currentdrawContext = new RGSSDrawContext(this);
+            
         }
 
         public void UnLoadContent()
@@ -86,23 +94,31 @@ namespace GameLibrary.GameEngine
         
         public void Draw(int frameCount)
         {
-            _spritBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+           
             _currentdrawContext.Draw(frameCount);
-            _spritBatch.End();
+            
         }
 
         public Texture2D SnapToTexture(int frameCount)
         {
-            Blend(frameCount);
+            //Blend(frameCount);
             int w, h;
-            w = GraphicsDevice.PresentationParameters.BackBufferWidth;
-            h = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            w = _currentdrawContext.DefaultWindowRect.Width;
+            h = _currentdrawContext.DefaultWindowRect.Height;
             RenderTarget2D screenshot;
-            screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Bgra32, DepthFormat.None);
-            _graphicsDevice.SetRenderTarget(screenshot);
-            Draw(frameCount);
-            _graphicsDevice.Present();
-            _graphicsDevice.SetRenderTarget(null);
+            //screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Bgra32, DepthFormat.None);
+            screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            lock (this)
+            {
+                _currentdrawContext.Draw(frameCount);
+                _graphicsDevice.SetRenderTarget(screenshot);
+                _graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Red);
+                SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                SpriteBatch.Draw(_currentdrawContext.RenderTarget, new Rectangle(0, 0, w, h), Microsoft.Xna.Framework.Color.White);
+                SpriteBatch.End();
+                _graphicsDevice.Present();
+                _graphicsDevice.SetRenderTarget(null);
+            }
             return screenshot;
         }
     }

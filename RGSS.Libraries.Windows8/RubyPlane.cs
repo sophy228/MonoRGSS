@@ -20,148 +20,148 @@ namespace RGSS.Libraries.Builtins
             return sp;
         }
         [RubyMethod("width")]
-        public static int getWidth(Sprite self)
+        public static int getWidth(Plane self)
         {
             return self.Width;
         }
         [RubyMethod("height")]
-        public static int getHeight(Sprite self)
+        public static int getHeight(Plane self)
         {
             return self.Height;
         }
         [RubyMethod("z")]
-        public static int GetZ(Sprite self)
+        public static int GetZ(Plane self)
         {
             return self.Z;
         }
         [RubyMethod("z=")]
-        public static int SetZ(Sprite self, int z)
+        public static int SetZ(Plane self, int z)
         {
             self.Z = z;
             return z;
         }
         [RubyMethod("bitmap")]
-        public static Bitmap GetBitmap(Sprite self)
+        public static Bitmap GetBitmap(Plane self)
         {
             return self.Bitmap;
         }
         [RubyMethod("bitmap=")]
-        public static int SetBitmap(Sprite self, Bitmap bitmap)
+        public static int SetBitmap(Plane self, Bitmap bitmap)
         {
             self.Bitmap = bitmap;
             return 0;
         }
         [RubyMethod("src_rect")]
-        public static Rect GetSrcRect(Sprite self)
+        public static Rect GetSrcRect(Plane self)
         {
             return self.SrcRect;
         }
         [RubyMethod("src_rect=")]
-        public static int SetSrcRect(Sprite self, Rect rect)
+        public static int SetSrcRect(Plane self, Rect rect)
         {
             self.SrcRect = rect;
             return 0;
         }
         [RubyMethod("visible")]
-        public static bool GetVisible(Sprite self)
+        public static bool GetVisible(Plane self)
         {
             return self.Visible;
         }
         [RubyMethod("visible=")]
-        public static int SetVisible(Sprite self, bool visible)
+        public static int SetVisible(Plane self, bool visible)
         {
             self.Visible = visible;
             return 0;
         }
         [RubyMethod("x")]
-        public static int GetX(Sprite self)
+        public static int GetX(Plane self)
         {
             return self.X;
         }
         [RubyMethod("x=")]
-        public static int SetX(Sprite self, int x)
+        public static int SetX(Plane self, int x)
         {
             self.X = x;
             return x;
         }
         [RubyMethod("y")]
-        public static int GetY(Sprite self)
+        public static int GetY(Plane self)
         {
             return self.Y;
         }
         [RubyMethod("y=")]
-        public static int SetY(Sprite self, int y)
+        public static int SetY(Plane self, int y)
         {
             self.Y = y;
             return y;
         }
         [RubyMethod("ox")]
-        public static int GetOX(Sprite self)
+        public static int GetOX(Plane self)
         {
             return self.OX;
         }
         [RubyMethod("ox=")]
-        public static int SetOX(Sprite self, int ox)
+        public static int SetOX(Plane self, int ox)
         {
             self.OX = ox;
             return ox;
         }
         [RubyMethod("oy")]
-        public static int GetOY(Sprite self)
+        public static int GetOY(Plane self)
         {
             return self.OY;
         }
         [RubyMethod("oy=")]
-        public static int SetOY(Sprite self, int oy)
+        public static int SetOY(Plane self, int oy)
         {
             self.OY = oy;
             return oy;
         }
         [RubyMethod("angle")]
-        public static int GetAngle(Sprite self)
+        public static int GetAngle(Plane self)
         {
             return self.Angle;
         }
         [RubyMethod("angle=")]
-        public static int SetAngle(Sprite self, int angle)
+        public static int SetAngle(Plane self, int angle)
         {
             self.Angle = angle;
             return angle;
         }
         [RubyMethod("dispose")]
-        public static void Dispose(Sprite self)
+        public static void Dispose(Plane self)
         {
             self.Dispose();
         }
         [RubyMethod("zoom_x")]
-        public static float GetZoomX(Sprite self)
+        public static float GetZoomX(Plane self)
         {
             return self.ZoomX;
         }
         [RubyMethod("zoom_x=")]
-        public static void SetZoomX(Sprite self, float zoomx)
+        public static void SetZoomX(Plane self, float zoomx)
         {
             self.ZoomX = zoomx;
         }
         [RubyMethod("zoom_y")]
-        public static float GetZoomY(Sprite self)
+        public static float GetZoomY(Plane self)
         {
             return self.ZoomY;
         }
         [RubyMethod("zoom_y=")]
-        public static void SetZoomY(Sprite self, float zoomy)
+        public static void SetZoomY(Plane self, float zoomy)
         {
             self.ZoomY = zoomy;
         }
 
         [RubyMethod("tone")]
-        public static Tone GetTone(Sprite self)
+        public static Tone GetTone(Plane self)
         {
             return null;
         }
 
         [RubyMethod("tone=")]
-        public static void SetTone(Sprite self, Tone tone)
+        public static void SetTone(Plane self, Tone tone)
         {
 
         }

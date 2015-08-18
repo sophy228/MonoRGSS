@@ -252,9 +252,9 @@ namespace GameLibrary.RGSS
 
         private void updateBorder()
         {
-            if (border != null)
-                border.dispose();
-            border = new Border(_viewport, pxLocX, pxLocY, pWidth * openness / 255, pHeight * openness / 255, "Graphics/System/Border");
+           if (border != null)
+              border.dispose();
+           border = new Border(_viewport, pxLocX, pxLocY, pWidth * openness / 255, pHeight * openness / 255, "Graphics/System/Border");
             padding = border.BorderMargin;
         }
 
@@ -275,6 +275,8 @@ namespace GameLibrary.RGSS
         {
             if (!CursorRect.IsEmpty)
             {
+                if (curseTexture != null)
+                    curseTexture.Dispose();
                 curseTexture = this.CreateFilledTexture(dm, curseRect.Width, curseRect.Height, backcolor, 2, bordercolor);
                 dm.SpriteBatch.Draw(curseTexture, new Vector2(curseRect.X, curseRect.Y), curseTexture.Bounds, Microsoft.Xna.Framework.Color.White);
             }
@@ -288,13 +290,16 @@ namespace GameLibrary.RGSS
                  var contentTexture = Contents.Texture;
                  if (mRenderTexture == null)
                     mRenderTexture = new RenderTarget2D(dm.GraphicsDevice, contentTexture.Width, contentTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
-                 dm.GraphicsDevice.SetRenderTarget(mRenderTexture);
-                 dm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
-                 dm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                 dm.SpriteBatch.Draw(contentTexture, Contents.Rect.toXnaRect(),Microsoft.Xna.Framework.Color.White);
-                 BlendCurse(dm, curseRect, curseRectBackcolor,curseBordercolor);
-                 dm.SpriteBatch.End();
-                 dm.GraphicsDevice.SetRenderTarget(null);
+                 lock (dm)
+                 {
+                     dm.GraphicsDevice.SetRenderTarget(mRenderTexture);
+                     dm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+                     dm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                     dm.SpriteBatch.Draw(contentTexture, Contents.Rect.toXnaRect(), Microsoft.Xna.Framework.Color.White);
+                     BlendCurse(dm, curseRect, curseRectBackcolor, curseBordercolor);
+                     dm.SpriteBatch.End();
+                     dm.GraphicsDevice.SetRenderTarget(null);
+                 }
             }
 
         }
@@ -327,17 +332,21 @@ namespace GameLibrary.RGSS
         {
             if (!Visible)
                 return;
-            
+           if(openness > 0)
+                updateBorder();
             if (openness < 255)
                 return;
-            updateBorder();
-            if (!CursorRect.IsEmpty)
+            
             {
                 Microsoft.Xna.Framework.Color darkCurse = new Microsoft.Xna.Framework.Color(220, 220, 220, 255);
                 Microsoft.Xna.Framework.Color darcBack = new Microsoft.Xna.Framework.Color(0, 0, 0, 100);
 
-
-                if (frameCount % curseortep == 0)
+                if (!Active)
+                {
+                    cursorColor = Microsoft.Xna.Framework.Color.White;
+                    backGroud = Microsoft.Xna.Framework.Color.Transparent;
+                }
+                else  if (frameCount % curseortep == 0)
                 {
                     cursorColor = cursorColor == Microsoft.Xna.Framework.Color.White ? darkCurse : Microsoft.Xna.Framework.Color.White;
                     backGroud = backGroud == Microsoft.Xna.Framework.Color.Transparent ? darcBack : Microsoft.Xna.Framework.Color.Transparent;
@@ -350,10 +359,11 @@ namespace GameLibrary.RGSS
         {
             if (!Visible)
                 return;
-            
+            if (border != null && openness > 0)
+                border.Draw(dm, frameCount);
             if (openness < 255)
                 return;
-            border.Draw(dm, frameCount);
+           
             Texture2D texture = null;
             if (mRenderTexture != null)
             {
@@ -368,13 +378,21 @@ namespace GameLibrary.RGSS
                 new Rectangle(ox, oy, texture.Width, texture.Height), Microsoft.Xna.Framework.Color.White);
         }
 
+        public void Update( )
+        {
+          PreBlend(RGSSEngine.GetDrawManager(), RGSSEngine.GetGame().GameControler.FrameCount);
+        }
+
         public void Dispose()
         {
-            border.dispose();
+            if(border != null)
+                border.dispose();
             if (curseTexture != null)
                 curseTexture.Dispose();
             if (content != null)
                 content.Dispose();
+            if (mRenderTexture != null)
+                mRenderTexture.Dispose();
             LinkNode.ListDel(this);
         }
     }

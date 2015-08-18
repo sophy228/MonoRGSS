@@ -19,6 +19,10 @@ namespace RGSS.Libraries.Builtins
         public const int UP = (int)Keys.UP;
         [RubyConstant]
         public const int DOWN = (int)Keys.Down;
+        [RubyConstant]
+        public const int L = LEFT;
+        [RubyConstant]
+        public const int R = RIGHT;
 
         [RubyConstant]
         public const int A = (int)Keys.A;

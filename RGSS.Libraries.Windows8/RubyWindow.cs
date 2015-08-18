@@ -94,6 +94,19 @@ namespace RGSS.Libraries.Builtins
         {
             self.window.Oy = oy;
         }
+
+        [RubyMethod("viewport")]
+        public static Viewport GetViewport(RubyWindow self, Viewport vp)
+        {
+           return  self.window.Viewport ;
+        }
+        [RubyMethod("viewport=")]
+        public static void SetViewport(RubyWindow self, Viewport vp)
+        {
+            self.window.Viewport = vp;
+        }
+
+
         [RubyMethod("dispose")]
         public static void Dispose(RubyWindow self)
         {
@@ -195,6 +208,7 @@ namespace RGSS.Libraries.Builtins
         public static void Update(RubyWindow self)
         {
             //do nothing
+            self.window.Update();
         }
     }
 #if false   

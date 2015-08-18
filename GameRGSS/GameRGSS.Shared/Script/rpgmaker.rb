@@ -8355,6 +8355,7 @@ class Sprite_Base < Sprite
   #--------------------------------------------------------------------------
   def animation_set_sprites(frame)
     cell_data = frame.cell_data
+    Debug.test(cell_data)
     for i in 0..15
       sprite = @animation_sprites[i]
       next if sprite == nil
@@ -8825,8 +8826,8 @@ class Sprite_Timer < Sprite
   def initialize(viewport)
     super(viewport)
     self.bitmap = Bitmap.new(88, 48)
-    #self.bitmap.font.name = "Arial"s
-    #self.bitmap.font.size = 32
+    self.bitmap.font.name = "Arial"
+    self.bitmap.font.size = 32
     self.x = 544 - self.bitmap.width
     self.y = 0
     self.z = 200
@@ -9503,7 +9504,7 @@ class Spriteset_Battle
     @viewport1.tone = $game_troop.screen.tone
     @viewport1.ox = $game_troop.screen.shake
     @viewport2.color = $game_troop.screen.flash_color
-    @viewport3.color.set(0, 0, 0, 255 - $game_troop.screen.brightness)
+    #@viewport3.color.set(0, 0, 0, 255 - $game_troop.screen.brightness)
     @viewport1.update
     @viewport2.update
     @viewport3.update
@@ -9715,6 +9716,192 @@ class Window_Base < Window
     src_rect = Rect.new((n%4*3+1)*cw, (n/4*4)*ch, cw, ch)
     self.contents.blt(x - cw / 2, y - ch, bitmap, src_rect)
   end
+
+
+  #--------------------------------------------------------------------------
+  # ● 获取体力文字颜色
+  #     actor : 角色
+  #--------------------------------------------------------------------------
+  def hp_color(actor)
+    return knockout_color if actor.hp == 0
+    return crisis_color if actor.hp < actor.maxhp / 4
+    return normal_color
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取魔力文字颜色
+  #     actor : 角色
+  #--------------------------------------------------------------------------
+  def mp_color(actor)
+    return crisis_color if actor.mp < actor.maxmp / 4
+    return normal_color
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色行走图
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #--------------------------------------------------------------------------
+  def draw_actor_graphic(actor, x, y)
+    draw_character(actor.character_name, actor.character_index, x, y)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色头像
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #     size  : 绘制大小
+  #--------------------------------------------------------------------------
+  def draw_actor_face(actor, x, y, size = 96)
+    draw_face(actor.face_name, actor.face_index, x, y, size)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色名称
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #--------------------------------------------------------------------------
+  def draw_actor_name(actor, x, y)
+    self.contents.font.color = hp_color(actor)
+    self.contents.draw_text(x, y, 108, WLH, actor.name)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色职业
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #--------------------------------------------------------------------------
+  def draw_actor_class(actor, x, y)
+    self.contents.font.color = normal_color
+    self.contents.draw_text(x, y, 108, WLH, actor.class.name)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色等级
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #--------------------------------------------------------------------------
+  def draw_actor_level(actor, x, y)
+    self.contents.font.color = system_color
+    self.contents.draw_text(x, y, 32, WLH, Vocab::level_a)
+    self.contents.font.color = normal_color
+    self.contents.draw_text(x + 32, y, 24, WLH, actor.level, 2)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色状态
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #     width : 描画目标宽度
+  #--------------------------------------------------------------------------
+  def draw_actor_state(actor, x, y, width = 96)
+    count = 0
+    for state in actor.states
+      draw_icon(state.icon_index, x + 24 * count, y)
+      count += 1
+      break if (24 * count > width - 24)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色体力
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #     width : 描画目标宽度
+  #--------------------------------------------------------------------------
+  def draw_actor_hp(actor, x, y, width = 120)
+    draw_actor_hp_gauge(actor, x, y, width)
+    self.contents.font.color = system_color
+    self.contents.draw_text(x, y, 30, WLH, Vocab::hp_a)
+    self.contents.font.color = hp_color(actor)
+    last_font_size = self.contents.font.size
+    xr = x + width
+    if width < 120
+      self.contents.draw_text(xr - 44, y, 44, WLH, actor.hp, 2)
+    else
+      self.contents.draw_text(xr - 99, y, 44, WLH, actor.hp, 2)
+      self.contents.font.color = normal_color
+      self.contents.draw_text(xr - 55, y, 11, WLH, "/", 2)
+      self.contents.draw_text(xr - 44, y, 44, WLH, actor.maxhp, 2)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色体力值槽
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #     width : 描画目标宽度
+  #--------------------------------------------------------------------------
+  def draw_actor_hp_gauge(actor, x, y, width = 120)
+    gw = width * actor.hp / actor.maxhp
+    gc1 = hp_gauge_color1
+    gc2 = hp_gauge_color2
+    self.contents.fill_rect(x, y + WLH - 8, width, 6, gauge_back_color)
+    self.contents.gradient_fill_rect(x, y + WLH - 8, gw, 6, gc1, gc2)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色魔力
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #     width : 描画目标宽度
+  #--------------------------------------------------------------------------
+  def draw_actor_mp(actor, x, y, width = 120)
+    draw_actor_mp_gauge(actor, x, y, width)
+    self.contents.font.color = system_color
+    self.contents.draw_text(x, y, 30, WLH, Vocab::mp_a)
+    self.contents.font.color = mp_color(actor)
+    last_font_size = self.contents.font.size
+    xr = x + width
+    if width < 120
+      self.contents.draw_text(xr - 44, y, 44, WLH, actor.mp, 2)
+    else
+      self.contents.draw_text(xr - 99, y, 44, WLH, actor.mp, 2)
+      self.contents.font.color = normal_color
+      self.contents.draw_text(xr - 55, y, 11, WLH, "/", 2)
+      self.contents.draw_text(xr - 44, y, 44, WLH, actor.maxmp, 2)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色魔力值槽
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #     width : 描画目标宽度
+  #--------------------------------------------------------------------------
+  def draw_actor_mp_gauge(actor, x, y, width = 120)
+    gw = width * actor.mp / [actor.maxmp, 1].max
+    gc1 = mp_gauge_color1
+    gc2 = mp_gauge_color2
+    self.contents.fill_rect(x, y + WLH - 8, width, 6, gauge_back_color)
+    self.contents.gradient_fill_rect(x, y + WLH - 8, gw, 6, gc1, gc2)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制角色能力值
+  #     actor : 角色
+  #     x     : 描画目标 X 坐标
+  #     y     : 描画目标 Y 坐标
+  #     type  : 能力值类型（0-3）
+  #--------------------------------------------------------------------------
+  def draw_actor_parameter(actor, x, y, type)
+    case type
+      when 0
+        parameter_name = Vocab::atk
+        parameter_value = actor.atk
+      when 1
+        parameter_name = Vocab::def
+        parameter_value = actor.def
+      when 2
+        parameter_name = Vocab::spi
+        parameter_value = actor.spi
+      when 3
+        parameter_name = Vocab::agi
+        parameter_value = actor.agi
+    end
+    self.contents.font.color = system_color
+    self.contents.draw_text(x, y, 120, WLH, parameter_name)
+    self.contents.font.color = normal_color
+    self.contents.draw_text(x + 120, y, 36, WLH, parameter_value, 2)
+  end
   #--------------------------------------------------------------------------
   # ● 绘制物品
   #     item    : 物品（技能、武器、防具也合用）
@@ -9726,8 +9913,8 @@ class Window_Base < Window
     if item != nil
       p item
       draw_icon(item.icon_index, x, y, enabled)
-      #self.contents.font.color = normal_color
-      #self.contents.font.color.alpha = enabled ? 255 : 128
+      self.contents.font.color = normal_color
+      self.contents.font.color.alpha = enabled ? 255 : 128
       self.contents.draw_text(x + 24, y, 172, WLH, item.name)
     end
   end
@@ -9740,12 +9927,12 @@ class Window_Base < Window
   #     width : 描画目标宽度
   #--------------------------------------------------------------------------
   def draw_currency_value(value, x, y, width)
-    #cx = contents.text_size(Vocab::gold).width
-    cx = 14
-    #self.contents.font.color = normal_color
-    #self.contents.draw_text(x, y, width-cx-2, WLH, value, 2)
-    #self.contents.font.color = system_color
-    #self.contents.draw_text(x, y, width, WLH, Vocab::gold, 2)
+    cx = contents.text_size(Vocab::gold).width
+
+    self.contents.font.color = normal_color
+    self.contents.draw_text(x, y, width-cx-2, WLH, value, 2)
+    self.contents.font.color = system_color
+    self.contents.draw_text(x, y, width, WLH, Vocab::gold, 2)
   end
 end
 #==============================================================================
@@ -10043,10 +10230,38 @@ class Window_Command < Window_Selectable
     rect.x += 4
     rect.width -= 8
     self.contents.clear_rect(rect)
-    #self.contents.font.color = normal_color
-    #self.contents.font.color.alpha = enabled ? 255 : 128
-    debugp(@commands[index])
+    self.contents.font.color = normal_color
+    self.contents.font.color.alpha = enabled ? 255 : 128
     self.contents.draw_text(rect, @commands[index])
+  end
+end
+
+#==============================================================================
+# ■ Window_Help
+#------------------------------------------------------------------------------
+# 　特技及物品的说明、角色的状态显示的窗口。
+#==============================================================================
+
+class Window_Help < Window_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #--------------------------------------------------------------------------
+  def initialize
+    super(0, 0, 544, WLH + 32)
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置文字
+  #  text  : 显示于窗口内的字符串
+  #  align : 对其 (0..靠左对齐, 1..居中对齐, 2..靠右对齐)
+  #--------------------------------------------------------------------------
+  def set_text(text, align = 0)
+    if text != @text or align != @align
+      self.contents.clear
+      self.contents.font.color = normal_color
+      self.contents.draw_text(4, 0, self.width - 40, WLH, text, align)
+      @text = text
+      @align = align
+    end
   end
 end
 
@@ -10074,6 +10289,532 @@ class Window_Gold < Window_Base
     draw_currency_value($game_party.gold, 4, 0, 120)
   end
 end
+
+
+#==============================================================================
+# ■ Window_MenuStatus
+#------------------------------------------------------------------------------
+# 　显示菜单画面和同伴状态的窗口。
+#==============================================================================
+
+class Window_MenuStatus < Window_Selectable
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #--------------------------------------------------------------------------
+  def initialize(x, y)
+    super(x, y, 384, 416)
+    refresh
+    self.active = false
+    self.index = -1
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    @item_max = $game_party.members.size
+    for actor in $game_party.members
+      draw_actor_face(actor, 2, actor.index * 96 + 2, 92)
+      x = 104
+      y = actor.index * 96 + WLH / 2
+      draw_actor_name(actor, x, y)
+      draw_actor_class(actor, x + 120, y)
+      draw_actor_level(actor, x, y + WLH * 1)
+      draw_actor_state(actor, x, y + WLH * 2)
+      draw_actor_hp(actor, x + 120, y + WLH * 1)
+      draw_actor_mp(actor, x + 120, y + WLH * 2)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新光标
+  #--------------------------------------------------------------------------
+  def update_cursor
+    if @index < 0               # 无光标
+      self.cursor_rect.empty
+    elsif @index < @item_max    # 一般
+      self.cursor_rect.set(0, @index * 96, contents.width, 96)
+    elsif @index >= 100         # 使用本身
+      self.cursor_rect.set(0, (@index - 100) * 96, contents.width, 96)
+    else                        # 全体
+      self.cursor_rect.set(0, 0, contents.width, @item_max * 96)
+    end
+  end
+end
+
+#==============================================================================
+# ■ Window_Item
+#------------------------------------------------------------------------------
+# 　物品画面、战斗画面、显示浏览物品的窗口。
+#==============================================================================
+
+class Window_Item < Window_Selectable
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #     width  : 窗口宽度
+  #     height : 窗口高度
+  #--------------------------------------------------------------------------
+  def initialize(x, y, width, height)
+    super(x, y, width, height)
+    @column_max = 2
+    self.index = 0
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取项目
+  #--------------------------------------------------------------------------
+  def item
+    return @data[self.index]
+  end
+  #--------------------------------------------------------------------------
+  # ● 判断是否为物品
+  #     item : 项目
+  #--------------------------------------------------------------------------
+  def include?(item)
+    return false if item == nil
+    if $game_temp.in_battle
+      return false unless item.is_a?(RPG::Item)
+    end
+    return true
+  end
+  #--------------------------------------------------------------------------
+  # ● 判断是否为有效状态
+  #     item : 项目
+  #--------------------------------------------------------------------------
+  def enable?(item)
+    return $game_party.item_can_use?(item)
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    @data = []
+    for item in $game_party.items
+      next unless include?(item)
+      @data.push(item)
+      if item.is_a?(RPG::Item) and item.id == $game_party.last_item_id
+        self.index = @data.size - 1
+      end
+    end
+    @data.push(nil) if include?(nil)
+    @item_max = @data.size
+    create_contents
+    for i in 0...@item_max
+      draw_item(i)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 描绘项目
+  #     index : 项目编号
+  #--------------------------------------------------------------------------
+  def draw_item(index)
+    rect = item_rect(index)
+    self.contents.clear_rect(rect)
+    item = @data[index]
+    if item != nil
+      number = $game_party.item_number(item)
+      enabled = enable?(item)
+      rect.width -= 4
+      draw_item_name(item, rect.x, rect.y, enabled)
+      self.contents.draw_text(rect, sprintf(":%2d", number), 2)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新帮助窗口文字
+  #--------------------------------------------------------------------------
+  def update_help
+    @help_window.set_text(item == nil ? "" : item.description)
+  end
+end
+
+#==============================================================================
+# ■ Window_Equip
+#------------------------------------------------------------------------------
+# 　装备画面、显示角色现在装备的物品的窗口。
+#==============================================================================
+
+class Window_Equip < Window_Selectable
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #     actor  : 角色
+  #--------------------------------------------------------------------------
+  def initialize(x, y, actor)
+    super(x, y, 336, WLH * 5 + 32)
+    @actor = actor
+    refresh
+    self.index = 0
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取装备
+  #--------------------------------------------------------------------------
+  def item
+    return @data[self.index]
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    @data = []
+    for item in @actor.equips do @data.push(item) end
+    @item_max = @data.size
+    self.contents.font.color = system_color
+    if @actor.two_swords_style
+      self.contents.draw_text(4, WLH * 0, 92, WLH, Vocab::weapon1)
+      self.contents.draw_text(4, WLH * 1, 92, WLH, Vocab::weapon2)
+    else
+      self.contents.draw_text(4, WLH * 0, 92, WLH, Vocab::weapon)
+      self.contents.draw_text(4, WLH * 1, 92, WLH, Vocab::armor1)
+    end
+    self.contents.draw_text(4, WLH * 2, 92, WLH, Vocab::armor2)
+    self.contents.draw_text(4, WLH * 3, 92, WLH, Vocab::armor3)
+    self.contents.draw_text(4, WLH * 4, 92, WLH, Vocab::armor4)
+    draw_item_name(@data[0], 92, WLH * 0)
+    draw_item_name(@data[1], 92, WLH * 1)
+    draw_item_name(@data[2], 92, WLH * 2)
+    draw_item_name(@data[3], 92, WLH * 3)
+    draw_item_name(@data[4], 92, WLH * 4)
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新帮助窗口文字
+  #--------------------------------------------------------------------------
+  def update_help
+    @help_window.set_text(item == nil ? "" : item.description)
+  end
+end
+
+#==============================================================================
+# ■ Window_EquipItem
+#------------------------------------------------------------------------------
+# 　装备画面、显示浏览变更装备的候补物品的窗口。
+#==============================================================================
+
+class Window_EquipItem < Window_Item
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  # ● 初始化对像
+  #     x          : 窗口 X 座标
+  #     y          : 窗口 Y 座标
+  #     width      : 窗口宽度
+  #     height     : 窗口高度
+  #     actor      : 角色
+  #     equip_type : 装备类型（0～4）
+  #--------------------------------------------------------------------------
+  def initialize(x, y, width, height, actor, equip_type)
+    @actor = actor
+    if equip_type == 1 and actor.two_swords_style
+      equip_type = 0                              # 将「盾」换成「武器2」
+    end
+    @equip_type = equip_type
+    super(x, y, width, height)
+  end
+  #--------------------------------------------------------------------------
+  # ● 判断是否为装备
+  #     item : 装备项目
+  #--------------------------------------------------------------------------
+  def include?(item)
+    return true if item == nil
+    if @equip_type == 0
+      return false unless item.is_a?(RPG::Weapon)
+    else
+      return false unless item.is_a?(RPG::Armor)
+      return false unless item.kind == @equip_type - 1
+    end
+    return @actor.equippable?(item)
+  end
+  #--------------------------------------------------------------------------
+  # ● 判断是否为有效状态
+  #     item : 装备项目
+  #--------------------------------------------------------------------------
+  def enable?(item)
+    return true
+  end
+end
+
+#==============================================================================
+# ■ Window_EquipStatus
+#------------------------------------------------------------------------------
+# 　装备画面的、显示角色能力值变化的窗口。
+#==============================================================================
+
+class Window_EquipStatus < Window_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #     actor  : 角色
+  #--------------------------------------------------------------------------
+  def initialize(x, y, actor)
+    super(x, y, 208, WLH * 5 + 32)
+    @actor = actor
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    draw_actor_name(@actor, 4, 0)
+    draw_parameter(0, WLH * 1, 0)
+    draw_parameter(0, WLH * 2, 1)
+    draw_parameter(0, WLH * 3, 2)
+    draw_parameter(0, WLH * 4, 3)
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置装备後的能力值
+  #     new_atk : 装备後的攻击力
+  #     new_def : 装备後的防御力
+  #     new_spi : 装备後的精神力
+  #     new_agi : 装备後的敏捷
+  #--------------------------------------------------------------------------
+  def set_new_parameters(new_atk, new_def, new_spi, new_agi)
+    if @new_atk != new_atk or @new_def != new_def or
+        @new_spi != new_spi or @new_agi != new_agi
+      @new_atk = new_atk
+      @new_def = new_def
+      @new_spi = new_spi
+      @new_agi = new_agi
+      refresh
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取装备後的能力值文字颜色
+  #     old_value : 装备前的能力值
+  #     new_value : 装备後的能力值
+  #--------------------------------------------------------------------------
+  def new_parameter_color(old_value, new_value)
+    if new_value > old_value      # 增强
+      return power_up_color
+    elsif new_value == old_value  # 不变
+      return normal_color
+    else                          # 减弱
+      return power_down_color
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制能力值
+  #     x    : 绘制点 X 座标
+  #     y    : 绘制点 Y 座标
+  #     type : 能力值 （0：攻击力、1：防御力、2：精神力、3：敏捷)
+  #--------------------------------------------------------------------------
+  def draw_parameter(x, y, type)
+    case type
+      when 0
+        name = Vocab::atk
+        value = @actor.atk
+        new_value = @new_atk
+      when 1
+        name = Vocab::def
+        value = @actor.def
+        new_value = @new_def
+      when 2
+        name = Vocab::spi
+        value = @actor.spi
+        new_value = @new_spi
+      when 3
+        name = Vocab::agi
+        value = @actor.agi
+        new_value = @new_agi
+    end
+    self.contents.font.color = system_color
+    self.contents.draw_text(x + 4, y, 80, WLH, name)
+    self.contents.font.color = normal_color
+    self.contents.draw_text(x + 90, y, 30, WLH, value, 2)
+    self.contents.font.color = system_color
+    self.contents.draw_text(x + 122, y, 20, WLH, ">", 1)
+    if new_value != nil
+      self.contents.font.color = new_parameter_color(value, new_value)
+      self.contents.draw_text(x + 142, y, 30, WLH, new_value, 2)
+    end
+  end
+end
+
+#==============================================================================
+# ■ Window_Skill
+#------------------------------------------------------------------------------
+# 　特技画面、战斗画面、显示可以使用的特技浏览的窗口。
+#==============================================================================
+
+class Window_Skill < Window_Selectable
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #     width  : 窗口宽度
+  #     height : 窗口高度
+  #     actor  : 角色
+  #--------------------------------------------------------------------------
+  def initialize(x, y, width, height, actor)
+    super(x, y, width, height)
+    @actor = actor
+    @column_max = 2
+    self.index = 0
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取技能
+  #--------------------------------------------------------------------------
+  def skill
+    return @data[self.index]
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    @data = []
+    for skill in @actor.skills
+      @data.push(skill)
+      if skill.id == @actor.last_skill_id
+        self.index = @data.size - 1
+      end
+    end
+    @item_max = @data.size
+    create_contents
+    for i in 0...@item_max
+      draw_item(i)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 描绘项目
+  #     index : 项目编号
+  #--------------------------------------------------------------------------
+  def draw_item(index)
+    rect = item_rect(index)
+    self.contents.clear_rect(rect)
+    skill = @data[index]
+    if skill != nil
+      rect.width -= 4
+      enabled = @actor.skill_can_use?(skill)
+      draw_item_name(skill, rect.x, rect.y, enabled)
+      self.contents.draw_text(rect, @actor.calc_mp_cost(skill), 2)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新帮助窗口文字
+  #--------------------------------------------------------------------------
+  def update_help
+    @help_window.set_text(skill == nil ? "" : skill.description)
+  end
+end
+
+
+#==============================================================================
+# ■ Window_SkillStatus
+#------------------------------------------------------------------------------
+# 　在特技画面显示特技使用者状态的窗口。
+#==============================================================================
+
+class Window_SkillStatus < Window_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     x      : 窗口 X 座标
+  #     y      : 窗口 Y 座标
+  #     actor  : 角色
+  #--------------------------------------------------------------------------
+  def initialize(x, y, actor)
+    super(x, y, 544, WLH + 32)
+    @actor = actor
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    draw_actor_name(@actor, 4, 0)
+    draw_actor_level(@actor, 140, 0)
+    draw_actor_hp(@actor, 240, 0)
+    draw_actor_mp(@actor, 392, 0)
+  end
+end
+
+#==============================================================================
+# ■ Window_Status
+#------------------------------------------------------------------------------
+# 　显示状态画面、完全规格的状态窗口。
+#==============================================================================
+
+class Window_Status < Window_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     actor : 角色
+  #--------------------------------------------------------------------------
+  def initialize(actor)
+    super(0, 0, 544, 416)
+    @actor = actor
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    draw_actor_name(@actor, 4, 0)
+    draw_actor_class(@actor, 128, 0)
+    draw_actor_face(@actor, 8, 32)
+    draw_basic_info(128, 32)
+    draw_parameters(32, 160)
+    draw_exp_info(288, 32)
+    draw_equipments(288, 160)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制基础资料
+  #     x : 绘制点 X 座标
+  #     y : 绘制点 Y 座标
+  #--------------------------------------------------------------------------
+  def draw_basic_info(x, y)
+    draw_actor_level(@actor, x, y + WLH * 0)
+    draw_actor_state(@actor, x, y + WLH * 1)
+    draw_actor_hp(@actor, x, y + WLH * 2)
+    draw_actor_mp(@actor, x, y + WLH * 3)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制能力值
+  #     x : 绘制点 X 座标
+  #     y : 绘制点 Y 座标
+  #--------------------------------------------------------------------------
+  def draw_parameters(x, y)
+    draw_actor_parameter(@actor, x, y + WLH * 0, 0)
+    draw_actor_parameter(@actor, x, y + WLH * 1, 1)
+    draw_actor_parameter(@actor, x, y + WLH * 2, 2)
+    draw_actor_parameter(@actor, x, y + WLH * 3, 3)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制经验值
+  #     x : 绘制点 X 座标
+  #     y : 绘制点 Y 座标
+  #--------------------------------------------------------------------------
+  def draw_exp_info(x, y)
+    s1 = @actor.exp_s
+    s2 = @actor.next_rest_exp_s
+    s_next = sprintf(Vocab::ExpNext, Vocab::level)
+    self.contents.font.color = system_color
+    self.contents.draw_text(x, y + WLH * 0, 180, WLH, Vocab::ExpTotal)
+    self.contents.draw_text(x, y + WLH * 2, 180, WLH, s_next)
+    self.contents.font.color = normal_color
+    self.contents.draw_text(x, y + WLH * 1, 180, WLH, s1, 2)
+    self.contents.draw_text(x, y + WLH * 3, 180, WLH, s2, 2)
+  end
+  #--------------------------------------------------------------------------
+  # ● 绘制装备
+  #     x : 绘制点 X 座标
+  #     y : 绘制点 Y 座标
+  #--------------------------------------------------------------------------
+  def draw_equipments(x, y)
+    self.contents.font.color = system_color
+    self.contents.draw_text(x, y, 120, WLH, Vocab::equip)
+    for i in 0..4
+      draw_item_name(@actor.equips[i], x + 16, y + WLH * (i + 1))
+    end
+  end
+end
+
 #==============================================================================
 # ■ Window_Message
 #------------------------------------------------------------------------------
@@ -10128,25 +10869,23 @@ class Window_Message < Window_Selectable
     update_number_input_window
     update_back_sprite
     update_show_fast
-    Debug.test(@opening)
     unless @opening or @closing             # 窗口非正在打开或正在关闭中
       if @wait_count > 0                    # 文间等待
         @wait_count -= 1
-        Debug.test(2)
       elsif self.pause                      # 等待输入的情况下
         input_pause
-        Debug.test(3)
+
       elsif self.active                     # 输入选择的情况下
         input_choice
-        Debug.test(6)
+
       elsif @number_input_window.visible    # 输入数值的情况下
         input_number
-        Debug.test(7)
+
       elsif @text != nil                    # 有等待显示的文字的情况下
-        Debug.test(4)
+
         update_message                        # 更新文章
       elsif continue?                       # 继续的情况下
-        Debug.test(5)
+
         start_message                         # 开始文章
         open                                  # 打开窗口
         $game_message.visible = true
@@ -10490,6 +11229,259 @@ class Window_Message < Window_Selectable
 end
 
 #==============================================================================
+# ■ Window_BattleMessage
+#------------------------------------------------------------------------------
+# 　在战斗画面显示信息的窗口。除了一般信息功能之外，还增加战斗进行描述功能。
+#==============================================================================
+
+class Window_BattleMessage < Window_Message
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #--------------------------------------------------------------------------
+  def initialize
+    super
+    self.openness = 255
+    #self.viewport = Viewport.new(0,0,544,416)
+    @lines = []
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 释放
+  #--------------------------------------------------------------------------
+  def dispose
+    super
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+  end
+  #--------------------------------------------------------------------------
+  # ● 开启窗口（默认无效化）
+  #--------------------------------------------------------------------------
+  def open
+  end
+  #--------------------------------------------------------------------------
+  # ● 关闭窗口（默认无效化）
+  #--------------------------------------------------------------------------
+  def close
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置窗口背景和位置（默认无效化）
+  #--------------------------------------------------------------------------
+  def reset_window
+  end
+  #--------------------------------------------------------------------------
+  # ● 清除
+  #--------------------------------------------------------------------------
+  def clear
+    @lines.clear
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取行数
+  #--------------------------------------------------------------------------
+  def line_number
+    return @lines.size
+  end
+  #--------------------------------------------------------------------------
+  # ● 返回上一行
+  #--------------------------------------------------------------------------
+  def back_one
+    @lines.pop
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 回到指定行
+  #     line_number : 行数
+  #--------------------------------------------------------------------------
+  def back_to(line_number)
+    while @lines.size > line_number
+      @lines.pop
+    end
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 加入文字
+  #     text : 要加入的文字
+  #--------------------------------------------------------------------------
+  def add_instant_text(text)
+    @lines.push(text)
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 替换文字
+  #     text : 用来替换的文字
+  #    将最後一行替换成指定文字。
+  #--------------------------------------------------------------------------
+  def replace_instant_text(text)
+    @lines.pop
+    @lines.push(text)
+    refresh
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取上一行文字
+  #--------------------------------------------------------------------------
+  def last_instant_text
+    return @lines[-1]
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    for i in 0...@lines.size
+      draw_line(i)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 描绘行
+  #     index : 行数
+  #--------------------------------------------------------------------------
+  def draw_line(index)
+    rect = Rect.new(0, 0, 0, 0)
+    rect.x += 4
+    rect.y += index * WLH
+    rect.width = contents.width - 8
+    rect.height = WLH
+    self.contents.clear_rect(rect)
+    self.contents.font.color = normal_color
+    self.contents.draw_text(rect, @lines[index])
+  end
+end
+
+#==============================================================================
+# ■ Window_PartyCommand
+#------------------------------------------------------------------------------
+# 　战斗画面、选择战斗与逃跑的窗口。
+#==============================================================================
+
+class Window_PartyCommand < Window_Command
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #--------------------------------------------------------------------------
+  def initialize
+    s1 = Vocab::fight
+    s2 = Vocab::escape
+    super(128, [s1, s2], 1, 4)
+    draw_item(0, true)
+    draw_item(1, $game_troop.can_escape)
+    self.active = false
+  end
+end
+
+#==============================================================================
+# ■ Window_ActorCommand
+#------------------------------------------------------------------------------
+#  选择角色命令（如「攻击」或「技能」）的窗口。
+#==============================================================================
+
+class Window_ActorCommand < Window_Command
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #--------------------------------------------------------------------------
+  def initialize
+    super(128, [], 1, 4)
+    self.active = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置
+  #     actor : 角色
+  #--------------------------------------------------------------------------
+  def setup(actor)
+    s1 = Vocab::attack
+    s2 = Vocab::skill
+    s3 = Vocab::guard
+    s4 = Vocab::item
+    if actor.class.skill_name_valid     # 是否指定职业技能文字
+      s2 = actor.class.skill_name       # 替换「技能」命令文字
+    end
+    @commands = [s1, s2, s3, s4]
+    @item_max = 4
+    refresh
+    self.index = 0
+  end
+end
+
+#==============================================================================
+# ■ Window_TargetEnemy
+#------------------------------------------------------------------------------
+#  在战斗画面，选择要攻击的敌人的窗口。
+#==============================================================================
+
+class Window_TargetEnemy < Window_Command
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #--------------------------------------------------------------------------
+  def initialize
+    commands = []
+    @enemies = []
+    for enemy in $game_troop.members
+      next unless enemy.exist?
+      commands.push(enemy.name)
+      @enemies.push(enemy)
+    end
+    super(416, commands, 2, 4)
+  end
+  #--------------------------------------------------------------------------
+  # ● 获取敌人对象
+  #--------------------------------------------------------------------------
+  def enemy
+    return @enemies[@index]
+  end
+end
+
+#==============================================================================
+# ■ Window_BattleStatus
+#------------------------------------------------------------------------------
+# 　显示战斗画面同伴状态的窗口。
+#==============================================================================
+
+class Window_BattleStatus < Window_Selectable
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #--------------------------------------------------------------------------
+  def initialize
+    super(0, 0, 416, 128)
+    refresh
+    self.active = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 释放
+  #--------------------------------------------------------------------------
+  def dispose
+    super
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    @item_max = $game_party.members.size
+    for i in 0...@item_max
+      draw_item(i)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 描绘项目
+  #     index : 项目索引
+  #--------------------------------------------------------------------------
+  def draw_item(index)
+    rect = item_rect(index)
+    rect.x += 4
+    rect.width -= 8
+    self.contents.clear_rect(rect)
+    self.contents.font.color = normal_color
+    actor = $game_party.members[index]
+    draw_actor_name(actor, 4, rect.y)
+    draw_actor_state(actor, 114, rect.y, 48)
+    draw_actor_hp(actor, 174, rect.y, 120)
+    draw_actor_mp(actor, 310, rect.y, 70)
+  end
+end
+
+#==============================================================================
 # ■ Window_NumberInput
 #------------------------------------------------------------------------------
 # 　信息窗口内部使用、输入数值的窗口。
@@ -10670,7 +11662,7 @@ class Scene_Base
   def snapshot_for_background
     $game_temp.background_bitmap.dispose
     $game_temp.background_bitmap = Graphics.snap_to_bitmap
-    #$game_temp.background_bitmap.blur
+    $game_temp.background_bitmap.blur
   end
   #--------------------------------------------------------------------------
   # ● 生成菜单画面背景
@@ -10831,6 +11823,7 @@ class Scene_Title < Scene_Base
 =begin
     @continue_enabled = (Dir.glob('Save*.rvdata').size > 0)
 =end
+    @continue_enabled = false
   end
   #--------------------------------------------------------------------------
   # ● 生成标题图形
@@ -10856,6 +11849,7 @@ class Scene_Title < Scene_Base
     @command_window = Window_Command.new(172, [s1, s2, s3])
     @command_window.x = (544 - @command_window.width) / 2
     @command_window.y = 288
+
     if @continue_enabled                    # 如果「继续」有效
       @command_window.index = 1             # 将光标移至「继续游戏」
     else                                    # 否则则将「继续游戏」半透明化
@@ -11243,55 +12237,2268 @@ class Scene_Map < Scene_Base
   end
 end
 
+#==============================================================================
+# ■ Scene_Menu
+#------------------------------------------------------------------------------
+# 　处理菜单画面的类。
+#==============================================================================
 
+class Scene_Menu < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     menu_index : 命令窗口光标初始位置
+  #--------------------------------------------------------------------------
+  def initialize(menu_index = 0)
+    @menu_index = menu_index
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    create_command_window
+    @gold_window = Window_Gold.new(0, 360)
+    @status_window = Window_MenuStatus.new(160, 0)
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_menu_background
+    @command_window.dispose
+    @gold_window.dispose
+    @status_window.dispose
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_menu_background
+    @command_window.update
+    @gold_window.update
+    @status_window.update
+    if @command_window.active
+      update_command_selection
+    elsif @status_window.active
+      update_actor_selection
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成命令窗口
+  #--------------------------------------------------------------------------
+  def create_command_window
+    s1 = Vocab::item
+    s2 = Vocab::skill
+    s3 = Vocab::equip
+    s4 = Vocab::status
+    s5 = Vocab::save
+    s6 = Vocab::game_end
+    @command_window = Window_Command.new(160, [s1, s2, s3, s4, s5, s6])
+    @command_window.index = @menu_index
+    if $game_party.members.size == 0          # 如果队伍为空
+      @command_window.draw_item(0, false)     # 无效化物品选项
+      @command_window.draw_item(1, false)     # 无效化技能选项
+      @command_window.draw_item(2, false)     # 无效化装备选项
+      @command_window.draw_item(3, false)     # 无效化状态选项
+    end
+    if $game_system.save_disabled             # 如果禁止存档
+      @command_window.draw_item(4, false)     # 无效化存档选项
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新命令窗口
+  #--------------------------------------------------------------------------
+  def update_command_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      $scene = Scene_Map.new
+    elsif Input.trigger?(Input::C)
+      if $game_party.members.size == 0 and @command_window.index < 4
+        Sound.play_buzzer
+        return
+      elsif $game_system.save_disabled and @command_window.index == 4
+        Sound.play_buzzer
+        return
+      end
+      Sound.play_decision
+      case @command_window.index
+        when 0      # 物品
+          $scene = Scene_Item.new
+        when 1,2,3  # 技能、装备、状态
+          start_actor_selection
+        when 4      # 存档
+          $scene = Scene_File.new(true, false, false)
+        when 5      # 结束游戏
+          $scene = Scene_End.new
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 角色选择开始
+  #--------------------------------------------------------------------------
+  def start_actor_selection
+    @command_window.active = false
+    @status_window.active = true
+    if $game_party.last_actor_index < @status_window.item_max
+      @status_window.index = $game_party.last_actor_index
+    else
+      @status_window.index = 0
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 角色选择结束
+  #--------------------------------------------------------------------------
+  def end_actor_selection
+    @command_window.active = true
+    @status_window.active = false
+    @status_window.index = -1
+  end
+  #--------------------------------------------------------------------------
+  # ● 角色选择更新
+  #--------------------------------------------------------------------------
+  def update_actor_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      end_actor_selection
+    elsif Input.trigger?(Input::C)
+      $game_party.last_actor_index = @status_window.index
+      Sound.play_decision
+      case @command_window.index
+        when 1  # 技能
+          $scene = Scene_Skill.new(@status_window.index)
+        when 2  # 装备
+          $scene = Scene_Equip.new(@status_window.index)
+        when 3  # 状态
+          $scene = Scene_Status.new(@status_window.index)
+      end
+    end
+  end
+end
+
+#==============================================================================
+# ■ Scene_Status
+#------------------------------------------------------------------------------
+# 　处理状态画面的类。
+#==============================================================================
+
+class Scene_Status < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     actor_index : 角色位置
+  #--------------------------------------------------------------------------
+  def initialize(actor_index = 0)
+    @actor_index = actor_index
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    @actor = $game_party.members[@actor_index]
+    @status_window = Window_Status.new(@actor)
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_menu_background
+    @status_window.dispose
+  end
+  #--------------------------------------------------------------------------
+  # ● 回到原画面
+  #--------------------------------------------------------------------------
+  def return_scene
+    $scene = Scene_Menu.new(3)
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至下一角色画面
+  #--------------------------------------------------------------------------
+  def next_actor
+    @actor_index += 1
+    @actor_index %= $game_party.members.size
+    $scene = Scene_Status.new(@actor_index)
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至上一角色画面
+  #--------------------------------------------------------------------------
+  def prev_actor
+    @actor_index += $game_party.members.size - 1
+    @actor_index %= $game_party.members.size
+    $scene = Scene_Status.new(@actor_index)
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    update_menu_background
+    @status_window.update
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      return_scene
+   elsif Input.trigger?(Input::R)
+     Sound.play_cursor
+      next_actor
+    elsif Input.trigger?(Input::L)
+      Sound.play_cursor
+      prev_actor
+    end
+    super
+  end
+end
+
+#==============================================================================
+# ■ Scene_Equip
+#------------------------------------------------------------------------------
+# 　处理装备画面的类。
+#==============================================================================
+
+class Scene_Equip < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 常量
+  #--------------------------------------------------------------------------
+  EQUIP_TYPE_MAX = 5                      # 最大装备数
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     actor_index : 角色位置
+  #     equip_index : 装备位置
+  #--------------------------------------------------------------------------
+  def initialize(actor_index = 0, equip_index = 0)
+    @actor_index = actor_index
+    @equip_index = equip_index
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    @actor = $game_party.members[@actor_index]
+    @help_window = Window_Help.new
+    create_item_windows
+    @equip_window = Window_Equip.new(208, 56, @actor)
+    @equip_window.help_window = @help_window
+    @equip_window.index = @equip_index
+    @status_window = Window_EquipStatus.new(0, 56, @actor)
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_menu_background
+    @help_window.dispose
+    @equip_window.dispose
+    @status_window.dispose
+    dispose_item_windows
+  end
+  #--------------------------------------------------------------------------
+  # ● 回到原画面
+  #--------------------------------------------------------------------------
+  def return_scene
+    $scene = Scene_Menu.new(2)
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至下一角色画面
+  #--------------------------------------------------------------------------
+  def next_actor
+    @actor_index += 1
+    @actor_index %= $game_party.members.size
+    $scene = Scene_Equip.new(@actor_index, @equip_window.index)
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至上一角色画面
+  #--------------------------------------------------------------------------
+  def prev_actor
+    @actor_index += $game_party.members.size - 1
+    @actor_index %= $game_party.members.size
+    $scene = Scene_Equip.new(@actor_index, @equip_window.index)
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_menu_background
+    @help_window.update
+    update_equip_window
+    update_status_window
+    update_item_windows
+    if @equip_window.active
+      update_equip_selection
+    elsif @item_window.active
+      update_item_selection
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成装备物品窗口
+  #--------------------------------------------------------------------------
+  def create_item_windows
+    @item_windows = []
+    for i in 0...EQUIP_TYPE_MAX
+      @item_windows[i] = Window_EquipItem.new(0, 208, 544, 208, @actor, i)
+      @item_windows[i].help_window = @help_window
+      @item_windows[i].visible = (@equip_index == i)
+      @item_windows[i].y = 208
+      @item_windows[i].height = 208
+      @item_windows[i].active = false
+      @item_windows[i].index = -1
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 释放装备物品窗口
+  #--------------------------------------------------------------------------
+  def dispose_item_windows
+    for window in @item_windows
+      window.dispose
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新装备物品窗口
+  #--------------------------------------------------------------------------
+  def update_item_windows
+    for i in 0...EQUIP_TYPE_MAX
+      @item_windows[i].visible = (@equip_window.index == i)
+      @item_windows[i].update
+    end
+    @item_window = @item_windows[@equip_window.index]
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新装备窗口
+  #--------------------------------------------------------------------------
+  def update_equip_window
+    @equip_window.update
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新状态窗口
+  #--------------------------------------------------------------------------
+  def update_status_window
+    if @equip_window.active
+      @status_window.set_new_parameters(nil, nil, nil, nil)
+    elsif @item_window.active
+      temp_actor = @actor.clone
+      temp_actor.change_equip(@equip_window.index, @item_window.item, true)
+      new_atk = temp_actor.atk
+      new_def = temp_actor.def
+      new_spi = temp_actor.spi
+      new_agi = temp_actor.agi
+      @status_window.set_new_parameters(new_atk, new_def, new_spi, new_agi)
+    end
+    @status_window.update
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新装备区域选择
+  #--------------------------------------------------------------------------
+  def update_equip_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      return_scene
+    elsif Input.trigger?(Input::R)
+      Sound.play_cursor
+      next_actor
+    elsif Input.trigger?(Input::L)
+      Sound.play_cursor
+      prev_actor
+    elsif Input.trigger?(Input::C)
+      if @actor.fix_equipment
+        Sound.play_buzzer
+      else
+        Sound.play_decision
+        @equip_window.active = false
+        @item_window.active = true
+        @item_window.index = 0
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新装备物品选择
+  #--------------------------------------------------------------------------
+  def update_item_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      @equip_window.active = true
+      @item_window.active = false
+      @item_window.index = -1
+    elsif Input.trigger?(Input::C)
+      Sound.play_equip
+      @actor.change_equip(@equip_window.index, @item_window.item)
+      @equip_window.active = true
+      @item_window.active = false
+      @item_window.index = -1
+      @equip_window.refresh
+      for item_window in @item_windows
+        item_window.refresh
+      end
+    end
+  end
+end
+
+#==============================================================================
+# ■ Scene_Item
+#------------------------------------------------------------------------------
+# 　处理物品画面的类。
+#==============================================================================
+
+class Scene_Item < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    @viewport = Viewport.new(0, 0, 544, 416)
+    @help_window = Window_Help.new
+    @help_window.viewport = @viewport
+    @item_window = Window_Item.new(0, 56, 544, 360)
+    @item_window.viewport = @viewport
+    @item_window.help_window = @help_window
+    @item_window.active = false
+    @target_window = Window_MenuStatus.new(0, 0)
+    hide_target_window
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_menu_background
+    @viewport.dispose
+    @help_window.dispose
+    @item_window.dispose
+    @target_window.dispose
+  end
+  #--------------------------------------------------------------------------
+  # ● 回到原画面
+  #--------------------------------------------------------------------------
+  def return_scene
+    $scene = Scene_Menu.new(0)
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_menu_background
+    @help_window.update
+    @item_window.update
+    @target_window.update
+    if @item_window.active
+      update_item_selection
+    elsif @target_window.active
+      update_target_selection
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新物品选择
+  #--------------------------------------------------------------------------
+  def update_item_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      return_scene
+    elsif Input.trigger?(Input::C)
+      @item = @item_window.item
+      if @item != nil
+        $game_party.last_item_id = @item.id
+      end
+      if $game_party.item_can_use?(@item)
+        Sound.play_decision
+        determine_item
+      else
+        Sound.play_buzzer
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 确认物品
+  #--------------------------------------------------------------------------
+  def determine_item
+    if @item.for_friend?
+      show_target_window(@item_window.index % 2 == 0)
+      if @item.for_all?
+        @target_window.index = 99
+      else
+        if $game_party.last_target_index < @target_window.item_max
+          @target_window.index = $game_party.last_target_index
+        else
+          @target_window.index = 0
+        end
+      end
+    else
+      use_item_nontarget
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新目标选择
+  #--------------------------------------------------------------------------
+  def update_target_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      if $game_party.item_number(@item) == 0    # 判断物品是否耗尽
+        @item_window.refresh                    # 刷新窗口内容
+      end
+      hide_target_window
+    elsif Input.trigger?(Input::C)
+      if not $game_party.item_can_use?(@item)
+        Sound.play_buzzer
+      else
+        determine_target
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 确认目标
+  #    目标无效时（如对无法战斗的角色使用回复药水）则播放冻结SE。
+  #--------------------------------------------------------------------------
+  def determine_target
+    used = false
+    if @item.for_all?
+      for target in $game_party.members
+        target.item_effect(target, @item)
+        used = true unless target.skipped
+      end
+    else
+      $game_party.last_target_index = @target_window.index
+      target = $game_party.members[@target_window.index]
+      target.item_effect(target, @item)
+      used = true unless target.skipped
+    end
+    if used
+      use_item_nontarget
+    else
+      Sound.play_buzzer
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示目标窗口
+  #     right : 靠又对齐标签（为false时则靠左）
+  #--------------------------------------------------------------------------
+  def show_target_window(right)
+    @item_window.active = false
+    width_remain = 544 - @target_window.width
+    @target_window.x = right ? width_remain : 0
+    @target_window.visible = true
+    @target_window.active = true
+    if right
+      @viewport.rect.set(0, 0, width_remain, 416)
+      @viewport.ox = 0
+    else
+      @viewport.rect.set(@target_window.width, 0, width_remain, 416)
+      @viewport.ox = @target_window.width
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 隐藏目标窗口
+  #--------------------------------------------------------------------------
+  def hide_target_window
+    @item_window.active = true
+    @target_window.visible = false
+    @target_window.active = false
+    @viewport.rect.set(0, 0, 544, 416)
+    @viewport.ox = 0
+  end
+  #--------------------------------------------------------------------------
+  # ● 非同伴目标使用物品
+  #--------------------------------------------------------------------------
+  def use_item_nontarget
+    Sound.play_use_item
+    $game_party.consume_item(@item)
+    @item_window.draw_item(@item_window.index)
+    @target_window.refresh
+    if $game_party.all_dead?
+      $scene = Scene_Gameover.new
+    elsif @item.common_event_id > 0
+      $game_temp.common_event_id = @item.common_event_id
+      $scene = Scene_Map.new
+    end
+  end
+end
+
+#==============================================================================
+# ■ Scene_Skill
+#------------------------------------------------------------------------------
+# 　处理特技画面的类。
+#==============================================================================
+
+class Scene_Skill < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     actor_index : 角色位置
+  #--------------------------------------------------------------------------
+  def initialize(actor_index = 0, equip_index = 0)
+    @actor_index = actor_index
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    @actor = $game_party.members[@actor_index]
+    @viewport = Viewport.new(0, 0, 544, 416)
+    @help_window = Window_Help.new
+    @help_window.viewport = @viewport
+    @status_window = Window_SkillStatus.new(0, 56, @actor)
+    @status_window.viewport = @viewport
+    @skill_window = Window_Skill.new(0, 112, 544, 304, @actor)
+    @skill_window.viewport = @viewport
+    @skill_window.help_window = @help_window
+    @target_window = Window_MenuStatus.new(0, 0)
+    hide_target_window
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_menu_background
+    @help_window.dispose
+    @status_window.dispose
+    @skill_window.dispose
+    @target_window.dispose
+  end
+  #--------------------------------------------------------------------------
+  # ● 回到原画面
+  #--------------------------------------------------------------------------
+  def return_scene
+    $scene = Scene_Menu.new(1)
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至下一角色画面
+  #--------------------------------------------------------------------------
+  def next_actor
+    @actor_index += 1
+    @actor_index %= $game_party.members.size
+    $scene = Scene_Skill.new(@actor_index)
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至上一角色画面
+  #--------------------------------------------------------------------------
+  def prev_actor
+    @actor_index += $game_party.members.size - 1
+    @actor_index %= $game_party.members.size
+    $scene = Scene_Skill.new(@actor_index)
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_menu_background
+    @help_window.update
+    @status_window.update
+    @skill_window.update
+    @target_window.update
+    if @skill_window.active
+      update_skill_selection
+    elsif @target_window.active
+      update_target_selection
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新技能选择
+  #--------------------------------------------------------------------------
+  def update_skill_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      return_scene
+    elsif Input.trigger?(Input::R)
+      Sound.play_cursor
+      next_actor
+    elsif Input.trigger?(Input::L)
+      Sound.play_cursor
+      prev_actor
+    elsif Input.trigger?(Input::C)
+      @skill = @skill_window.skill
+      if @skill != nil
+        @actor.last_skill_id = @skill.id
+      end
+      if @actor.skill_can_use?(@skill)
+        Sound.play_decision
+        determine_skill
+      else
+        Sound.play_buzzer
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 确认技能
+  #--------------------------------------------------------------------------
+  def determine_skill
+    if @skill.for_friend?
+      show_target_window(@skill_window.index % 2 == 0)
+      if @skill.for_all?
+        @target_window.index = 99
+      elsif @skill.for_user?
+        @target_window.index = @actor_index + 100
+      else
+        if $game_party.last_target_index < @target_window.item_max
+          @target_window.index = $game_party.last_target_index
+        else
+          @target_window.index = 0
+        end
+      end
+    else
+      use_skill_nontarget
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新目标选择
+  #--------------------------------------------------------------------------
+  def update_target_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      hide_target_window
+    elsif Input.trigger?(Input::C)
+      if not @actor.skill_can_use?(@skill)
+        Sound.play_buzzer
+      else
+        determine_target
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 确认目标
+  #    目标无效时（如对无法战斗的角色使用回复技能）则播放冻结SE。
+  #--------------------------------------------------------------------------
+  def determine_target
+    used = false
+    if @skill.for_all?
+      for target in $game_party.members
+        target.skill_effect(@actor, @skill)
+        used = true unless target.skipped
+      end
+    elsif @skill.for_user?
+      target = $game_party.members[@target_window.index - 100]
+      target.skill_effect(@actor, @skill)
+      used = true unless target.skipped
+    else
+      $game_party.last_target_index = @target_window.index
+      target = $game_party.members[@target_window.index]
+      target.skill_effect(@actor, @skill)
+      used = true unless target.skipped
+    end
+    if used
+      use_skill_nontarget
+    else
+      Sound.play_buzzer
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示目标窗口
+  #     right : 靠又对齐标签（为false时则靠左）
+  #--------------------------------------------------------------------------
+  def show_target_window(right)
+    @skill_window.active = false
+    width_remain = 544 - @target_window.width
+    @target_window.x = right ? width_remain : 0
+    @target_window.visible = true
+    @target_window.active = true
+    if right
+      @viewport.rect.set(0, 0, width_remain, 416)
+      @viewport.ox = 0
+    else
+      @viewport.rect.set(@target_window.width, 0, width_remain, 416)
+      @viewport.ox = @target_window.width
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 隐藏目标窗口
+  #--------------------------------------------------------------------------
+  def hide_target_window
+    @skill_window.active = true
+    @target_window.visible = false
+    @target_window.active = false
+    @viewport.rect.set(0, 0, 544, 416)
+    @viewport.ox = 0
+  end
+  #--------------------------------------------------------------------------
+  # ● 非同伴目标使用物品
+  #--------------------------------------------------------------------------
+  def use_skill_nontarget
+    Sound.play_use_skill
+    @actor.mp -= @actor.calc_mp_cost(@skill)
+    @status_window.refresh
+    @skill_window.refresh
+    @target_window.refresh
+    if $game_party.all_dead?
+      $scene = Scene_Gameover.new
+    elsif @skill.common_event_id > 0
+      $game_temp.common_event_id = @skill.common_event_id
+      $scene = Scene_Map.new
+    end
+  end
+end
+
+#==============================================================================
+# ■ Scene_Battle
+#------------------------------------------------------------------------------
+# 　处理战斗画面的类。
+#==============================================================================
+
+class Scene_Battle < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    $game_temp.in_battle = true
+    @spriteset = Spriteset_Battle.new
+    @message_window = Window_BattleMessage.new
+    @action_battlers = []
+    create_info_viewport
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始後处理
+  #--------------------------------------------------------------------------
+  def post_start
+    super
+    process_battle_start
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_info_viewport
+    @message_window.dispose
+    @spriteset.dispose
+    unless $scene.is_a?(Scene_Gameover)
+      $scene = nil if $BTEST
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 基本更新处理
+  #     main : 从main里调用
+  #--------------------------------------------------------------------------
+  def update_basic(main = false)
+    Graphics.update unless main     # 更新游戏画面
+    Input.update unless main        # 更新输入处理
+    $game_system.update             # 更新计时器
+    $game_troop.update              # 更新敌人队伍
+    @spriteset.update               # 更新活动块组
+    @message_window.update          # 更新讯息窗口
+  end
+  #--------------------------------------------------------------------------
+  # ● 等待
+  #     duration : 等待时间（祯数）
+  #     no_fast  : 无效化瞬间显示
+  #    一个在场景类更新中等待时间用的方法。一般来说，update每祯都会被调用一次。
+  #    但是在战斗中不容易掌握流程，所以这个方法是作为一个例外使用。
+  #--------------------------------------------------------------------------
+  def wait(duration, no_fast = false)
+    for i in 0...duration
+      update_basic
+      break if not no_fast and i >= duration / 2 and show_fast?
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 等待讯息结束
+  #--------------------------------------------------------------------------
+  def wait_for_message
+    @message_window.update
+    while $game_message.visible
+      update_basic
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 等待动画结束
+  #--------------------------------------------------------------------------
+  def wait_for_animation
+    while @spriteset.animation?
+      update_basic
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 判断是否瞬间显示
+  #--------------------------------------------------------------------------
+  def show_fast?
+    return (Input.press?(Input::A) or Input.press?(Input::C))
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_basic(true)
+    update_info_viewport                  # 更新资讯显示端口
+    if $game_message.visible
+      @info_viewport.visible = false
+      @message_window.visible = true
+    end
+    unless $game_message.visible          # 除非讯息显示中
+      return if judge_win_loss            # 判断胜负结果
+      update_scene_change
+      if @target_enemy_window != nil
+        update_target_enemy_selection     # 选择目标敌人
+      elsif @target_actor_window != nil
+        update_target_actor_selection     # 选择目标角色
+      elsif @skill_window != nil
+        update_skill_selection            # 选择技能
+      elsif @item_window != nil
+        update_item_selection             # 选择物品
+      elsif @party_command_window.active
+        update_party_command_selection    # 选择队伍命令
+      elsif @actor_command_window.active
+        update_actor_command_selection    # 选择角色命令
+      else
+        process_battle_event              # 战斗事件处理
+        process_action                    # 战斗行动
+        process_battle_event              # 战斗事件处理
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成资讯显示端口
+  #--------------------------------------------------------------------------
+  def create_info_viewport
+    @info_viewport = Viewport.new(0, 288, 544, 128)
+    @info_viewport.z = 100
+    @status_window = Window_BattleStatus.new
+    @party_command_window = Window_PartyCommand.new
+    @actor_command_window = Window_ActorCommand.new
+    @status_window.viewport = @info_viewport
+    @party_command_window.viewport = @info_viewport
+    @actor_command_window.viewport = @info_viewport
+    @status_window.x = 128
+    @actor_command_window.x = 544
+    @info_viewport.visible = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 释放资讯显示端口
+  #--------------------------------------------------------------------------
+  def dispose_info_viewport
+    @status_window.dispose
+    @party_command_window.dispose
+    @actor_command_window.dispose
+    @info_viewport.dispose
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新资讯显示端口
+  #--------------------------------------------------------------------------
+  def update_info_viewport
+    @party_command_window.update
+    @actor_command_window.update
+    @status_window.update
+    if @party_command_window.active and @info_viewport.ox > 0
+      @info_viewport.ox -= 16
+    elsif @actor_command_window.active and @info_viewport.ox < 128
+      @info_viewport.ox += 16
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 战斗事件处理
+  #--------------------------------------------------------------------------
+  def process_battle_event
+    loop do
+      return if judge_win_loss
+      return if $game_temp.next_scene != nil
+      $game_troop.interpreter.update
+      $game_troop.setup_battle_event
+      wait_for_message
+      process_action if $game_troop.forcing_battler != nil
+      return unless $game_troop.interpreter.running?
+      update_basic
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 判断胜负结果
+  #--------------------------------------------------------------------------
+  def judge_win_loss
+    if $game_temp.in_battle
+      if $game_party.all_dead?
+        process_defeat
+        return true
+      elsif $game_troop.all_dead?
+        process_victory
+        return true
+      else
+        return false
+      end
+    else
+      return true
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束战斗
+  #     result : 结果（0：胜利，1：逃跑，2：失败）
+  #--------------------------------------------------------------------------
+  def battle_end(result)
+    if result == 2 and not $game_troop.can_lose
+      call_gameover
+    else
+      $game_party.clear_actions
+      $game_party.remove_states_battle
+      $game_troop.clear
+      if $game_temp.battle_proc != nil
+        $game_temp.battle_proc.call(result)
+        $game_temp.battle_proc = nil
+      end
+      unless $BTEST
+        $game_temp.map_bgm.play
+        $game_temp.map_bgs.play
+      end
+      $scene = Scene_Map.new
+      @message_window.clear
+      Graphics.fadeout(30)
+    end
+    $game_temp.in_battle = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 转到输入下一个角色的命令
+  #--------------------------------------------------------------------------
+  def next_actor
+    loop do
+      if @actor_index == $game_party.members.size-1
+        start_main
+        return
+      end
+      @status_window.index = @actor_index += 1
+      @active_battler = $game_party.members[@actor_index]
+      if @active_battler.auto_battle
+        @active_battler.make_action
+        next
+      end
+      break if @active_battler.inputable?
+    end
+    start_actor_command_selection
+  end
+  #--------------------------------------------------------------------------
+  # ● 转到输入上一个角色的命令
+  #--------------------------------------------------------------------------
+  def prior_actor
+    loop do
+      if @actor_index == 0
+        start_party_command_selection
+        return
+      end
+      @status_window.index = @actor_index -= 1
+      @active_battler = $game_party.members[@actor_index]
+      next if @active_battler.auto_battle
+      break if @active_battler.inputable?
+    end
+    start_actor_command_selection
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始队伍命令选择
+  #--------------------------------------------------------------------------
+  def start_party_command_selection
+    if $game_temp.in_battle
+      @status_window.refresh
+      @status_window.index = @actor_index = -1
+      @active_battler = nil
+      @info_viewport.visible = true
+      @message_window.visible = false
+      @party_command_window.active = true
+      @party_command_window.index = 0
+      @actor_command_window.active = false
+      $game_party.clear_actions
+      if $game_troop.surprise or not $game_party.inputable?
+        start_main
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新队伍命令选择
+  #--------------------------------------------------------------------------
+  def update_party_command_selection
+    if Input.trigger?(Input::C)
+      case @party_command_window.index
+        when 0  # 战斗
+          Sound.play_decision
+          @status_window.index = @actor_index = -1
+          next_actor
+        when 1  # 逃跑
+          if $game_troop.can_escape == false
+            Sound.play_buzzer
+            return
+          end
+          Sound.play_decision
+          process_escape
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始角色命令选择
+  #--------------------------------------------------------------------------
+  def start_actor_command_selection
+    @party_command_window.active = false
+    @actor_command_window.setup(@active_battler)
+    @actor_command_window.active = true
+    @actor_command_window.index = 0
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新角色命令选择
+  #--------------------------------------------------------------------------
+  def update_actor_command_selection
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      prior_actor
+    elsif Input.trigger?(Input::C)
+      case @actor_command_window.index
+        when 0  # 攻击
+          Sound.play_decision
+          @active_battler.action.set_attack
+          start_target_enemy_selection
+        when 1  # 技能
+          Sound.play_decision
+          start_skill_selection
+        when 2  # 防御
+          Sound.play_decision
+          @active_battler.action.set_guard
+          next_actor
+        when 3  # 物品
+          Sound.play_decision
+          start_item_selection
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始敌人目标选择
+  #--------------------------------------------------------------------------
+  def start_target_enemy_selection
+    @target_enemy_window = Window_TargetEnemy.new
+    @target_enemy_window.y = @info_viewport.rect.y
+    @info_viewport.rect.x += @target_enemy_window.width
+    @info_viewport.ox += @target_enemy_window.width
+    @actor_command_window.active = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束敌人目标选择
+  #--------------------------------------------------------------------------
+  def end_target_enemy_selection
+    @info_viewport.rect.x -= @target_enemy_window.width
+    @info_viewport.ox -= @target_enemy_window.width
+    @target_enemy_window.dispose
+    @target_enemy_window = nil
+    if @actor_command_window.index == 0
+      @actor_command_window.active = true
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新敌人目标选择
+  #--------------------------------------------------------------------------
+  def update_target_enemy_selection
+    @target_enemy_window.update
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      end_target_enemy_selection
+    elsif Input.trigger?(Input::C)
+      Sound.play_decision
+      @active_battler.action.target_index = @target_enemy_window.enemy.index
+      end_target_enemy_selection
+      end_skill_selection
+      end_item_selection
+      next_actor
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始同伴目标选择
+  #--------------------------------------------------------------------------
+  def start_target_actor_selection
+    @target_actor_window = Window_BattleStatus.new
+    @target_actor_window.index = 0
+    @target_actor_window.active = true
+    @target_actor_window.y = @info_viewport.rect.y
+    @info_viewport.rect.x += @target_actor_window.width
+    @info_viewport.ox += @target_actor_window.width
+    @actor_command_window.active = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束同伴目标选择
+  #--------------------------------------------------------------------------
+  def end_target_actor_selection
+    @info_viewport.rect.x -= @target_actor_window.width
+    @info_viewport.ox -= @target_actor_window.width
+    @target_actor_window.dispose
+    @target_actor_window = nil
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新同伴目标选择
+  #--------------------------------------------------------------------------
+  def update_target_actor_selection
+    @target_actor_window.update
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      end_target_actor_selection
+    elsif Input.trigger?(Input::C)
+      Sound.play_decision
+      @active_battler.action.target_index = @target_actor_window.index
+      end_target_actor_selection
+      end_skill_selection
+      end_item_selection
+      next_actor
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始技能选择
+  #--------------------------------------------------------------------------
+  def start_skill_selection
+    @help_window = Window_Help.new
+    @skill_window = Window_Skill.new(0, 56, 544, 232, @active_battler)
+    @skill_window.help_window = @help_window
+    @actor_command_window.active = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束技能选择
+  #--------------------------------------------------------------------------
+  def end_skill_selection
+    if @skill_window != nil
+      @skill_window.dispose
+      @skill_window = nil
+      @help_window.dispose
+      @help_window = nil
+    end
+    @actor_command_window.active = true
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新技能选择
+  #--------------------------------------------------------------------------
+  def update_skill_selection
+    @skill_window.active = true
+    @skill_window.update
+    @help_window.update
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      end_skill_selection
+    elsif Input.trigger?(Input::C)
+      @skill = @skill_window.skill
+      if @skill != nil
+        @active_battler.last_skill_id = @skill.id
+      end
+      if @active_battler.skill_can_use?(@skill)
+        Sound.play_decision
+        determine_skill
+      else
+        Sound.play_buzzer
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 确认技能
+  #--------------------------------------------------------------------------
+  def determine_skill
+    @active_battler.action.set_skill(@skill.id)
+    @skill_window.active = false
+    if @skill.need_selection?
+      if @skill.for_opponent?
+        start_target_enemy_selection
+      else
+        start_target_actor_selection
+      end
+    else
+      end_skill_selection
+      next_actor
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始物品选择
+  #--------------------------------------------------------------------------
+  def start_item_selection
+    @help_window = Window_Help.new
+    @item_window = Window_Item.new(0, 56, 544, 232)
+    @item_window.help_window = @help_window
+    @actor_command_window.active = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束物品选择
+  #--------------------------------------------------------------------------
+  def end_item_selection
+    if @item_window != nil
+      @item_window.dispose
+      @item_window = nil
+      @help_window.dispose
+      @help_window = nil
+    end
+    @actor_command_window.active = true
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新物品选择
+  #--------------------------------------------------------------------------
+  def update_item_selection
+    @item_window.active = true
+    @item_window.update
+    @help_window.update
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      end_item_selection
+    elsif Input.trigger?(Input::C)
+      @item = @item_window.item
+      if @item != nil
+        $game_party.last_item_id = @item.id
+      end
+      if $game_party.item_can_use?(@item)
+        Sound.play_decision
+        determine_item
+      else
+        Sound.play_buzzer
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 确认物品
+  #--------------------------------------------------------------------------
+  def determine_item
+    @active_battler.action.set_item(@item.id)
+    @item_window.active = false
+    if @item.need_selection?
+      if @item.for_opponent?
+        start_target_enemy_selection
+      else
+        start_target_actor_selection
+      end
+    else
+      end_item_selection
+      next_actor
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 战斗开始处理
+  #--------------------------------------------------------------------------
+  def process_battle_start
+    @message_window.clear
+    wait(10)
+    for name in $game_troop.enemy_names
+      text = sprintf(Vocab::Emerge, name)
+      $game_message.texts.push(text)
+    end
+    if $game_troop.preemptive
+      text = sprintf(Vocab::Preemptive, $game_party.name)
+      $game_message.texts.push(text)
+    elsif $game_troop.surprise
+      text = sprintf(Vocab::Surprise, $game_party.name)
+      $game_message.texts.push(text)
+    end
+    wait_for_message
+    @message_window.clear
+    make_escape_ratio
+    process_battle_event
+    start_party_command_selection
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成逃跑机率
+  #--------------------------------------------------------------------------
+  def make_escape_ratio
+    actors_agi = $game_party.average_agi
+    enemies_agi = $game_troop.average_agi
+    @escape_ratio = 150 - 100 * enemies_agi / actors_agi
+  end
+  #--------------------------------------------------------------------------
+  # ● 逃跑处理
+  #--------------------------------------------------------------------------
+  def process_escape
+    @info_viewport.visible = false
+    @message_window.visible = true
+    text = sprintf(Vocab::EscapeStart, $game_party.name)
+    $game_message.texts.push(text)
+    if $game_troop.preemptive
+      success = true
+    else
+      success = (rand(100) < @escape_ratio)
+    end
+    Sound.play_escape
+    if success
+      wait_for_message
+      battle_end(1)
+    else
+      @escape_ratio += 10
+      $game_message.texts.push('\.' + Vocab::EscapeFailure)
+      wait_for_message
+      $game_party.clear_actions
+      start_main
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 胜利处理
+  #--------------------------------------------------------------------------
+  def process_victory
+    @info_viewport.visible = false
+    @message_window.visible = true
+    RPG::BGM.stop
+    $game_system.battle_end_me.play
+    unless $BTEST
+      $game_temp.map_bgm.play
+      $game_temp.map_bgs.play
+    end
+    display_exp_and_gold
+    display_drop_items
+    display_level_up
+    battle_end(0)
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示所获得的金钱和经验值
+  #--------------------------------------------------------------------------
+  def display_exp_and_gold
+    exp = $game_troop.exp_total
+    gold = $game_troop.gold_total
+    $game_party.gain_gold(gold)
+    text = sprintf(Vocab::Victory, $game_party.name)
+    $game_message.texts.push('\|' + text)
+    if exp > 0
+      text = sprintf(Vocab::ObtainExp, exp)
+      $game_message.texts.push('\.' + text)
+    end
+    if gold > 0
+      text = sprintf(Vocab::ObtainGold, gold, Vocab::gold)
+      $game_message.texts.push('\.' + text)
+    end
+    wait_for_message
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示所获得的掉落物品
+  #--------------------------------------------------------------------------
+  def display_drop_items
+    drop_items = $game_troop.make_drop_items
+    for item in drop_items
+      $game_party.gain_item(item, 1)
+      text = sprintf(Vocab::ObtainItem, item.name)
+      $game_message.texts.push(text)
+    end
+    wait_for_message
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示升级
+  #--------------------------------------------------------------------------
+  def display_level_up
+    exp = $game_troop.exp_total
+    for actor in $game_party.existing_members
+      last_level = actor.level
+      last_skills = actor.skills
+      actor.gain_exp(exp, true)
+    end
+    wait_for_message
+  end
+  #--------------------------------------------------------------------------
+  # ● 失败处理
+  #--------------------------------------------------------------------------
+  def process_defeat
+    @info_viewport.visible = false
+    @message_window.visible = true
+    text = sprintf(Vocab::Defeat, $game_party.name)
+    $game_message.texts.push(text)
+    wait_for_message
+    battle_end(2)
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行画面切换
+  #--------------------------------------------------------------------------
+  def update_scene_change
+    case $game_temp.next_scene
+      when "map"
+        call_map
+      when "gameover"
+        call_gameover
+      when "title"
+        call_title
+      else
+        $game_temp.next_scene = nil
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至地图画面
+  #--------------------------------------------------------------------------
+  def call_map
+    $game_temp.next_scene = nil
+    battle_end(1)
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至游戏结束画面
+  #--------------------------------------------------------------------------
+  def call_gameover
+    $game_temp.next_scene = nil
+    $scene = Scene_Gameover.new
+    @message_window.clear
+  end
+  #--------------------------------------------------------------------------
+  # ● 切换至标题画面
+  #--------------------------------------------------------------------------
+  def call_title
+    $game_temp.next_scene = nil
+    $scene = Scene_Title.new
+    @message_window.clear
+    Graphics.fadeout(60)
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始执行战斗处理
+  #--------------------------------------------------------------------------
+  def start_main
+    $game_troop.increase_turn
+    @info_viewport.visible = false
+    @info_viewport.ox = 0
+    @message_window.visible = true
+    @party_command_window.active = false
+    @actor_command_window.active = false
+    @status_window.index = @actor_index = -1
+    @active_battler = nil
+    @message_window.clear
+    $game_troop.make_actions
+    make_action_orders
+    wait(20)
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成行动顺序
+  #--------------------------------------------------------------------------
+  def make_action_orders
+    @action_battlers = []
+    unless $game_troop.surprise
+      @action_battlers += $game_party.members
+    end
+    unless $game_troop.preemptive
+      @action_battlers += $game_troop.members
+    end
+    for battler in @action_battlers
+      battler.action.make_speed
+    end
+    @action_battlers.sort! do |a,b|
+      b.action.speed - a.action.speed
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 战斗行动处理
+  #--------------------------------------------------------------------------
+  def process_action
+    return if judge_win_loss
+    return if $game_temp.next_scene != nil
+    set_next_active_battler
+    if @active_battler == nil
+      turn_end
+      return
+    end
+    @message_window.clear
+    wait(5)
+    @active_battler.white_flash = true
+    unless @active_battler.action.forcing
+      @active_battler.action.prepare
+    end
+    if @active_battler.action.valid?
+      execute_action
+    end
+    unless @active_battler.action.forcing
+      @message_window.clear
+      remove_states_auto
+      display_current_state
+    end
+    @active_battler.white_flash = false
+    @message_window.clear
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行战斗行动
+  #--------------------------------------------------------------------------
+  def execute_action
+    case @active_battler.action.kind
+      when 0  # 基本
+        case @active_battler.action.basic
+          when 0  # 攻击
+            execute_action_attack
+          when 1  # 防御
+            execute_action_guard
+          when 2  # 逃跑
+            execute_action_escape
+          when 3  # 等待
+            execute_action_wait
+        end
+      when 1  # 使用技能
+        execute_action_skill
+      when 2  # 使用物品
+        execute_action_item
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 回合结束
+  #--------------------------------------------------------------------------
+  def turn_end
+    $game_troop.turn_ending = true
+    $game_party.slip_damage_effect
+    $game_troop.slip_damage_effect
+    $game_party.do_auto_recovery
+    $game_troop.preemptive = false
+    $game_troop.surprise = false
+    process_battle_event
+    $game_troop.turn_ending = false
+    start_party_command_selection
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置下一战斗者行动
+  #    当「强制战斗行动」事件命令被执行时，设置该战斗者并将他从列表中移除
+  #    否则从列表顶端开始。当角色不在队伍之中时（可能因事件命令而离开）则
+  #    直接跳过。
+  #--------------------------------------------------------------------------
+  def set_next_active_battler
+    loop do
+      if $game_troop.forcing_battler != nil
+        @active_battler = $game_troop.forcing_battler
+        @action_battlers.delete(@active_battler)
+        $game_troop.forcing_battler = nil
+      else
+        @active_battler = @action_battlers.shift
+      end
+      return if @active_battler == nil
+      return if @active_battler.index != nil
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 自动解除状态
+  #--------------------------------------------------------------------------
+  def remove_states_auto
+    last_st = @active_battler.states
+    @active_battler.remove_states_auto
+    if @active_battler.states != last_st
+      wait(5)
+      display_state_changes(@active_battler)
+      wait(30)
+      @message_window.clear
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示当前状态
+  #--------------------------------------------------------------------------
+  def display_current_state
+    state_text = @active_battler.most_important_state_text
+    unless state_text.empty?
+      wait(5)
+      text = @active_battler.name + state_text
+      @message_window.add_instant_text(text)
+      wait(45)
+      @message_window.clear
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行战斗行动：攻击
+  #--------------------------------------------------------------------------
+  def execute_action_attack
+    text = sprintf(Vocab::DoAttack, @active_battler.name)
+    @message_window.add_instant_text(text)
+    targets = @active_battler.action.make_targets
+    display_attack_animation(targets)
+    wait(20)
+    for target in targets
+      target.attack_effect(@active_battler)
+      display_action_effects(target)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行战斗行动：防御
+  #--------------------------------------------------------------------------
+  def execute_action_guard
+    text = sprintf(Vocab::DoGuard, @active_battler.name)
+    @message_window.add_instant_text(text)
+    wait(45)
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行战斗行动：逃跑
+  #--------------------------------------------------------------------------
+  def execute_action_escape
+    text = sprintf(Vocab::DoEscape, @active_battler.name)
+    @message_window.add_instant_text(text)
+    @active_battler.escape
+    Sound.play_escape
+    wait(45)
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行战斗行动：等待
+  #--------------------------------------------------------------------------
+  def execute_action_wait
+    text = sprintf(Vocab::DoWait, @active_battler.name)
+    @message_window.add_instant_text(text)
+    wait(45)
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行战斗行动：使用技能
+  #--------------------------------------------------------------------------
+  def execute_action_skill
+    skill = @active_battler.action.skill
+    text = @active_battler.name + skill.message1
+    @message_window.add_instant_text(text)
+    unless skill.message2.empty?
+      wait(10)
+      @message_window.add_instant_text(skill.message2)
+    end
+    targets = @active_battler.action.make_targets
+    display_animation(targets, skill.animation_id)
+    @active_battler.mp -= @active_battler.calc_mp_cost(skill)
+    $game_temp.common_event_id = skill.common_event_id
+    for target in targets
+      target.skill_effect(@active_battler, skill)
+      display_action_effects(target, skill)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行战斗行动：使用物品
+  #--------------------------------------------------------------------------
+  def execute_action_item
+    item = @active_battler.action.item
+    text = sprintf(Vocab::UseItem, @active_battler.name, item.name)
+    @message_window.add_instant_text(text)
+    targets = @active_battler.action.make_targets
+    display_animation(targets, item.animation_id)
+    $game_party.consume_item(item)
+    $game_temp.common_event_id = item.common_event_id
+    for target in targets
+      target.item_effect(@active_battler, item)
+      display_action_effects(target, item)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示动画
+  #     targets      : 目标数组
+  #     animation_id : 动画 ID（─1：与普通攻击相同）
+  #--------------------------------------------------------------------------
+  def display_animation(targets, animation_id)
+    if animation_id < 0
+      display_attack_animation(targets)
+    else
+      display_normal_animation(targets, animation_id)
+    end
+    wait(20)
+    wait_for_animation
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示攻击动画
+  #     targets : 目标数组
+  #    敌人的场合，播放「敌人普通攻击」音效和等待。
+  #    角色的场合，则包含双刀派（将左手武器动画翻转作为右手武器动画）。
+  #--------------------------------------------------------------------------
+  def display_attack_animation(targets)
+    if @active_battler.is_a?(Game_Enemy)
+      Sound.play_enemy_attack
+      wait(15, true)
+    else
+      aid1 = @active_battler.atk_animation_id
+      aid2 = @active_battler.atk_animation_id2
+      display_normal_animation(targets, aid1, false)
+      display_normal_animation(targets, aid2, true)
+    end
+    wait_for_animation
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示普通动画
+  #     targets      : 目标数组
+  #     animation_id : 动画 ID
+  #     mirror       : 横向翻转
+  #--------------------------------------------------------------------------
+  def display_normal_animation(targets, animation_id, mirror = false)
+    animation = $data_animations[animation_id]
+    if animation != nil
+      to_screen = (animation.position == 3)       # 判断位置是否为画面
+      for target in targets.uniq
+        target.animation_id = animation_id
+        target.animation_mirror = mirror
+        wait(20, true) unless to_screen           # 单体，等待
+      end
+      wait(20, true) if to_screen                 # 全体，等待
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示行动结果
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_action_effects(target, obj = nil)
+    unless target.skipped
+      line_number = @message_window.line_number
+      wait(5)
+      display_critical(target, obj)
+      display_damage(target, obj)
+      display_state_changes(target, obj)
+      if line_number == @message_window.line_number
+        display_failure(target, obj) unless target.states_active?
+      end
+      if line_number != @message_window.line_number
+        wait(30)
+      end
+      @message_window.back_to(line_number)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示会心一击
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_critical(target, obj = nil)
+    if target.critical
+      if target.actor?
+        text = Vocab::CriticalToActor
+      else
+        text = Vocab::CriticalToEnemy
+      end
+      @message_window.add_instant_text(text)
+      wait(20)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示伤害
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_damage(target, obj = nil)
+    if target.missed
+      display_miss(target, obj)
+    elsif target.evaded
+      display_evasion(target, obj)
+    else
+      display_hp_damage(target, obj)
+      display_mp_damage(target, obj)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示落空
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_miss(target, obj = nil)
+    if obj == nil or obj.physical_attack
+      if target.actor?
+        text = sprintf(Vocab::ActorNoHit, target.name)
+      else
+        text = sprintf(Vocab::EnemyNoHit, target.name)
+      end
+      Sound.play_miss
+    else
+      text = sprintf(Vocab::ActionFailure, target.name)
+    end
+    @message_window.add_instant_text(text)
+    wait(30)
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示逃跑
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_evasion(target, obj = nil)
+    if target.actor?
+      text = sprintf(Vocab::ActorEvasion, target.name)
+    else
+      text = sprintf(Vocab::EnemyEvasion, target.name)
+    end
+    Sound.play_evasion
+    @message_window.add_instant_text(text)
+    wait(30)
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示体力伤害
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_hp_damage(target, obj = nil)
+    if target.hp_damage == 0                # 无伤害
+      return if obj != nil and obj.damage_to_mp
+      return if obj != nil and obj.base_damage == 0
+      fmt = target.actor? ? Vocab::ActorNoDamage : Vocab::EnemyNoDamage
+      text = sprintf(fmt, target.name)
+    elsif target.absorbed                   # 吸收
+      fmt = target.actor? ? Vocab::ActorDrain : Vocab::EnemyDrain
+      text = sprintf(fmt, target.name, Vocab::hp, target.hp_damage)
+    elsif target.hp_damage > 0              # 伤害
+      if target.actor?
+        text = sprintf(Vocab::ActorDamage, target.name, target.hp_damage)
+        Sound.play_actor_damage
+        $game_troop.screen.start_shake(5, 5, 10)
+      else
+        text = sprintf(Vocab::EnemyDamage, target.name, target.hp_damage)
+        Sound.play_enemy_damage
+        target.blink = true
+      end
+    else                                    # 回复
+      fmt = target.actor? ? Vocab::ActorRecovery : Vocab::EnemyRecovery
+      text = sprintf(fmt, target.name, Vocab::hp, -target.hp_damage)
+      Sound.play_recovery
+    end
+    @message_window.add_instant_text(text)
+    wait(30)
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示魔力伤害
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_mp_damage(target, obj = nil)
+    return if target.dead?
+    return if target.mp_damage == 0
+    if target.absorbed                      # 吸收
+      fmt = target.actor? ? Vocab::ActorDrain : Vocab::EnemyDrain
+      text = sprintf(fmt, target.name, Vocab::mp, target.mp_damage)
+    elsif target.mp_damage > 0              # 伤害
+      fmt = target.actor? ? Vocab::ActorLoss : Vocab::EnemyLoss
+      text = sprintf(fmt, target.name, Vocab::mp, target.mp_damage)
+    else                                    # 回复
+      fmt = target.actor? ? Vocab::ActorRecovery : Vocab::EnemyRecovery
+      text = sprintf(fmt, target.name, Vocab::mp, -target.mp_damage)
+      Sound.play_recovery
+    end
+    @message_window.add_instant_text(text)
+    wait(30)
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示更改状态
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_state_changes(target, obj = nil)
+    return if target.missed or target.evaded
+    return unless target.states_active?
+    if @message_window.line_number < 4
+      @message_window.add_instant_text("")
+    end
+    display_added_states(target, obj)
+    display_removed_states(target, obj)
+    display_remained_states(target, obj)
+    if @message_window.last_instant_text.empty?
+      @message_window.back_one
+    else
+      wait(10)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示附加状态
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_added_states(target, obj = nil)
+    for state in target.added_states
+      if target.actor?
+        next if state.message1.empty?
+        text = target.name + state.message1
+      else
+        next if state.message2.empty?
+        text = target.name + state.message2
+      end
+      if state.id == 1                      # 无法战斗
+        target.perform_collapse
+      end
+      @message_window.replace_instant_text(text)
+      wait(20)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示移除状态
+  #     target : 目标
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_removed_states(target, obj = nil)
+    for state in target.removed_states
+      next if state.message4.empty?
+      text = target.name + state.message4
+      @message_window.replace_instant_text(text)
+      wait(20)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示不变状态
+  #     target : 目标
+  #     obj    : 技能或物品
+  #    当尝试将以睡着的人附加睡眠状态等时用的。
+  #--------------------------------------------------------------------------
+  def display_remained_states(target, obj = nil)
+    for state in target.remained_states
+      next if state.message3.empty?
+      text = target.name + state.message3
+      @message_window.replace_instant_text(text)
+      wait(20)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 显示失败
+  #     target : 目标（角色）
+  #     obj    : 技能或物品
+  #--------------------------------------------------------------------------
+  def display_failure(target, obj)
+    text = sprintf(Vocab::ActionFailure, target.name)
+    @message_window.add_instant_text(text)
+    wait(20)
+  end
+end
+
+#==============================================================================
+# ■ Scene_Debug
+#------------------------------------------------------------------------------
+# 　处理调试画面的类。
+#==============================================================================
+
+class Scene_Debug < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    @left_window = Window_DebugLeft.new(0, 0)
+    @right_window = Window_DebugRight.new(176, 0)
+    @help_window = Window_Base.new(176, 272, 368, 144)
+    @left_window.top_row = $game_temp.debug_top_row
+    @left_window.index = $game_temp.debug_index
+    @right_window.mode = @left_window.mode
+    @right_window.top_id = @left_window.top_id
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_menu_background
+    $game_map.refresh
+    @left_window.dispose
+    @right_window.dispose
+    @help_window.dispose
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_menu_background
+    @right_window.mode = @left_window.mode
+    @right_window.top_id = @left_window.top_id
+    @left_window.update
+    @right_window.update
+    $game_temp.debug_top_row = @left_window.top_row
+    $game_temp.debug_index = @left_window.index
+    if @left_window.active
+      update_left_input
+    elsif @right_window.active
+      update_right_input
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新左方窗口输入
+  #--------------------------------------------------------------------------
+  def update_left_input
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      $scene = Scene_Map.new
+      return
+    elsif Input.trigger?(Input::C)
+      Sound.play_decision
+      wlh = 24
+      if @left_window.mode == 0
+        text1 = "C键 (回车) : 开 / 关"
+        @help_window.contents.draw_text(4, 0, 336, wlh, text1)
+      else
+        text1 = "← (左)       :  -1"
+        text2 = "→ (右)       :  +1"
+        text3 = "L  (Pageup)   : -10"
+        text4 = "R  (Pagedown) : +10"
+        @help_window.contents.draw_text(4, wlh * 0, 336, wlh, text1)
+        @help_window.contents.draw_text(4, wlh * 1, 336, wlh, text2)
+        @help_window.contents.draw_text(4, wlh * 2, 336, wlh, text3)
+        @help_window.contents.draw_text(4, wlh * 3, 336, wlh, text4)
+      end
+      @left_window.active = false
+      @right_window.active = true
+      @right_window.index = 0
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新右方窗口输入
+  #--------------------------------------------------------------------------
+  def update_right_input
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      @left_window.active = true
+      @right_window.active = false
+      @right_window.index = -1
+      @help_window.contents.clear
+    else
+      current_id = @right_window.top_id + @right_window.index
+      if @right_window.mode == 0
+        if Input.trigger?(Input::C)
+          Sound.play_decision
+          $game_switches[current_id] = (not $game_switches[current_id])
+          @right_window.refresh
+        end
+      elsif @right_window.mode == 1
+        last_value = $game_variables[current_id]
+        if Input.repeat?(Input::RIGHT)
+          $game_variables[current_id] += 1
+        elsif Input.repeat?(Input::LEFT)
+          $game_variables[current_id] -= 1
+        elsif Input.repeat?(Input::R)
+          $game_variables[current_id] += 10
+        elsif Input.repeat?(Input::L)
+          $game_variables[current_id] -= 10
+        end
+        if $game_variables[current_id] > 99999999
+          $game_variables[current_id] = 99999999
+        elsif $game_variables[current_id] < -99999999
+          $game_variables[current_id] = -99999999
+        end
+        if $game_variables[current_id] != last_value
+          Sound.play_cursor
+          @right_window.draw_item(@right_window.index)
+        end
+      end
+    end
+  end
+end
+
+
+
+#==============================================================================
+# ■ Scene_End
+#------------------------------------------------------------------------------
+# 　处理游戏结束画面的类。
+#==============================================================================
+
+class Scene_End < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    create_command_window
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行渐变
+  #--------------------------------------------------------------------------
+  def post_start
+    super
+    open_command_window
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束前处理
+  #--------------------------------------------------------------------------
+  def pre_terminate
+    super
+    close_command_window
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_command_window
+    dispose_menu_background
+  end
+  #--------------------------------------------------------------------------
+  # ● 回到原画面
+  #--------------------------------------------------------------------------
+  def return_scene
+    $scene = Scene_Menu.new(5)
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_menu_background
+    @command_window.update
+    if Input.trigger?(Input::B)
+      Sound.play_cancel
+      return_scene
+    elsif Input.trigger?(Input::C)
+      case @command_window.index
+        when 0  # 回到标题画面
+          command_to_title
+        when 1  # 离开游戏
+          command_shutdown
+        when 2  # 取消
+          command_cancel
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新菜单画面背景
+  #--------------------------------------------------------------------------
+  def update_menu_background
+    super
+    @menuback_sprite.tone.set(0, 0, 0, 128)
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成命令窗口
+  #--------------------------------------------------------------------------
+  def create_command_window
+    s1 = Vocab::to_title
+    s2 = Vocab::shutdown
+    s3 = Vocab::cancel
+    @command_window = Window_Command.new(172, [s1, s2, s3])
+    @command_window.x = (544 - @command_window.width) / 2
+    @command_window.y = (416 - @command_window.height) / 2
+    @command_window.openness = 0
+  end
+  #--------------------------------------------------------------------------
+  # ● 释放命令窗口
+  #--------------------------------------------------------------------------
+  def dispose_command_window
+    @command_window.dispose
+  end
+  #--------------------------------------------------------------------------
+  # ● 开启命令窗口
+  #--------------------------------------------------------------------------
+  def open_command_window
+    @command_window.open
+    begin
+      @command_window.update
+      Graphics.update
+    end until @command_window.openness == 255
+  end
+  #--------------------------------------------------------------------------
+  # ● 关闭命令窗口
+  #--------------------------------------------------------------------------
+  def close_command_window
+    @command_window.close
+    begin
+      @command_window.update
+      Graphics.update
+    end until @command_window.openness == 0
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行「回到标题画面」命令
+  #--------------------------------------------------------------------------
+  def command_to_title
+    Sound.play_decision
+    RPG::BGM.fade(800)
+    RPG::BGS.fade(800)
+    RPG::ME.fade(800)
+    $scene = Scene_Title.new
+    close_command_window
+    Graphics.fadeout(60)
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行「离开游戏」命令
+  #--------------------------------------------------------------------------
+  def command_shutdown
+    Sound.play_decision
+    RPG::BGM.fade(800)
+    RPG::BGS.fade(800)
+    RPG::ME.fade(800)
+    $scene = nil
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行「取消」命令
+  #--------------------------------------------------------------------------
+  def command_cancel
+    Sound.play_decision
+    return_scene
+  end
+end
+
+
+
+vp1 = Viewport.new(0,0,100,100)
+sp1 = Sprite.new
+bitmap = Cache.system("Balloon")
+sp1.bitmap = bitmap
+sp1.color.set(0,0,255,128)
+sp1.opacity = 255
+
+Input.update
+while true do
+  sp1.update
+
+  Graphics.update
+  Input.update
+end
+
+
+Font.default_name = ["黑体", "DFKai-SB", "標楷體", "Verdana", "Arial Unicode MS"]
+data_enemies       = load_data("Data/Enemies.rvdata")
+data_items = load_data("Data/Items.rvdata")
 Graphics.freeze
 $scene = Scene_Title.new
 $scene.main while $scene != nil
 Graphics.transition(30)
 
 
-s1 = "abc"
-s2 = "bbb"
-s3 = "ccc"
-s4 = "ddd"
-s5 = "eee"
-s6 = "fff"
-
-map = load_data("Data/Map001.rvdata")
-tilemap = Tilemap.new()
-tilemap.bitmaps[0]=Cache.system("TileA1")
-tilemap.bitmaps[1]=Cache.system("TileA2")
-tilemap.map_data = map.data
-
-script = load_data("Data/Scripts.rvdata")
-Debug.test(script)
-=begin
-for x in 0...map.width
-  for y in 0...map.height
-    map.data[x,y,1] = 2912  +34+y
-  end
-end
-=end
-Debug.test(map)
-command_window = Window_Command.new(160, [s1, s2, s3, s4, s5, s6])
-command_window.draw_item(1, false)
-command_window.openness=0
-command_window.open
-command_window.x=100
-command_window.y=300
-begin
-  command_window.update
-  Graphics.update
-end until command_window.openness == 255
-#command_window.draw_item(0, false)     # 无效化物品选项
-#command_window.draw_item(1, false)     # 无效化技能选项
-#command_window.draw_item(2, false)     # 无效化装备选项
-#command_window.draw_item(3, false)     # 无效化状态选项
-Graphics.freeze
-Input.update
-while true do
-  Graphics.update
-  Input.update
-  command_window.update
-  tilemap.update
-end

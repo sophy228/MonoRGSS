@@ -24,12 +24,13 @@ namespace GameLibrary.RGSS
         public Tilemap(Viewport viewport = null)
         {
             bitmaps = new Bitmap[9];
-            
+            _viewport = viewport;
             if (_viewport == null)
             {
                 var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
                 _viewport = context.ViewPortHeaer;
             }
+                
         }
 
         public Bitmap[] Bitmaps
@@ -92,7 +93,10 @@ namespace GameLibrary.RGSS
             }
             set
             {
-               
+                if (value > 0)
+                {
+
+                }
                 oy = value;
             }
         }

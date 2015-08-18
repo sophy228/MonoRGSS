@@ -18,7 +18,14 @@ namespace GameLibrary.GameEngine
 
         public T Load<T>(string path)
         {
-           return _content.Load<T>(path);
+            try
+            {
+                return _content.Load<T>(path);
+            }
+            catch(Exception e)
+            {
+                return default(T);
+            }
         }
 
         public void LoadContent()

@@ -11,9 +11,11 @@ namespace GameLibrary.RGSS
         public int[,] map_data;
         public string styleName;
         protected int number;
-        public TileStyle(string name)
+        private int picePerRow;
+        public TileStyle(string name, int piceperRow = 4)
         {
             styleName = name;
+            picePerRow = piceperRow;
         }
 
         public int Number
@@ -33,8 +35,8 @@ namespace GameLibrary.RGSS
                 if (index >= 0 && index < Number)
                 {
                     int smallSildes = map_data[index, i];
-                    int row = smallSildes / map_data.GetLength(1);
-                    int col = smallSildes % map_data.GetLength(1);
+                    int row = smallSildes / picePerRow;
+                    int col = smallSildes % picePerRow;
                     rect = new Rect(col * 16, row * 16, 16, 16);
                 }
                 else
@@ -46,7 +48,7 @@ namespace GameLibrary.RGSS
             return rects;
         }
 
-        private static TileStyle tileStyle1, tileStyle2, tileStyle3;
+        private static TileStyle tileStyle1, tileStyle2, tileStyle3, tileStyle4;
 
         public static TileStyle TileStyle1
         {
@@ -62,7 +64,7 @@ namespace GameLibrary.RGSS
             get
             {
                 if (tileStyle2 == null)
-                    tileStyle2 = new TileStyle3();
+                    tileStyle2 = new TileStyle2();
                 return tileStyle2;
             }
         }
@@ -73,6 +75,16 @@ namespace GameLibrary.RGSS
                 if (tileStyle3 == null)
                     tileStyle3 = new TileStyle3();
                 return tileStyle3;
+            }
+        }
+
+        public static TileStyle TileStyle4
+        {
+            get
+            {
+                if (tileStyle4 == null)
+                    tileStyle4 = new TileStyle4();
+                return tileStyle4;
             }
         }
     }
@@ -136,27 +148,27 @@ namespace GameLibrary.RGSS
         }
     }
 
-    class TileSylte2 : TileStyle
+    class TileStyle2 : TileStyle
     {
-        public TileSylte2():base("Style2")
+        public TileStyle2():base("Style2")
         {
             map_data = new int[,]
             {
-                {5,6,9,10},
-                {4,6,8,10},
-                {1,2,9,10},
-                {0,2,8,10},
-                {5,7,9,11},
-                {4,7,8,11},
-                {2,3,10,11},
-                {0,3,4,7},
-                {5,6,13,14},
-                {4,6,12,14},
-                {1,2,13,14},
-                {0,2,12,14},
-                {5,7,13,15},
-                {8,11,12,15},
-                {1,3,13,15},
+                {10,9,6,5},
+                {8,9,4,5},
+                {2,1,6,5},
+                {0,1,4,5},
+                {10,11,6,7},
+                {8,11,4,7},
+                {2,3,6,7},
+                {0,3,8,11},
+                {10,9,14,13},
+                {8,9,12,13},
+                {2,1,14,13},
+                {0,1,12,13},
+                {10,11,14,15},
+                {4,7,12,15},
+                {2,3,14,15},
                 {0,3,12,15}
             };
         }
@@ -172,6 +184,18 @@ namespace GameLibrary.RGSS
                 {0,1,4,5},
                 {2,3,6,7},
                 {0,3,4,7}
+            };
+        }
+    }
+
+    class TileStyle4 : TileStyle
+    {
+        public TileStyle4()
+            : base("Style4",2)
+        {
+            map_data = new int[,]
+            {
+                {0,1,2,3},
             };
         }
     }

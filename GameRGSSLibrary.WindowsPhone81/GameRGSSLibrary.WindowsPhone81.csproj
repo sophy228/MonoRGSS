@@ -76,6 +76,9 @@
     <Compile Include="..\GameRGSSLibrary.Windows\RGSS\DataBase.cs">
       <Link>RGSS\DataBase.cs</Link>
     </Compile>
+    <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Font.cs">
+      <Link>RGSS\Font.cs</Link>
+    </Compile>
     <Compile Include="..\GameRGSSLibrary.Windows\RGSS\Graphics.cs">
       <Link>RGSS\Graphics.cs</Link>
     </Compile>
@@ -145,7 +148,7 @@
     <Reference Include="Microsoft.Scripting">
       <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
     </Reference>
-    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoGame.Framework, Version=3.3.0.2210, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsPhone81\MonoGame.Framework.dll</HintPath>
     </Reference>
@@ -462,6 +465,16 @@
     <Content Include="..\GameRGSSLibrary.Windows\Content\Graphics\System\Window.xnb">
       <Link>Content\Graphics\System\Window.xnb</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Font\黑体_Bold.xnb">
+      <Link>Content\Font\黑体_Bold.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\GameRGSSLibrary.Windows\Content\Font\黑体_Regular.xnb">
+      <Link>Content\Font\黑体_Regular.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />

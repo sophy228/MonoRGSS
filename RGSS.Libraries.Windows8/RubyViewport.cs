@@ -53,28 +53,38 @@ namespace RGSS.Libraries.Builtins
         [RubyMethod("ox")]
         public static int GetOX(Viewport self)
         {
-            return 0;
+            return self.Ox;
         }
         [RubyMethod("ox=")]
         public static void SetOX(Viewport self, int ox)
         {
-
+            self.Ox = ox;
         }
         [RubyMethod("oy")]
         public static int GetOY(Viewport self)
         {
-            return 0;
+            return self.Oy;
         }
         [RubyMethod("oy=")]
         public static void SetOY(Viewport self, int oy)
         {
-
+            self.Oy = oy;
         }
 
         [RubyMethod("update")]
         public static void Update(Viewport self)
         {
             
+        }
+        [RubyMethod("visible")]
+        public static bool GetVisible(Viewport self)
+        {
+            return self.Visible;
+        }
+        [RubyMethod("visible=")]
+        public static void SetVisible(Viewport self, bool visible)
+        {
+            self.Visible = visible;
         }
     }
 }

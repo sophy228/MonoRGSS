@@ -137,9 +137,16 @@ namespace RPGVXLibrary.Input
                     this[k] = KeyState.Up;
             }
         }
-        public void ReleaseKeys()
+        public void ReleaseDirKeys()
         {
-            for (Keys k = Keys.UP; k <= Keys.D; k++)
+            for (Keys k = Keys.UP; k <= Keys.RIGHT; k++)
+            {
+                this[k] = KeyState.Up;
+            }
+        }
+        public void ReleaseButtonKeys()
+        {
+            for (Keys k = Keys.A; k <= Keys.D; k++)
             {
                 this[k] = KeyState.Up;
             }
@@ -178,7 +185,7 @@ namespace RPGVXLibrary.Input
             }
             else
             {
-                    InputState.ReleaseKeys();
+                    InputState.ReleaseDirKeys();
             }
 
             if (VirtualThumbsticks.RightThumbstick.Length() > .3f)
@@ -187,8 +194,8 @@ namespace RPGVXLibrary.Input
                 double radians;
 
                 radians = Math.Atan2(
-                    VirtualThumbsticks.LeftThumbstick.Y,
-                    VirtualThumbsticks.LeftThumbstick.X);
+                    -VirtualThumbsticks.RightThumbstick.Y,
+                    VirtualThumbsticks.RightThumbstick.X);
                 angle = radians * (180 / Math.PI);
 
                 if (angle > -45 && angle <= 45)
@@ -199,6 +206,10 @@ namespace RPGVXLibrary.Input
                     InputState.SetKeyDown(Keys.D);
                 else
                     InputState.SetKeyDown(Keys.A);
+            }
+            else
+            {
+                InputState.ReleaseButtonKeys();
             }
 
 
@@ -219,6 +230,7 @@ namespace RPGVXLibrary.Input
 
         public static void Draw(DrawManager dm, int frameCount)
         {
+            dm.GraphicsDevice.Viewport = dm.DefaultViewport;
             stickTexture = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickDirection");
             stickBallTexture = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickBall");
             stickTextureKey = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickKey");

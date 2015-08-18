@@ -66,7 +66,10 @@ namespace GameLibrary.RGSS
         {
             get
             {
-                return (int)array.GetValue(new int[] { i });
+                if (i > XSize - 1)
+                    return -1;
+                else
+                    return (int)array.GetValue(new int[] { i });
             }
             set
             {
@@ -78,7 +81,10 @@ namespace GameLibrary.RGSS
         {
             get
             {
-                return (int)array.GetValue(new int[] { i,j });
+                if (i > XSize - 1 || j > YSize - 1)
+                    return -1;
+                else
+                    return (int)array.GetValue(new int[] { i, j });
             }
             set
             {
@@ -90,7 +96,10 @@ namespace GameLibrary.RGSS
         {
             get
             {
-                return (int)array.GetValue(new int[] { i, j,k});
+                if (i > XSize - 1 || j > YSize - 1 || k > ZSize - 1)
+                    return -1;
+                else
+                    return (int)array.GetValue(new int[] { i, j,k});
             }
             set
             {

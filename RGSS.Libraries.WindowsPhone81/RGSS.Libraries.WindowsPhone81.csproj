@@ -58,6 +58,9 @@
     <Compile Include="..\RGSS.Libraries.Windows8\RubyExtensions.cs">
       <Link>RubyExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyFont.cs">
+      <Link>RubyFont.cs</Link>
+    </Compile>
     <Compile Include="..\RGSS.Libraries.Windows8\RubyGraphics.cs">
       <Link>RubyGraphics.cs</Link>
     </Compile>

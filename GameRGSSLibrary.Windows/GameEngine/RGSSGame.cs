@@ -88,7 +88,7 @@ namespace GameLibrary.GameEngine
             switch (_gameControler.GameState)
             {
                 case GameState.Freezed:
-                    this.SuppressDraw();
+                   this.SuppressDraw();
                     break;
                     
             }
@@ -101,10 +101,12 @@ namespace GameLibrary.GameEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
-            Debug.WriteLine("draw @" + gameTime.ElapsedGameTime.TotalMilliseconds);
+           
+//  Debug.WriteLine("draw @" + gameTime.ElapsedGameTime.TotalMilliseconds);
             
             // TODO: Add your drawing code here
+            lock (_drawManager)
+            {
             switch(_gameControler.GameState)
             {
                 case GameState.Freezed:
@@ -112,13 +114,12 @@ namespace GameLibrary.GameEngine
                 case GameState.Runging:
                     //drawing context;
                     
-                    _drawManager.Blend(_gameControler.FrameCount);
-                    GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
-                    _drawManager.Draw(_gameControler.FrameCount);
-                    _gameControler.DrawOneFrameCompleted.Set();
-                    _gameControler.GameState = GameState.Freezed;
-                    base.Draw(gameTime);
-                    Input.Draw(_drawManager, _gameControler.FrameCount);
+                 // _drawManager.Blend(_gameControler.FrameCount);
+                   
+                        GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Blue);
+                        _drawManager.Draw(_gameControler.FrameCount);
+                        _gameControler.DrawOneFrameCompleted.Set();
+                        _gameControler.GameState = GameState.Freezed;
                     break;
                 case GameState.Pending:
                     break;
@@ -128,7 +129,9 @@ namespace GameLibrary.GameEngine
                 default:
                     break;
             }
-            
+            base.Draw(gameTime);
+            Input.Draw(_drawManager, _gameControler.FrameCount);
+            }
         }
     }
 }

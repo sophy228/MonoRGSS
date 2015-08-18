@@ -18,22 +18,26 @@ namespace GameLibrary.RGSS
         private int mHeight;
         private Rectangle mRect;
         private Texture2D mTexture;
-        public ContentFont Font;
+       // public ContentFont Font;
+        private Font font;
         private DrawManager drm;
         private RenderTarget2D mRenderTexture;
         private bool isDisposed;
-
+        private Texture2D orignalTexture;
+        private  Effect effect;
 
         public Bitmap(String path)
         {
             drm = RGSSEngine.GetDrawManager();
             path = path.Replace("/", "\\");
             mTexture = drm.Content.Load<Texture2D>(path);
+            
             mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
             mWidth = mTexture.Width;
             mHeight = mTexture.Height;
             mRect = new Rectangle(0, 0, mWidth, mHeight);
-            Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+         //   Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+            font = new Font((string)null);
             RenderTexture();
             isDisposed = false;
         }
@@ -47,7 +51,8 @@ namespace GameLibrary.RGSS
             mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
             mRect = new Rectangle(0, 0, mWidth, mHeight);
             mTexture = (Texture2D)mRenderTexture;
-            Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+            //Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+            font = new Font((string)null);
             RenderTexture();
             isDisposed = false;
         }
@@ -60,7 +65,8 @@ namespace GameLibrary.RGSS
             mWidth = mTexture.Width;
             mHeight = mTexture.Height;
             mRect = new Rectangle(0, 0, mWidth, mHeight);
-            Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+           // Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
+            font = new Font((string)null);
             RenderTexture();
             isDisposed = false;
         }
@@ -97,6 +103,18 @@ namespace GameLibrary.RGSS
             }
         }
 
+        public Font Font
+        {
+            get
+            {
+                return font;
+            }
+            set
+            {
+                font = value;
+            }
+        }
+
         public bool IsDisposed
         {
             get
@@ -107,15 +125,25 @@ namespace GameLibrary.RGSS
 
         private void RenderTexture()
         {
+         //   effect = drm.Content.Load<Effect>("Effect\\gray");
+            lock(drm)
+           {
+               
             drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
+
             drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
             if (mTexture != null)
             {
                 drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                //effect.CurrentTechnique.Passes[0].Apply();
+
                 drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
                 drm.SpriteBatch.End();
+                //mTexture.Dispose();
+                orignalTexture = mTexture;
             }
             drm.GraphicsDevice.SetRenderTarget(null);
+           }
             mTexture = (Texture2D)mRenderTexture;
         }
 
@@ -144,7 +172,7 @@ namespace GameLibrary.RGSS
 
         public void Clear()
         {
-            Rect rect = new Rect(mRect.X, mRect.Y, mRect.Width, mRect.Y);
+            Rect rect = new Rect(mRect.X, mRect.Y, mRect.Width, mRect.Height);
             FillRect(rect, Color.FormXnaColor(Microsoft.Xna.Framework.Color.Transparent));
         }
 
@@ -200,6 +228,8 @@ namespace GameLibrary.RGSS
 
         public void GradientFillRect(Rectangle rect, Color color1, Color color2, Boolean vertical = false)
         {
+           // FillRect(rect.X,rect.Y,rect.Width,rect.Height, color2);
+           // return;
             if (mRect.Contains(rect))
             {
                 int size = rect.Width * rect.Height;
@@ -219,7 +249,7 @@ namespace GameLibrary.RGSS
                 while (i < size)
                 {
 
-                    data[i++] = new Microsoft.Xna.Framework.Color(Rinit, Ginit, Binit, Ainit);
+                    data[i++] = new Microsoft.Xna.Framework.Color(Rinit /255, Ginit / 255, Binit / 255, Ainit / 255);
                     if (!vertical)
                     {
                         Rinit += Rstep;
@@ -252,18 +282,77 @@ namespace GameLibrary.RGSS
             GradientFillRect(rect, color1, color2, vertical);
         }
 
+        public Rect TextSize(string text)
+        {
+           SpriteFont spriteFont = font.ToXnaFont();
+           Vector2 size;
+           try
+           {
+               size = spriteFont.MeasureString(text);
+           }
+           catch
+           {
+               string txt = text;
+               foreach (var c in text)
+               {
+
+                   if (!spriteFont.Characters.Contains(c))
+                   {
+                       txt = txt.Replace(c, '?');
+                   }
+               }
+               text = txt;
+               size = spriteFont.MeasureString(text);
+           }
+           var v = spriteFont.MeasureString(text);;
+           return new Rect(0, 0, (int)v.X, (int)v.Y);
+        }
+
         public void DrawText(int x, int y, int width, int height, string text, int align = 0)
         {
-           // RenderTarget2D rendertarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height);
-            SpriteFont spriteFont = this.Font.font;
-            Vector2 position = new Vector2(x, y);
-            Color color = this.Font.color;
+            Rectangle bounds = new Rectangle(x, y, width, height);
+            SpriteFont spriteFont = font.ToXnaFont();;
+            
+            //Vector2 position = new Vector2(x, y);
+            Vector2 position = bounds.Center.ToVector2();
+           
+            Color color = font.Color;
             float rotation = 0;
-            Vector2 origin = new Vector2(0, 0);
+            Vector2 size;
+            try
+            {
+                size = spriteFont.MeasureString(text);
+            }
+            catch
+            {
+                int i = 0;
+                string txt = text;
+                foreach(var c in text)
+                {
 
-            float xscale = (float)width / (text.Length * (spriteFont.Spacing + 14));
+                    if (!spriteFont.Characters.Contains(c))
+                    {
+                        txt = txt.Replace(c, '?');
+                    }
+                }
+                text = txt;
+                size = spriteFont.MeasureString(text);
+            }
+            Vector2 origin = new Vector2(0, 0);
+            origin = size * 0.5f;
+
+            origin.Y -= bounds.Height / 2 - size.Y / 2;  // bottom
+            if(align == 0)
+                origin.X += bounds.Width / 2 - size.X / 2;
+            if(align == 2)
+                origin.X -= bounds.Width / 2 - size.X / 2;
+
+
+
+            float xscale = (float)width / (text.Length * (spriteFont.Spacing + font.Size));
             float yscale = (float)height / ((spriteFont.LineSpacing));
 
+            xscale *= (float) ( font.Size / 14.0);
             if (xscale > 1)
                 xscale = 1;
             if(yscale > 1)
@@ -277,14 +366,19 @@ namespace GameLibrary.RGSS
             SpriteEffects effects = SpriteEffects.None;
             float layerDepth = 0;
 
+            color.Alpha = (color.Alpha * color.Alpha) / 255;
+            lock (drm)
+            {
+                drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
+                //drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+                drm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+                //drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
+                drm.SpriteBatch.DrawString(spriteFont, text, position, color.toXnaColor(), rotation, origin, scale, effects, layerDepth);
 
-            drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
-            //drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
-            drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
-            drm.SpriteBatch.DrawString(spriteFont, text, position, color.toXnaColor(), rotation, origin, scale, effects, layerDepth);
-            drm.SpriteBatch.End();
-            drm.GraphicsDevice.SetRenderTarget(null);
+
+                drm.SpriteBatch.End();
+                drm.GraphicsDevice.SetRenderTarget(null);
+            }
         }
         public void Blt(int x, int y, Bitmap srcBitmap, Rect srcRect, int opacity=255)
         {
@@ -294,26 +388,105 @@ namespace GameLibrary.RGSS
             if (opacity < 0)
                 opacity = 0;
             var color = new Microsoft.Xna.Framework.Color(opacity, opacity, opacity);
-            drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
-            drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            //drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
-            drm.SpriteBatch.Draw(srcBitmap.Texture, new Vector2(x, y), srcRect.toXnaRect(), color);
-            drm.SpriteBatch.End();
-            drm.GraphicsDevice.SetRenderTarget(null);
+            lock (drm)
+            {
+                drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
+                drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                //drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
+                drm.SpriteBatch.Draw(srcBitmap.Texture, new Vector2(x, y), srcRect.toXnaRect(), color);
+                drm.SpriteBatch.End();
+                drm.GraphicsDevice.SetRenderTarget(null);
+            }
         }
         public void StretchBlt(Rect dest_rect, Bitmap srcBitmap, Rect srcRect, int opacity=0)
         {
-            //RenderTarget2D rendertarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height);
-            drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
-            drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            //drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
-            drm.SpriteBatch.Draw(srcBitmap.Texture, dest_rect.toXnaRect(), srcRect.toXnaRect(), Microsoft.Xna.Framework.Color.White);
-            drm.SpriteBatch.End();
-            drm.GraphicsDevice.SetRenderTarget(null);
+            lock (drm)
+            {
+                //RenderTarget2D rendertarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height);
+                drm.GraphicsDevice.SetRenderTarget(mRenderTexture);
+                drm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                //drm.SpriteBatch.Draw(mTexture, mRenderTexture.Bounds, Microsoft.Xna.Framework.Color.White);
+                drm.SpriteBatch.Draw(srcBitmap.Texture, dest_rect.toXnaRect(), srcRect.toXnaRect(), Microsoft.Xna.Framework.Color.White);
+                drm.SpriteBatch.End();
+                drm.GraphicsDevice.SetRenderTarget(null);
+            }
         }
+
+        public void RadialBlur(int angle, int division)
+        {
+            if (angle < 0)
+                angle = 0;
+            if (angle > 360)
+                angle = 360;
+            if (division < 2)
+                division = 2;
+            if (division > 100)
+                division = 100;
+            effect = drm.Content.Load<Effect>("Effect\\SpinBlur");
+            var renderTarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            lock (drm)
+            {
+                drm.GraphicsDevice.SetRenderTarget(renderTarget);
+                drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+                drm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+     SamplerState.LinearClamp, DepthStencilState.Default,
+     RasterizerState.CullNone, effect);
+                effect.Parameters["angle"].SetValue(angle);
+                effect.Parameters["SAMPLES"].SetValue(division);
+                drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
+                drm.SpriteBatch.End();
+                drm.GraphicsDevice.SetRenderTarget(null);
+            }
+            if (mRenderTexture != null)
+                mRenderTexture.Dispose();
+            mTexture = mRenderTexture = renderTarget;
+            //  effect.Dispose();
+        }
+
+        public void Blur()
+        {
+           effect = drm.Content.Load<Effect>("Effect\\Blur");
+           var renderTarget =  new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+           lock (drm)
+           {
+               drm.GraphicsDevice.SetRenderTarget(renderTarget);
+               drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+               drm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+    SamplerState.LinearClamp, DepthStencilState.Default,
+    RasterizerState.CullNone, effect);
+               drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
+               drm.SpriteBatch.End();
+               drm.GraphicsDevice.SetRenderTarget(null);
+           }
+           if (mRenderTexture!=null)
+               mRenderTexture.Dispose();
+           mTexture = mRenderTexture = renderTarget;
+         //  effect.Dispose();
+        }
+
+        internal void ApplyEffect(Effect effect)
+        {
+            var renderTarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            lock (drm)
+            {
+                drm.GraphicsDevice.SetRenderTarget(renderTarget);
+                drm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+                drm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+     SamplerState.LinearClamp, DepthStencilState.Default,
+     RasterizerState.CullNone, effect);
+                drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
+                drm.SpriteBatch.End();
+                drm.GraphicsDevice.SetRenderTarget(null);
+            }
+            if (mRenderTexture != null)
+                mRenderTexture.Dispose();
+            mTexture = mRenderTexture = renderTarget;
+        }
+
         public void Dispose()
         {
             mRenderTexture.Dispose();
+          //  orignalTexture.Dispose();
             isDisposed = true;
         }
     }

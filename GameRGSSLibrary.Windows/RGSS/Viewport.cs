@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using GameLibrary.GameEngine;
 using GameLibrary.Ulitilies;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GameLibrary.RGSS
 {
@@ -8,7 +10,8 @@ namespace GameLibrary.RGSS
     {
         private Rect _rect;
         private int _z;
-
+        private int ox;
+        private int oy;
         private DrawContext _drawContext;
 
         private Sprite _spriteHeader;
@@ -31,7 +34,11 @@ namespace GameLibrary.RGSS
             id = ViewportFactory.AllocateId();
             _spriteHeader = new Sprite(this,true);
             _windowHeader = new LinkNode();
-            
+            Visible = true;
+            //_rect.X *= _drawContext.DrawManager.DefaultViewport.Width / 544;
+            //_rect.Width *= _drawContext.DrawManager.DefaultViewport.Width / 544;
+            //_rect.Y *= _drawContext.DrawManager.DefaultViewport.Height / 416;
+            //_rect.Height *= _drawContext.DrawManager.DefaultViewport.Height / 416;
         }
 
         internal Viewport(DrawContext context, int x, int y, int width, int height)
@@ -56,6 +63,29 @@ namespace GameLibrary.RGSS
             }
         }
 
+        public int Ox
+        {
+            get
+            {
+                return ox;
+            }
+            set
+            {
+                ox = value;
+            }
+        }
+
+        public int Oy
+        {
+            get
+            {
+                return oy;
+            }
+            set
+            {
+                oy = value;
+            }
+        }
 
         public int Z
         {
@@ -93,15 +123,17 @@ namespace GameLibrary.RGSS
         }
         public void PreBlend(DrawManager dm, int frameCount)
         {
+#if DEBUGOUT
             if (_rect != null)
                 Debug.WriteLine(string.Format("ViewPort#{0}({1},{2},{3},{4})- Z:({5}), blend@frameCount:{6}",
                              id, _rect.X, _rect.Y, _rect.Width, _rect.Height, Z, frameCount));
             else
                 Debug.WriteLine(string.Format("ViewPort#{0}- Z:({1}), blend@frameCount:{2}",
                              id, Z, frameCount));
+#endif
             foreach (Window wd in WindowHeader)
             {
-                wd.PreBlend(dm, frameCount);
+               wd.PreBlend(dm, frameCount);
             }
         }
         public void Draw(DrawManager dm, int frameCount)
@@ -114,6 +146,25 @@ namespace GameLibrary.RGSS
                 Debug.WriteLine(string.Format("ViewPort#{0}- Z:({1}), draw@frameCount:{2}",
                              id, Z, frameCount));
 #endif
+            if (!Visible)
+                return;
+            Matrix origenoffset = Matrix.CreateTranslation(-Ox, -Oy, 0);
+            Matrix scaleTranslation = Matrix.CreateScale((float)(dm.DefaultViewport.Width / 544.0f), (float)(dm.DefaultViewport.Height / 416.0f), 1.0f);
+            dm.SpriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                SamplerState.LinearClamp,
+                DepthStencilState.Default,
+                RasterizerState.CullNone,
+                null,
+                origenoffset);
+            var viewport = dm.DefaultViewport;
+
+            viewport.X = this._rect.X;
+            viewport.Y = this._rect.Y ;
+            viewport.Width = this._rect.Width ;
+            viewport.Height = this._rect.Height;
+            dm.GraphicsDevice.Viewport = viewport;
             foreach(Sprite sp in SpriteHeader)
             {
                 sp.Draw(dm, frameCount);
@@ -123,6 +174,7 @@ namespace GameLibrary.RGSS
             {
                 wd.Draw(dm, frameCount);
             }
+            dm.SpriteBatch.End();
         }
 
         public void Dispose()

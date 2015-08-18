@@ -221,6 +221,18 @@ namespace RGSS.Libraries.Builtins
             self.sp.Bitmap = bitmap;
             return 0;
         }
+        [RubyMethod("viewport")]
+        public static Viewport GetViewport(RubySprite self)
+        {
+            return self.sp.Viewport;
+        }
+        [RubyMethod("viewport=")]
+        public static int SetViewport(RubySprite self, Viewport value)
+        {
+            self.sp.Viewport = value;
+            return 0;
+        }
+        
         [RubyMethod("src_rect")]
         public static Rect GetSrcRect(RubySprite self)
         {
@@ -241,6 +253,17 @@ namespace RGSS.Libraries.Builtins
         public static int SetVisible(RubySprite self, bool visible)
         {
             self.sp.Visible = visible;
+            return 0;
+        }
+        [RubyMethod("mirror")]
+        public static bool GetMirror(RubySprite self)
+        {
+            return self.sp.Mirror;
+        }
+        [RubyMethod("mirror=")]
+        public static int SetMirror(RubySprite self, bool value)
+        {
+            self.sp.Mirror = value;
             return 0;
         }
         [RubyMethod("x")]
@@ -324,18 +347,6 @@ namespace RGSS.Libraries.Builtins
             self.sp.ZoomY = zoomy;
         }
 
-        [RubyMethod("tone")]
-        public static Tone GetTone(RubySprite self)
-        {
-            return null;
-        }
-
-        [RubyMethod("tone=")]
-        public static void SetTone(RubySprite self, Tone tone)
-        {
-
-        }
-
         [RubyMethod("update")]
         public static void Update(RubySprite self)
         {
@@ -343,18 +354,96 @@ namespace RGSS.Libraries.Builtins
         }
 
         [RubyMethod("opacity")]
-        [RubyMethod("blend_type")]
-        [RubyMethod("bush_depth")]
-        public static void GetOpacity(RubySprite self)
+        public static int GetOpacity(RubySprite self)
         {
-            
+            return self.sp.Opacity;    
         }
         [RubyMethod("opacity=")]
-        [RubyMethod("blend_type=")]
-        [RubyMethod("bush_depth=")]
         public static void SetOpacity(RubySprite self, int opacity)
         {
+            self.sp.Opacity = opacity;
+        }
 
+        [RubyMethod("color")]
+        public static Color GetColor(RubySprite self)
+        {
+            return self.sp.Color;
+        }
+
+        [RubyMethod("color=")]
+        public static void SetColor(RubySprite self, Color color)
+        {
+            self.sp.Color = color;
+        }
+
+        [RubyMethod("tone")]
+        public static Tone GetTone(RubySprite self)
+        {
+            return self.sp.Tone;
+        }
+
+        [RubyMethod("tone=")]
+        public static void SetTone(RubySprite self, Tone tone)
+        {
+            self.sp.Tone = tone;
+        }
+
+        [RubyMethod("blend_type")]
+        [RubyMethod("bush_depth")]
+        public static void GetValue(RubySprite self)
+        {
+
+        }
+        
+        [RubyMethod("blend_type=")]
+        [RubyMethod("bush_depth=")]
+        public static void SetValue(RubySprite self, int opacity)
+        {
+
+        }
+
+        [RubyMethod("wave_amp")]
+        public static int GetWaveAmp(RubySprite self)
+        {
+           return  self.sp.WaveAmp;
+        }
+        [RubyMethod("wave_amp=")]
+        public static void SetWaveAmp(RubySprite self, int value)
+        {
+            self.sp.WaveAmp = value;
+        }
+
+        [RubyMethod("wave_length")]
+        public static int GetWaveLength(RubySprite self)
+        {
+            return self.sp.WaveLength;
+        }
+        [RubyMethod("wave_length=")]
+        public static void SetWaveLength(RubySprite self, int value)
+        {
+            self.sp.WaveLength = value;
+        }
+
+        [RubyMethod("wave_speed")]
+        public static int GetWaveSpeed(RubySprite self)
+        {
+            return self.sp.WaveSpeed;
+        }
+        [RubyMethod("wave_speed=")]
+        public static void SetWaveSpeed(RubySprite self, int value)
+        {
+            self.sp.WaveSpeed = value;
+        }
+
+        [RubyMethod("wave_phase")]
+        public static int GetWavePhase(RubySprite self)
+        {
+            return self.sp.WavePhase;
+        }
+        [RubyMethod("wave_phase=")]
+        public static void SetWavePhase(RubySprite self, int value)
+        {
+            self.sp.WavePhase = value;
         }
     }
 }

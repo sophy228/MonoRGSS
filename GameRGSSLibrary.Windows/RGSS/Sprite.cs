@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using GameLibrary.GameEngine;
 using GameLibrary.Ulitilies;
 using Microsoft.Xna.Framework;
@@ -41,11 +42,30 @@ namespace GameLibrary.RGSS
 
         private Rect mSrcRect;
         private bool _drawBySelf;
-        
+
+        private int opacity;
+        private Color blendColor;
+        private Texture2D blendTexture;
+        private Color lastBlendColor;
+        private Rect lastSrcRect;
+        private Tone tone;
+        private bool disposed;
+        private bool mirror;
+
+        private int waveAmp;
+        private int waveLength;
+        private int waveSpeed;
+        private int wavePhase;
+
+        Effect effect = null;
         private void initialSprite()
         {
             Inialize();
             id = SpriteFactory.AllocateId();
+            if(id == 1320)
+            {
+
+            }
         }
         public Sprite(Viewport viewport = null, bool drawBySelf = false)
         {
@@ -61,6 +81,11 @@ namespace GameLibrary.RGSS
                 }
                 this.InsertInZorder(_viewport.SpriteHeader);
             }
+            opacity = 255;
+            blendColor = new Color(0, 0, 0, 0);
+            lastBlendColor = new Color(0, 0, 0, 0);
+            tone = new Tone(255, 255, 255, 0);
+            disposed = false;
         }
 
         private void Inialize()
@@ -70,6 +95,7 @@ namespace GameLibrary.RGSS
             m_pxSrcHeight = 0;
             m_pxLocX = m_pxLocY = 0;
             mSrcRect = new Rect(m_pxLocX, m_pxLocY, m_pxSrcHeight, m_pxSrcWidth);
+            lastSrcRect = new Rect(m_pxLocX, m_pxLocY, m_pxSrcHeight, m_pxSrcWidth);
             //dest rect
             m_pxDstX = m_pxDstY = 0;
             //orign
@@ -189,6 +215,19 @@ namespace GameLibrary.RGSS
                 m_fVisible = value;
             }
         }
+
+        public bool Mirror
+        {
+            get
+            {
+                return mirror;
+            }
+            set
+            {
+                mirror = value;
+            }
+        }
+
         public int X
         {
             get
@@ -270,7 +309,89 @@ namespace GameLibrary.RGSS
             }
         }
 
+        public Color Color
+        {
+            get
+            {
+                return blendColor;
+            }
+            set
+            {
+                blendColor = value;
+            }
+        }
 
+        public Tone Tone
+        {
+            get
+            {
+                return tone;
+            }
+            set
+            {
+                tone = value;
+            }
+        }
+
+        public int Opacity
+        {
+            get
+            {
+                return opacity;
+            }
+            set
+            {
+                opacity = value;
+            }
+        }
+
+        public int WaveAmp
+        {
+            get
+            {
+                return waveAmp;
+            }
+            set
+            {
+                waveAmp = value;
+            }
+        }
+
+        public int WaveLength
+        {
+            get
+            {
+                return waveLength;
+            }
+            set
+            {
+                waveLength = value;
+            }
+        }
+
+        public int WaveSpeed
+        {
+            get
+            {
+                return waveSpeed;
+            }
+            set
+            {
+                waveSpeed = value;
+            }
+        }
+
+        public int WavePhase
+        {
+            get
+            {
+                return wavePhase;
+            }
+            set
+            {
+                wavePhase = value;
+            }
+        }
 
         public void Draw(DrawManager dm, int frameCount)
         {
@@ -284,21 +405,90 @@ namespace GameLibrary.RGSS
             Vector2 vDest = new Vector2(m_pxDstX, m_pxDstY);
             Vector2 vOrigin = new Vector2(m_pxOriginX, m_pxOriginY);
             Vector2 vScale = new Vector2(m_zoomX, m_zoomY);
-            dm.SpriteBatch.Draw(m_Bitmap.Texture, vDest, rSource, m_cTint.toXnaColor(), m_fpRotation, vOrigin, vScale, SpriteEffects.None, m_fpDepth);
+
+            Color actualTint = new Color((int)(m_cTint.Red * (opacity / 255.0)),
+                                          (int)(m_cTint.Green * (opacity / 255.0)),
+                                          (int)(m_cTint.Blue * (opacity / 255.0)),
+                                          opacity);
+            if (effect != null)
+            {
+                dm.SpriteBatch.End();
+                
+                dm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+        SamplerState.LinearClamp, DepthStencilState.Default,
+        RasterizerState.CullNone, effect);
+            }
+            SpriteEffects speffect = SpriteEffects.None;
+            if (mirror)
+                speffect = SpriteEffects.FlipHorizontally;
+            dm.SpriteBatch.Draw(m_Bitmap.Texture, vDest, rSource, actualTint.toXnaColor(), m_fpRotation, vOrigin, vScale, speffect, m_fpDepth);
+                if (effect != null)
+                {
+                    dm.SpriteBatch.End();
+
+                    dm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                }
+            
+            if (blendColor.Alpha != 0)
+            {
+                
+
+                Color actualblend = new Color((int)(blendColor.Red * (blendColor.Alpha / 255.0)),
+                                          (int)(blendColor.Green * (blendColor.Alpha / 255.0)),
+                                          (int)(blendColor.Blue * (blendColor.Alpha / 255.0)),
+                                          blendColor.Alpha);
+
+                if (!lastBlendColor.isSame(blendColor) || lastSrcRect.Width != mSrcRect.Width || lastSrcRect.Height != mSrcRect.Height)
+                {
+                    if (blendTexture != null)
+                        blendTexture.Dispose();
+                    var drm = RGSSEngine.GetDrawManager();
+                    blendTexture = new Texture2D(drm.GraphicsDevice, rSource.Width, rSource.Height);
+                    int size = rSource.Width * rSource.Height;
+                    Microsoft.Xna.Framework.Color[] data = new Microsoft.Xna.Framework.Color[size];
+                    for (int i = 0; i < size; i++)
+                        data[i] = actualblend.toXnaColor();
+                    blendTexture.SetData(data);
+                }
+                if (blendTexture != null)
+                    dm.SpriteBatch.Draw(blendTexture, vDest, rSource, Microsoft.Xna.Framework.Color.White, m_fpRotation, vOrigin, vScale, SpriteEffects.None, m_fpDepth);
+            }
+
+            lastBlendColor.SetColor(blendColor.Red, blendColor.Green, blendColor.Blue, blendColor.Alpha);
+            lastSrcRect.Set(mSrcRect.X, mSrcRect.Y, mSrcRect.Width, mSrcRect.Height);
         }
 
         public virtual void Update()
         {
-
+            var dm = RGSSEngine.GetGame().DrawManager;
+            
+            if (waveAmp != 0)
+            {
+                effect = dm.Content.Load<Effect>("Effect\\WaveEffect");
+                effect.Parameters["amp"].SetValue((float)waveAmp / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
+                effect.Parameters["length"].SetValue((float)waveLength / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
+                effect.Parameters["speed"].SetValue((float)waveSpeed / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
+                effect.Parameters["phase"].SetValue((float)wavePhase / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
+                effect.Parameters["fTimer"].SetValue((float)RGSSEngine.GetGame().GameControler.FrameCount / (float)RGSSEngine.GetGame().GameControler.FrameRate);
+                //Bitmap.ApplyEffect(effect);
+            }
+            else
+            {
+                effect = null;
+            }
         }
 
         public void Dispose()
         {
+            if (disposed)
+                return;
             if (!_drawBySelf)
             {
-                LinkNode.ListDel(this);
+
+              LinkNode.ListDel(this);
                 //todo what about bitmap？
             }
+            disposed = true;
         }
 
     }
@@ -332,6 +522,7 @@ namespace GameLibrary.RGSS
 
         public static int AllocateId()
         {
+            
             return id++;
         }
     }
