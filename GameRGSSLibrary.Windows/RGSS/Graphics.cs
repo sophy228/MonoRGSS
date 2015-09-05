@@ -16,6 +16,12 @@ namespace GameLibrary.RGSS
             game.GameControler.FreezeFrame();
         }
 
+        public static void Transition(int duration, string path = null, int vague = 0)
+        {
+            var game = RGSSEngine.GetGame();
+            game.GameControler.Transition(duration,path,vague);
+        }
+
         public static int FrameCount
         {
             get
@@ -48,6 +54,20 @@ namespace GameLibrary.RGSS
             {
                 var game = RGSSEngine.GetGame();
                 return game.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            }
+        }
+
+        public static float Brightness
+        {
+            get
+            {
+                var game = RGSSEngine.GetGame();
+                return game.DrawManager.Brightness;
+            }
+            set
+            {
+                var game = RGSSEngine.GetGame();
+                game.DrawManager.Brightness = value;
             }
         }
 

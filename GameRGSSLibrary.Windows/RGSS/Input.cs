@@ -162,56 +162,57 @@ namespace RPGVXLibrary.Input
         private static Texture2D stickTextureKey;
         public static void Update()
         {
-            VirtualThumbsticks.Update();
-
-            if (VirtualThumbsticks.LeftThumbstick.Length() > .2f)
+            lock (InputState)
             {
-                double angle;
-                double radians;
+                VirtualThumbsticks.Update();
+                if (VirtualThumbsticks.LeftThumbstick.Length() > .2f)
+                {
+                    double angle;
+                    double radians;
 
-                radians = Math.Atan2(
-                    -VirtualThumbsticks.LeftThumbstick.Y,
-                    VirtualThumbsticks.LeftThumbstick.X);
-                angle = radians * (180 / Math.PI);
+                    radians = Math.Atan2(
+                        -VirtualThumbsticks.LeftThumbstick.Y,
+                        VirtualThumbsticks.LeftThumbstick.X);
+                    angle = radians * (180 / Math.PI);
 
-                if (angle > -45 && angle <= 45)
-                    InputState.SetKeyDown(Keys.RIGHT);
-                else if (angle > 45 && angle < 135)
-                    InputState.SetKeyDown(Keys.UP);
-                else if (angle > -135 && angle < -45)
-                    InputState.SetKeyDown(Keys.Down);
+                    if (angle > -45 && angle <= 45)
+                        InputState.SetKeyDown(Keys.RIGHT);
+                    else if (angle > 45 && angle < 135)
+                        InputState.SetKeyDown(Keys.UP);
+                    else if (angle > -135 && angle < -45)
+                        InputState.SetKeyDown(Keys.Down);
+                    else
+                        InputState.SetKeyDown(Keys.LEFT);
+                }
                 else
-                    InputState.SetKeyDown(Keys.LEFT);
-            }
-            else
-            {
+                {
                     InputState.ReleaseDirKeys();
-            }
+                }
 
-            if (VirtualThumbsticks.RightThumbstick.Length() > .3f)
-            {
-                double angle;
-                double radians;
+                if (VirtualThumbsticks.RightThumbstick.Length() > .3f)
+                {
+                    double angle;
+                    double radians;
 
-                radians = Math.Atan2(
-                    -VirtualThumbsticks.RightThumbstick.Y,
-                    VirtualThumbsticks.RightThumbstick.X);
-                angle = radians * (180 / Math.PI);
+                    radians = Math.Atan2(
+                        -VirtualThumbsticks.RightThumbstick.Y,
+                        VirtualThumbsticks.RightThumbstick.X);
+                    angle = radians * (180 / Math.PI);
 
-                if (angle > -45 && angle <= 45)
-                    InputState.SetKeyDown(Keys.C);
-                else if (angle > 45 && angle < 135)
-                    InputState.SetKeyDown(Keys.B);
-                else if (angle > -135 && angle < -45)
-                    InputState.SetKeyDown(Keys.D);
+                    if (angle > -45 && angle <= 45)
+                        InputState.SetKeyDown(Keys.C);
+                    else if (angle > 45 && angle < 135)
+                        InputState.SetKeyDown(Keys.B);
+                    else if (angle > -135 && angle < -45)
+                        InputState.SetKeyDown(Keys.D);
+                    else
+                        InputState.SetKeyDown(Keys.A);
+                }
                 else
-                    InputState.SetKeyDown(Keys.A);
+                {
+                    InputState.ReleaseButtonKeys();
+                }
             }
-            else
-            {
-                InputState.ReleaseButtonKeys();
-            }
-
 
         }
         public static bool IsPressed(Keys key)
@@ -235,88 +236,88 @@ namespace RPGVXLibrary.Input
             stickBallTexture = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickBall");
             stickTextureKey = dm.Content.Load<Texture2D>("Graphics\\System\\ThumbstickKey");
             float scalefactor = 0.3f;
-
-#if !VTSSHOW
-            
-            
-            if (VirtualThumbsticks.LeftThumbstickCenter.HasValue)
+            lock (InputState)
             {
-               Vector2 origenCenter = VirtualThumbsticks.LeftThumbstickCenter.Value;
-               Vector2 offCenter = VirtualThumbsticks.LeftThumbstick;
- #else
+#if !VTSSHOW
+                if (VirtualThumbsticks.LeftThumbstickCenter.HasValue)
+                {
+                    Vector2 origenCenter = VirtualThumbsticks.LeftThumbstickCenter.Value;
+                    Vector2 offCenter = VirtualThumbsticks.LeftThumbstick;
+#else
               {
 
 
                Vector2 origenCenter = new Vector2(123, 286);
                Vector2 offCenter = new Vector2(0, 1);
 #endif
-               Vector2 ballCenter = origenCenter + 60f * offCenter;
+                    Vector2 ballCenter = origenCenter + 60f * offCenter;
 
-                Matrix origenoffset = Matrix.CreateTranslation(-origenCenter.X, -origenCenter.Y, 0);
-                Matrix scaleTranslation = Matrix.CreateScale(scalefactor);
-                Matrix origenoffsetback = Matrix.CreateTranslation(origenCenter.X, origenCenter.Y, 0);
-
-
-                dm.SpriteBatch.Begin(
-                SpriteSortMode.Deferred,
-                BlendState.AlphaBlend,
-                SamplerState.LinearClamp,
-                DepthStencilState.Default,
-                RasterizerState.CullNone,
-                null,
-                origenoffset * scaleTranslation * origenoffsetback);
-
-                dm.SpriteBatch.Draw(
-                    stickTexture,
-                    origenCenter - new Vector2(stickTexture.Width / 2f, stickTexture.Height / 2f),
-                    Color.Orange);
+                    Matrix origenoffset = Matrix.CreateTranslation(-origenCenter.X, -origenCenter.Y, 0);
+                    Matrix scaleTranslation = Matrix.CreateScale(scalefactor);
+                    Matrix origenoffsetback = Matrix.CreateTranslation(origenCenter.X, origenCenter.Y, 0);
 
 
-                dm.SpriteBatch.Draw(
-                    stickBallTexture,
-                    ballCenter - new Vector2(stickBallTexture.Width / 2f, stickBallTexture.Height / 2f),
-                    Color.Orange);
+                    dm.SpriteBatch.Begin(
+                    SpriteSortMode.Deferred,
+                    BlendState.AlphaBlend,
+                    SamplerState.LinearClamp,
+                    DepthStencilState.Default,
+                    RasterizerState.CullNone,
+                    null,
+                    origenoffset * scaleTranslation * origenoffsetback);
+
+                    dm.SpriteBatch.Draw(
+                        stickTexture,
+                        origenCenter - new Vector2(stickTexture.Width / 2f, stickTexture.Height / 2f),
+                        Color.Orange);
 
 
-
-                dm.SpriteBatch.End();
-            }
-
-               if (VirtualThumbsticks.RightThumbstickCenter.HasValue)
-            {
-                Vector2 origenCenter = VirtualThumbsticks.RightThumbstickCenter.Value;
-               Vector2 offCenter = VirtualThumbsticks.RightThumbstick;
-
-               Vector2 ballCenter = origenCenter + 60f * offCenter;
-
-                Matrix origenoffset = Matrix.CreateTranslation(-origenCenter.X, -origenCenter.Y, 0);
-                Matrix scaleTranslation = Matrix.CreateScale(scalefactor);
-                Matrix origenoffsetback = Matrix.CreateTranslation(origenCenter.X, origenCenter.Y, 0);
-
-
-                dm.SpriteBatch.Begin(
-                SpriteSortMode.Deferred,
-                BlendState.AlphaBlend,
-                SamplerState.LinearClamp,
-                DepthStencilState.Default,
-                RasterizerState.CullNone,
-                null,
-                origenoffset * scaleTranslation * origenoffsetback);
-
-                dm.SpriteBatch.Draw(
-                    stickTextureKey,
-                    origenCenter - new Vector2(stickTexture.Width / 2f, stickTexture.Height / 2f),
-                    Color.Orange);
-
-
-                dm.SpriteBatch.Draw(
-                    stickBallTexture,
-                    ballCenter - new Vector2(stickBallTexture.Width / 2f, stickBallTexture.Height / 2f),
-                    Color.Orange);
+                    dm.SpriteBatch.Draw(
+                        stickBallTexture,
+                        ballCenter - new Vector2(stickBallTexture.Width / 2f, stickBallTexture.Height / 2f),
+                        Color.Orange);
 
 
 
-                dm.SpriteBatch.End();
+                    dm.SpriteBatch.End();
+                }
+
+                if (VirtualThumbsticks.RightThumbstickCenter.HasValue)
+                {
+                    Vector2 origenCenter = VirtualThumbsticks.RightThumbstickCenter.Value;
+                    Vector2 offCenter = VirtualThumbsticks.RightThumbstick;
+
+                    Vector2 ballCenter = origenCenter + 60f * offCenter;
+
+                    Matrix origenoffset = Matrix.CreateTranslation(-origenCenter.X, -origenCenter.Y, 0);
+                    Matrix scaleTranslation = Matrix.CreateScale(scalefactor);
+                    Matrix origenoffsetback = Matrix.CreateTranslation(origenCenter.X, origenCenter.Y, 0);
+
+
+                    dm.SpriteBatch.Begin(
+                    SpriteSortMode.Deferred,
+                    BlendState.AlphaBlend,
+                    SamplerState.LinearClamp,
+                    DepthStencilState.Default,
+                    RasterizerState.CullNone,
+                    null,
+                    origenoffset * scaleTranslation * origenoffsetback);
+
+                    dm.SpriteBatch.Draw(
+                        stickTextureKey,
+                        origenCenter - new Vector2(stickTexture.Width / 2f, stickTexture.Height / 2f),
+                        Color.Orange);
+
+
+                    dm.SpriteBatch.Draw(
+                        stickBallTexture,
+                        ballCenter - new Vector2(stickBallTexture.Width / 2f, stickBallTexture.Height / 2f),
+                        Color.Orange);
+
+
+
+                    dm.SpriteBatch.End();
+                }
             }
           
         }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using GameLibrary.RGSS;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -12,6 +12,8 @@ namespace GameLibrary.GameEngine
        // SpriteBatch spriteBatch;
         GameControler _gameControler;
         DrawManager _drawManager;
+        private int actualDrawCount;
+        private double comptime;
         public RGSSGame()
         {
            // graphics = new GraphicsDeviceManager(this);
@@ -85,14 +87,23 @@ namespace GameLibrary.GameEngine
         {
             // TODO: Add your update logic here
            // Input.Update();
+            actualDrawCount++;
+
+            string s = string.Format("draw at time:{0}, actualDrawCount:{1}, state:{2}",
+                gameTime.TotalGameTime, actualDrawCount, _gameControler.GameState);
+        ///    Debug.WriteLine(s);
             switch (_gameControler.GameState)
             {
                 case GameState.Freezed:
-                   this.SuppressDraw();
+                case GameState.Pending:
+                  this.SuppressDraw();
                     break;
-                    
             }
             base.Update(gameTime);
+            if (_gameControler.GameState == GameState.Pending)
+            {
+                comptime += gameTime.ElapsedGameTime.TotalSeconds;
+            }
         }
 
         /// <summary>
@@ -101,37 +112,59 @@ namespace GameLibrary.GameEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-           
-//  Debug.WriteLine("draw @" + gameTime.ElapsedGameTime.TotalMilliseconds);
+
+            base.Draw(gameTime);
             
             // TODO: Add your drawing code here
-            lock (_drawManager)
-            {
             switch(_gameControler.GameState)
             {
                 case GameState.Freezed:
+                 //  lock (_drawManager)
+                 //  {
+                 //       _drawManager.DrawFreeze();
+                  //  }
                     break;
                 case GameState.Runging:
-                    //drawing context;
-                    
-                 // _drawManager.Blend(_gameControler.FrameCount);
-                   
-                        GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Blue);
+                        GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
                         _drawManager.Draw(_gameControler.FrameCount);
+                        _gameControler.GameState = GameState.Pending;
                         _gameControler.DrawOneFrameCompleted.Set();
-                        _gameControler.GameState = GameState.Freezed;
                     break;
                 case GameState.Pending:
+                   // lock (_drawManager)
+                  //  {
+                       // _drawManager.Draw(_gameControler.FrameCount);
+                  //      _drawManager.DrawFreeze();
+                  //  }
                     break;
-                case GameState.Transacting:
-                    _gameControler.DrawOneFrameCompleted.Set();
+                case GameState.Transition:
+                    
+                    lock (_drawManager)
+                    {
+                      //  GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
+                        if (!_drawManager.DrawTransition())
+                        {
+                            _gameControler.GameState = GameState.Pending;
+                            _gameControler.TansitionCompleted.Set();
+                        }
+                    }
                     break;
                 default:
                     break;
             }
-            base.Draw(gameTime);
-            Input.Draw(_drawManager, _gameControler.FrameCount);
+
+           lock (_drawManager)
+            {
+                Input.Draw(_drawManager, _gameControler.FrameCount);
+                float frameRate = 1 / ((float)gameTime.ElapsedGameTime.TotalSeconds + (float)comptime);
+                _drawManager.SpriteBatch.Begin(
+                   SpriteSortMode.Deferred,
+                   BlendState.AlphaBlend);
+                _drawManager.SpriteBatch.DrawString(new Font("黑体").ToXnaFont(), frameRate.ToString(), new Vector2(10, 10), Microsoft.Xna.Framework.Color.White);
+                _drawManager.SpriteBatch.End();
+                comptime = 0;
             }
-        }
+           
+         }
     }
 }

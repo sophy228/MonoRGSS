@@ -319,25 +319,19 @@ namespace GameLibrary.RGSS
             Color color = font.Color;
             float rotation = 0;
             Vector2 size;
-            try
-            {
-                size = spriteFont.MeasureString(text);
-            }
-            catch
-            {
-                int i = 0;
-                string txt = text;
-                foreach(var c in text)
-                {
 
-                    if (!spriteFont.Characters.Contains(c))
-                    {
-                        txt = txt.Replace(c, '?');
-                    }
+            string txt = text;
+            foreach (var c in text)
+            {
+
+                if (!spriteFont.Characters.Contains(c))
+                {
+                    txt = txt.Replace(c, '?');
                 }
-                text = txt;
-                size = spriteFont.MeasureString(text);
             }
+            text = txt;
+            size = spriteFont.MeasureString(text);
+
             Vector2 origin = new Vector2(0, 0);
             origin = size * 0.5f;
 
@@ -432,7 +426,8 @@ namespace GameLibrary.RGSS
      SamplerState.LinearClamp, DepthStencilState.Default,
      RasterizerState.CullNone, effect);
                 effect.Parameters["angle"].SetValue(angle);
-                effect.Parameters["SAMPLES"].SetValue(division);
+                if (effect.Parameters["SAMPLES"] != null)
+                    effect.Parameters["SAMPLES"].SetValue(division);
                 drm.SpriteBatch.Draw(mTexture, mRect, Microsoft.Xna.Framework.Color.White);
                 drm.SpriteBatch.End();
                 drm.GraphicsDevice.SetRenderTarget(null);

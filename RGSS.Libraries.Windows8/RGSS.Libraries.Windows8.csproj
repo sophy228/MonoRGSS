@@ -104,6 +104,7 @@
     <Compile Include="Initializers.Generated.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RubyAudio.cs" />
     <Compile Include="RubyBitmap.cs" />
     <Compile Include="RubyCache.cs" />
     <Compile Include="RubyColor.cs" />

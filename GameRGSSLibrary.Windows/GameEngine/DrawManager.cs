@@ -18,11 +18,16 @@ namespace GameLibrary.GameEngine
         private DrawContext _currentdrawContext;
         private RGSSContent _rgssContent;
         private readonly Game _game;
+        private float transDuraiton;
+        private float totalDuration;
+        private string transFile;
+        private bool fullScreen;
+
         public DrawManager(Game game)
         {
             _game = game;
             _graphicsDeviceManager = new GraphicsDeviceManager(game);
-            
+            fullScreen = true;
            
         }
         public GraphicsDevice GraphicsDevice
@@ -65,10 +70,34 @@ namespace GameLibrary.GameEngine
             }
         }
 
+        public bool FullScreen
+        {
+            get
+            {
+                return fullScreen;
+            }
+            set
+            {
+                fullScreen = value;
+            }
+        }
+
         public Microsoft.Xna.Framework.Graphics.Viewport DefaultViewport
         {
             get;
            private set;
+        }
+
+        public float Brightness
+        {
+            get
+            {
+                return _currentdrawContext.Brightness;
+            }
+            set
+            {
+                _currentdrawContext.Brightness = value;
+            }
         }
 
         public  void LoadContent()
@@ -94,14 +123,40 @@ namespace GameLibrary.GameEngine
         
         public void Draw(int frameCount)
         {
-           
             _currentdrawContext.Draw(frameCount);
+        }
+
+        public void DrawFreeze()
+        {
+            _currentdrawContext.DrawFreeze();
+        }
+
+        public void BeginTransition(int duration, string path, int vague)
+        {
+            totalDuration = transDuraiton = duration;
+            transFile = path;
+        }
+
+        public bool DrawTransition()
+        {
+            if (transDuraiton != 0)
+            {
+               _currentdrawContext.DrawTransition(transDuraiton / totalDuration, transFile);
+               transDuraiton--;
+               return true;
+            }
+            else
+            {
+                totalDuration = 0;
+                transFile = null;
+                return false;
+            }
             
         }
 
         public Texture2D SnapToTexture(int frameCount)
         {
-            //Blend(frameCount);
+         //   Blend(frameCount);
             int w, h;
             w = _currentdrawContext.DefaultWindowRect.Width;
             h = _currentdrawContext.DefaultWindowRect.Height;
@@ -109,14 +164,14 @@ namespace GameLibrary.GameEngine
             //screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Bgra32, DepthFormat.None);
             screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
             lock (this)
-            {
-                _currentdrawContext.Draw(frameCount);
+            {             
+               _currentdrawContext.Draw(frameCount);
                 _graphicsDevice.SetRenderTarget(screenshot);
-                _graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Red);
+                _graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
                 SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-                SpriteBatch.Draw(_currentdrawContext.RenderTarget, new Rectangle(0, 0, w, h), Microsoft.Xna.Framework.Color.White);
-                SpriteBatch.End();
-                _graphicsDevice.Present();
+               SpriteBatch.Draw(_currentdrawContext.RenderTarget, new Rectangle(0, 0, w, h), Microsoft.Xna.Framework.Color.White);
+               SpriteBatch.End();
+                //_graphicsDevice.Present();
                 _graphicsDevice.SetRenderTarget(null);
             }
             return screenshot;

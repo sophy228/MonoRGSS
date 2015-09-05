@@ -45,8 +45,6 @@ namespace GameLibrary.RGSS
 
         private int opacity;
         private Color blendColor;
-        private Texture2D blendTexture;
-        private Color lastBlendColor;
         private Rect lastSrcRect;
         private Tone tone;
         private bool disposed;
@@ -56,8 +54,16 @@ namespace GameLibrary.RGSS
         private int waveLength;
         private int waveSpeed;
         private int wavePhase;
+        private float vaveTime;
 
-        Effect effect = null;
+        private Texture2D toRenderTexture;
+        private RenderTarget2D renderTextureBuffer;
+
+        private int flashDuration = 0;
+        private Color flashColor;
+        private bool flashing;
+        private int flashAlphaStep;
+
         private void initialSprite()
         {
             Inialize();
@@ -77,14 +83,14 @@ namespace GameLibrary.RGSS
                 if (_viewport == null)
                 {
                     var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
-                    _viewport = context.ViewPortHeaer;
+                    _viewport = context.FindSelfManagedViewport();
                 }
                 this.InsertInZorder(_viewport.SpriteHeader);
             }
             opacity = 255;
             blendColor = new Color(0, 0, 0, 0);
-            lastBlendColor = new Color(0, 0, 0, 0);
-            tone = new Tone(255, 255, 255, 0);
+            tone = new Tone(0, 0, 0, 0);
+            tone.ValueChanged = blendColor.ValueChanged = new ValueChangedFunc(this.ColorValueChangedHandler);
             disposed = false;
         }
 
@@ -318,6 +324,7 @@ namespace GameLibrary.RGSS
             set
             {
                 blendColor = value;
+                UpdateTexture();
             }
         }
 
@@ -330,6 +337,7 @@ namespace GameLibrary.RGSS
             set
             {
                 tone = value;
+                UpdateTexture();
             }
         }
 
@@ -341,7 +349,12 @@ namespace GameLibrary.RGSS
             }
             set
             {
-                opacity = value;
+                if (value > 255)
+                    opacity = 255;
+                else if (value < 0)
+                    opacity = 0;
+                else
+                    opacity = value;
             }
         }
 
@@ -354,6 +367,7 @@ namespace GameLibrary.RGSS
             set
             {
                 waveAmp = value;
+                UpdateTexture();
             }
         }
 
@@ -366,6 +380,7 @@ namespace GameLibrary.RGSS
             set
             {
                 waveLength = value;
+                UpdateTexture();
             }
         }
 
@@ -378,6 +393,7 @@ namespace GameLibrary.RGSS
             set
             {
                 waveSpeed = value;
+                UpdateTexture();
             }
         }
 
@@ -390,6 +406,7 @@ namespace GameLibrary.RGSS
             set
             {
                 wavePhase = value;
+                UpdateTexture();
             }
         }
 
@@ -398,90 +415,156 @@ namespace GameLibrary.RGSS
             
       //      Debug.WriteLine(string.Format("Sprinte#{0}- Z:({1}), draw@frameCount:{2}",
      //                        id, Z, frameCount));
-            if (!Visible || m_Bitmap == null)
+           // PreBlend();
+            if (!Visible || m_Bitmap == null || (flashing && flashColor == null))
                 return;
+            if (toRenderTexture == null)
+                toRenderTexture = Bitmap.Texture;
             Rectangle rSource;
             rSource = new Rectangle(mSrcRect.X, mSrcRect.Y, mSrcRect.Width, mSrcRect.Height);
             Vector2 vDest = new Vector2(m_pxDstX, m_pxDstY);
             Vector2 vOrigin = new Vector2(m_pxOriginX, m_pxOriginY);
             Vector2 vScale = new Vector2(m_zoomX, m_zoomY);
-
-            Color actualTint = new Color((int)(m_cTint.Red * (opacity / 255.0)),
-                                          (int)(m_cTint.Green * (opacity / 255.0)),
-                                          (int)(m_cTint.Blue * (opacity / 255.0)),
-                                          opacity);
-            if (effect != null)
-            {
-                dm.SpriteBatch.End();
-                
-                dm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
-        SamplerState.LinearClamp, DepthStencilState.Default,
-        RasterizerState.CullNone, effect);
-            }
             SpriteEffects speffect = SpriteEffects.None;
             if (mirror)
                 speffect = SpriteEffects.FlipHorizontally;
-            dm.SpriteBatch.Draw(m_Bitmap.Texture, vDest, rSource, actualTint.toXnaColor(), m_fpRotation, vOrigin, vScale, speffect, m_fpDepth);
-                if (effect != null)
-                {
-                    dm.SpriteBatch.End();
+            else
+                speffect = SpriteEffects.None;
 
-                    dm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                }
-            
-            if (blendColor.Alpha != 0)
+            if(opacity < 255)
             {
-                
 
-                Color actualblend = new Color((int)(blendColor.Red * (blendColor.Alpha / 255.0)),
-                                          (int)(blendColor.Green * (blendColor.Alpha / 255.0)),
-                                          (int)(blendColor.Blue * (blendColor.Alpha / 255.0)),
-                                          blendColor.Alpha);
-
-                if (!lastBlendColor.isSame(blendColor) || lastSrcRect.Width != mSrcRect.Width || lastSrcRect.Height != mSrcRect.Height)
-                {
-                    if (blendTexture != null)
-                        blendTexture.Dispose();
-                    var drm = RGSSEngine.GetDrawManager();
-                    blendTexture = new Texture2D(drm.GraphicsDevice, rSource.Width, rSource.Height);
-                    int size = rSource.Width * rSource.Height;
-                    Microsoft.Xna.Framework.Color[] data = new Microsoft.Xna.Framework.Color[size];
-                    for (int i = 0; i < size; i++)
-                        data[i] = actualblend.toXnaColor();
-                    blendTexture.SetData(data);
-                }
-                if (blendTexture != null)
-                    dm.SpriteBatch.Draw(blendTexture, vDest, rSource, Microsoft.Xna.Framework.Color.White, m_fpRotation, vOrigin, vScale, SpriteEffects.None, m_fpDepth);
             }
-
-            lastBlendColor.SetColor(blendColor.Red, blendColor.Green, blendColor.Blue, blendColor.Alpha);
-            lastSrcRect.Set(mSrcRect.X, mSrcRect.Y, mSrcRect.Width, mSrcRect.Height);
+            Color color = new RGSS.Color(opacity, opacity, opacity, opacity);
+            dm.SpriteBatch.Draw(toRenderTexture, vDest, rSource, color.toXnaColor(), m_fpRotation, vOrigin, vScale, speffect, m_fpDepth);
+           
         }
-
+        
+        public void Flash(Color color, int duration)
+        {
+            flashColor = color;
+            flashDuration = duration;
+            flashing = true;
+            if (flashColor != null)
+            flashAlphaStep = flashColor.Alpha / duration;
+        }
         public virtual void Update()
         {
-            var dm = RGSSEngine.GetGame().DrawManager;
-            
-            if (waveAmp != 0)
+         
+            bool needUpdate = false;
+            if(waveAmp != 0 && waveLength != 0 && waveSpeed != 0 )
             {
-                effect = dm.Content.Load<Effect>("Effect\\WaveEffect");
-                effect.Parameters["amp"].SetValue((float)waveAmp / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
-                effect.Parameters["length"].SetValue((float)waveLength / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
-                effect.Parameters["speed"].SetValue((float)waveSpeed / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
-                effect.Parameters["phase"].SetValue((float)wavePhase / (float)dm.CurrentDrawContext.DefaultWindowRect.Width);
-                effect.Parameters["fTimer"].SetValue((float)RGSSEngine.GetGame().GameControler.FrameCount / (float)RGSSEngine.GetGame().GameControler.FrameRate);
-                //Bitmap.ApplyEffect(effect);
+                vaveTime += 1 / (float)RGSSEngine.GetGame().GameControler.FrameRate;
+                needUpdate = true;
+            }
+            if(flashDuration > 0)
+            {
+               
+                if (flashColor != null)
+                {
+                    flashColor.Alpha -= flashAlphaStep;
+                    needUpdate = true;
+                }
+                flashDuration--;
+            }
+            else if(flashDuration == 0)
+            {
+                if(flashing)
+                    needUpdate = true;
+                flashing = false;
+            }
+
+            if (needUpdate)
+                UpdateTexture();
+        }
+
+        public void ColorValueChangedHandler(object obj)
+        {
+            UpdateTexture();
+        }
+
+        public void UpdateTexture()
+        {
+           
+            if (!Visible || m_Bitmap == null || (flashing && flashColor == null) )
+                return;
+
+            {
+                var dm = RGSSEngine.GetDrawManager();
+                lock (dm)
+                {
+                    if (renderTextureBuffer != null)
+                        renderTextureBuffer.Dispose();
+                    renderTextureBuffer = new RenderTarget2D(dm.GraphicsDevice, Bitmap.Texture.Width, Bitmap.Texture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+                    var spriteEffect = dm.Content.Load<Effect>("Effect\\SpriteEffect");
+
+                    dm.GraphicsDevice.SetRenderTarget(renderTextureBuffer);
+
+                    dm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+                    spriteEffect.Parameters["tone"].SetValue(new Vector4(Tone.Red/255.0f, Tone.Green/255.0f, Tone.Blue/255.0f, Tone.Gray/255.0f));
+                    spriteEffect.Parameters["amp"].SetValue((float)waveAmp / (float)Bitmap.Texture.Height);
+                    spriteEffect.Parameters["length"].SetValue((float)waveLength / (float)Bitmap.Texture.Height);
+                    spriteEffect.Parameters["speed"].SetValue((float)waveSpeed / (float)Bitmap.Texture.Height);
+                    spriteEffect.Parameters["fTimer"].SetValue(vaveTime);
+                    dm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+                                   SamplerState.LinearClamp, DepthStencilState.Default,
+                        RasterizerState.CullNone, spriteEffect);
+                    //   dm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                    Color color;
+                    if (flashing && flashColor != null)
+                        color = flashColor;
+                    else
+                        color = Color;
+                    dm.SpriteBatch.Draw(Bitmap.Texture, Bitmap.Rect.toXnaRect(), color.toXnaColor());
+                    dm.SpriteBatch.End();
+                    dm.GraphicsDevice.SetRenderTarget(null);
+                    toRenderTexture = renderTextureBuffer;
+                }
+            }
+
+        }
+#if false
+        public void PreBlend()
+        {
+            if (!Visible || m_Bitmap == null)
+                return;
+            if(Tone.Red != 0 || Tone.Green != 0 || Tone.Blue != 0 || Tone.Gray != 0 ||
+                Color.Red != 0 || Color.Green != 0 || Color.Blue != 0 || Color.Alpha != 0)
+            {
+                var dm = RGSSEngine.GetDrawManager();
+                if (renderTextureBuffer != null)
+                  renderTextureBuffer.Dispose();
+                renderTextureBuffer = new RenderTarget2D(dm.GraphicsDevice, Bitmap.Texture.Width, Bitmap.Texture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+                var spriteEffect = dm.Content.Load<Effect>("Effect\\SpriteEffect");
+
+                dm.GraphicsDevice.SetRenderTarget(renderTextureBuffer);
+
+                dm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+               // spriteEffect.Parameters["tone"].SetValue(new Vector4(Tone.Red/255.0f, Tone.Green/255.0f, Tone.Blue/255.0f, Tone.Gray/255.0f));
+               spriteEffect.Parameters["amp"].SetValue((float)waveAmp / (float)Bitmap.Texture.Height);
+               spriteEffect.Parameters["length"].SetValue((float)waveLength / (float)Bitmap.Texture.Height);
+               spriteEffect.Parameters["speed"].SetValue((float)waveSpeed / (float)Bitmap.Texture.Height);
+                dm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+                               SamplerState.LinearClamp, DepthStencilState.Default,
+                    RasterizerState.CullNone, spriteEffect);
+             //   dm.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                dm.SpriteBatch.Draw(Bitmap.Texture, Bitmap.Rect.toXnaRect(), Color.toXnaColor());
+                dm.SpriteBatch.End();
+                dm.GraphicsDevice.SetRenderTarget(null);
+                toRenderTexture = renderTextureBuffer;
             }
             else
             {
-                effect = null;
+                toRenderTexture = Bitmap.Texture;
             }
         }
-
+#endif
         public void Dispose()
         {
             if (disposed)
                 return;
+            if (renderTextureBuffer != null)
+                renderTextureBuffer.Dispose();
             if (!_drawBySelf)
             {
 
@@ -501,7 +584,7 @@ namespace GameLibrary.RGSS
             if (vp == null)
             {
                 var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
-                vp = context.ViewPortHeaer;
+                vp = context.FindSelfManagedViewport();
             }
             Sprite sp = new Sprite(vp);
             //sp.InsertInZorder(vp.SpriteHeader);

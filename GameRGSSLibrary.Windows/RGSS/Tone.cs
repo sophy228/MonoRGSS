@@ -12,7 +12,7 @@ namespace GameLibrary.RGSS
         private int _green;
         private int _blue;
         private int _gray;
-
+        public ValueChangedFunc ValueChanged;
 
         public Tone(int red, int green, int blue, int gray = 0)
         {
@@ -30,10 +30,12 @@ namespace GameLibrary.RGSS
             }
             set
             {
-                if (value >= 0 && value <= 255)
+                if (value >= -255 && value <= 255)
                     _red = value;
                 else
-                    _red = (value > 255) ? 255 : 0;
+                    _red = (value > 255) ? 255 : -255;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
         public int Green
@@ -44,10 +46,12 @@ namespace GameLibrary.RGSS
             }
             set
             {
-                if (value >= 0 && value <= 255)
+                if (value >= -255 && value <= 255)
                     _green = value;
                 else
-                    _green = (value > 255) ? 255 : 0;
+                    _green = (value > 255) ? 255 : -255;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
         public int Blue
@@ -58,10 +62,12 @@ namespace GameLibrary.RGSS
             }
             set
             {
-                if (value >= 0 && value <= 255)
+                if (value >= -255 && value <= 255)
                     _blue = value;
                 else
-                    _blue = (value > 255) ? 255 : 0;
+                    _blue = (value > 255) ? 255 : -255;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
 
@@ -76,7 +82,9 @@ namespace GameLibrary.RGSS
                 if (value >= 0 && value <= 255)
                     _gray = value;
                 else
-                    _gray = (value > 255) ? 255 : 0;
+                    _gray = (value > 255) ? 255 :0;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
 
@@ -86,6 +94,8 @@ namespace GameLibrary.RGSS
             Green = green;
             Blue = blue;
             Gray = gray;
+            if (ValueChanged != null)
+                ValueChanged(this);
         }
     }
 }

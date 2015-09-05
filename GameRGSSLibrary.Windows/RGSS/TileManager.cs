@@ -268,7 +268,7 @@ namespace GameLibrary.RGSS
                             sprite.SrcRect = rect;
                             sprite.X = (slideindex % 2) * 16 + 32 * (x);
                             sprite.Y = (slideindex / 2) * 16 + 32 * (y);
-                            if ((tileMap.Passanges[mapData[x, y, layer]] & 0x10) == 0x10)
+                            if (tileMap.Passanges != null && (tileMap.Passanges[mapData[x, y, layer]] & 0x10) == 0x10)
                                 sprite.Z = 200;
                             else
                                 sprite.Z = 0;
@@ -301,15 +301,15 @@ namespace GameLibrary.RGSS
                         tileset2.TilePic == TilePicA3 && 
                         tileset.TilePic != TilePicA3)
                     {
-                        drawSprites[x, y, 0].sprites[0].Color = new Color(20, 20, 20, 128);
-                        drawSprites[x, y, 0].sprites[2].Color = new Color(20, 20, 20, 128);
+                        drawSprites[x, y, 0].sprites[0].Color.SetColor(20, 20, 20, 128);
+                        drawSprites[x, y, 0].sprites[2].Color.SetColor(20, 20, 20, 128);
                     }
                     if (tileset1.TilePic == TilePicA4 &&
                         tileset2.TilePic == TilePicA4 &&
                         tileset.TilePic != TilePicA4)
                     {
-                        drawSprites[x, y, 0].sprites[0].Color = new Color(20, 20, 20, 128);
-                        drawSprites[x, y, 0].sprites[2].Color = new Color(20, 20, 20, 128);
+                        drawSprites[x, y, 0].sprites[0].Color.SetColor(20, 20, 20, 128);
+                        drawSprites[x, y, 0].sprites[2].Color.SetColor(20, 20, 20, 128);
                     }
                 }
         }

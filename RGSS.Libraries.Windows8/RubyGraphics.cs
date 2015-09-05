@@ -50,7 +50,7 @@ namespace RGSS.Libraries.Builtins
         [RubyMethodAttribute("transition", RubyMethodAttributes.PublicSingleton)]
         public static void Transition(object/*!*/ self, int duration, [Optional]string filename, [Optional]int vague)
         {
-
+            Graphics.Transition(duration, filename, vague);
         }
 
         [RubyMethodAttribute("frame_reset", RubyMethodAttributes.PublicSingleton)]
@@ -101,15 +101,15 @@ namespace RGSS.Libraries.Builtins
         }
 
         [RubyMethodAttribute("brightness", RubyMethodAttributes.PublicSingleton)]
-        public static int Getbrightness(object/*!*/ self)
+        public static float Getbrightness(object/*!*/ self)
         {
-            return 255;
+            return Graphics.Brightness;
         }
 
         [RubyMethodAttribute("brightness=", RubyMethodAttributes.PublicSingleton)]
-        public static void Setbrightness(object/*!*/ self, int br)
+        public static void Setbrightness(object/*!*/ self, float br)
         {
-
+            Graphics.Brightness = br;
         }
 
     }

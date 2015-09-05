@@ -37,6 +37,9 @@
     <Compile Include="..\RGSS.Libraries.Windows8\Initializers.Generated.cs">
       <Link>Initializers.Generated.cs</Link>
     </Compile>
+    <Compile Include="..\RGSS.Libraries.Windows8\RubyAudio.cs">
+      <Link>RubyAudio.cs</Link>
+    </Compile>
     <Compile Include="..\RGSS.Libraries.Windows8\RubyBitmap.cs">
       <Link>RubyBitmap.cs</Link>
     </Compile>

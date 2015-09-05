@@ -25,6 +25,7 @@ namespace RGSS.Libraries.Builtins {
         protected override void LoadModules() {
             
             
+            DefineGlobalModule("Audio", typeof(RGSS.Libraries.Builtins.RubyAudio), 0x00000008, null, LoadAudio_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
             DefineGlobalModule("Debug", typeof(RGSS.Libraries.Builtins.RubyDebug), 0x00000008, null, LoadDebug_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
             DefineGlobalModule("Graphics", typeof(RGSS.Libraries.Builtins.RubyGraphics), 0x00000008, null, LoadGraphics_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
             DefineGlobalModule("Input", typeof(RGSS.Libraries.Builtins.RubyInputOps), 0x00000008, null, LoadInput_Class, LoadInput_Constants, IronRuby.Builtins.RubyModule.EmptyArray);
@@ -69,6 +70,69 @@ namespace RGSS.Libraries.Builtins {
             DefineGlobalClass("Window", typeof(RGSS.Libraries.Builtins.RubyWindow), 0x00000008, Context.ObjectClass, LoadWindow_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, RGSS.Libraries.Builtins.RubyWindow>(RGSS.Libraries.Builtins.RubyWindow.Create)
             );
+        }
+        
+        private static void LoadAudio_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "bgm_fade", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.FadeBgm)
+            );
+            
+            DefineLibraryMethod(module, "bgm_play", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.String, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.PlayBgm)
+            );
+            
+            DefineLibraryMethod(module, "bgm_stop", 0x21, 
+                0x00000000U, 
+                new Action<System.Object>(RGSS.Libraries.Builtins.RubyAudio.StopBgm)
+            );
+            
+            DefineLibraryMethod(module, "bgs_fade", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.FadeBgs)
+            );
+            
+            DefineLibraryMethod(module, "bgs_play", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.String, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.PlayBgs)
+            );
+            
+            DefineLibraryMethod(module, "bgs_stop", 0x21, 
+                0x00000000U, 
+                new Action<System.Object>(RGSS.Libraries.Builtins.RubyAudio.StopBgs)
+            );
+            
+            DefineLibraryMethod(module, "me_fade", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.FadeMe)
+            );
+            
+            DefineLibraryMethod(module, "me_play", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.String, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.PlayMe)
+            );
+            
+            DefineLibraryMethod(module, "me_stop", 0x21, 
+                0x00000000U, 
+                new Action<System.Object>(RGSS.Libraries.Builtins.RubyAudio.StopMe)
+            );
+            
+            DefineLibraryMethod(module, "se_fade", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.FadeSe)
+            );
+            
+            DefineLibraryMethod(module, "se_play", 0x21, 
+                0x00000000U, 
+                new Action<System.Object, System.String, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyAudio.PlaySe)
+            );
+            
+            DefineLibraryMethod(module, "se_stop", 0x21, 
+                0x00000000U, 
+                new Action<System.Object>(RGSS.Libraries.Builtins.RubyAudio.StopSe)
+            );
+            
         }
         
         private static void LoadBitmap_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
@@ -326,12 +390,12 @@ namespace RGSS.Libraries.Builtins {
         private static void LoadGraphics_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
             DefineLibraryMethod(module, "brightness", 0x21, 
                 0x00000000U, 
-                new Func<System.Object, System.Int32>(RGSS.Libraries.Builtins.RubyGraphics.Getbrightness)
+                new Func<System.Object, System.Single>(RGSS.Libraries.Builtins.RubyGraphics.Getbrightness)
             );
             
             DefineLibraryMethod(module, "brightness=", 0x21, 
                 0x00000000U, 
-                new Action<System.Object, System.Int32>(RGSS.Libraries.Builtins.RubyGraphics.Setbrightness)
+                new Action<System.Object, System.Single>(RGSS.Libraries.Builtins.RubyGraphics.Setbrightness)
             );
             
             DefineLibraryMethod(module, "fadein", 0x21, 
@@ -695,6 +759,11 @@ namespace RGSS.Libraries.Builtins {
                 new Action<RGSS.Libraries.Builtins.RubySprite>(RGSS.Libraries.Builtins.RubySprite.Dispose)
             );
             
+            DefineLibraryMethod(module, "flash", 0x11, 
+                0x00000000U, 
+                new Action<RGSS.Libraries.Builtins.RubySprite, GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubySprite.Flash)
+            );
+            
             DefineLibraryMethod(module, "height", 0x11, 
                 0x00000000U, 
                 new Func<RGSS.Libraries.Builtins.RubySprite, System.Int32>(RGSS.Libraries.Builtins.RubySprite.getHeight)
@@ -1053,17 +1122,22 @@ namespace RGSS.Libraries.Builtins {
         private static void LoadViewport_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
             DefineLibraryMethod(module, "color", 0x11, 
                 0x00000000U, 
-                new Func<GameLibrary.RGSS.Viewport, GameLibrary.RGSS.Tone>(RGSS.Libraries.Builtins.RubyViewportOps.GetTone)
+                new Func<GameLibrary.RGSS.Viewport, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyViewportOps.GetColor)
             );
             
             DefineLibraryMethod(module, "color=", 0x11, 
                 0x00000000U, 
-                new Action<GameLibrary.RGSS.Viewport, System.Object>(RGSS.Libraries.Builtins.RubyViewportOps.SetTone)
+                new Action<GameLibrary.RGSS.Viewport, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyViewportOps.SetColor)
             );
             
             DefineLibraryMethod(module, "dispose", 0x11, 
                 0x00000000U, 
                 new Action<GameLibrary.RGSS.Viewport>(RGSS.Libraries.Builtins.RubyViewportOps.Dispose)
+            );
+            
+            DefineLibraryMethod(module, "flash", 0x11, 
+                0x00000000U, 
+                new Action<GameLibrary.RGSS.Viewport, GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyViewportOps.Flash)
             );
             
             DefineLibraryMethod(module, "ox", 0x11, 
@@ -1093,7 +1167,7 @@ namespace RGSS.Libraries.Builtins {
             
             DefineLibraryMethod(module, "tone=", 0x11, 
                 0x00000000U, 
-                new Action<GameLibrary.RGSS.Viewport, System.Object>(RGSS.Libraries.Builtins.RubyViewportOps.SetTone)
+                new Action<GameLibrary.RGSS.Viewport, GameLibrary.RGSS.Tone>(RGSS.Libraries.Builtins.RubyViewportOps.SetTone)
             );
             
             DefineLibraryMethod(module, "update", 0x11, 

@@ -2,12 +2,14 @@
 using System.IO;
 namespace GameLibrary.RGSS
 {
+    public delegate void ValueChangedFunc(object obj);
     public class Color
     {
         private int _red;
         private int _green;
         private int _blue;
         private int _alpha;
+        public ValueChangedFunc ValueChanged;
         public Color(int red, int green, int blue, int alpha = 255)
         {
             Red = red;
@@ -35,6 +37,8 @@ namespace GameLibrary.RGSS
                     _red = value;
                 else
                     _red = (value > 255) ? 255 : 0;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
         public int Green
@@ -49,6 +53,8 @@ namespace GameLibrary.RGSS
                     _green = value;
                 else
                     _green = (value > 255) ? 255 : 0;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
         public int Blue
@@ -63,6 +69,8 @@ namespace GameLibrary.RGSS
                     _blue = value;
                 else
                     _blue = (value > 255) ? 255 : 0;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
 
@@ -78,6 +86,8 @@ namespace GameLibrary.RGSS
                     _alpha = value;
                 else
                     _alpha = (value > 255) ? 255 : 0;
+                if (ValueChanged != null)
+                    ValueChanged(this);
             }
         }
 
@@ -87,6 +97,8 @@ namespace GameLibrary.RGSS
             Green = green;
             Blue = blue;
             Alpha = alpha;
+            if (ValueChanged != null)
+                ValueChanged(this);
         }
 
         public void SetColor(Color c)
@@ -95,6 +107,8 @@ namespace GameLibrary.RGSS
             Green = c.Green;
             Blue = c.Blue;
             Alpha = c.Alpha;
+            if (ValueChanged != null)
+                ValueChanged(this);
         }
 
         internal Microsoft.Xna.Framework.Color toXnaColor()

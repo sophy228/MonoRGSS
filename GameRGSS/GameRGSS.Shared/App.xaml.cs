@@ -30,7 +30,9 @@ namespace GameRGSS
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             var gamePage = Window.Current.Content as GamePage;
-
+#if WINDOWS_PHONE_APP
+            Windows.UI.ViewManagement.StatusBar.GetForCurrentView().HideAsync();
+#endif
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (gamePage == null)

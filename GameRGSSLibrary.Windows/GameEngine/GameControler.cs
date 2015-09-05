@@ -14,7 +14,7 @@ namespace GameLibrary.GameEngine
         Freezed,
         Runging,
         Pending,
-        Transacting
+        Transition
     }
     public class GameControler
     {
@@ -22,8 +22,11 @@ namespace GameLibrary.GameEngine
         private RGSSGame _game;
         public GameState _gameState;
         public AutoResetEvent DrawOneFrameCompleted;
+        public AutoResetEvent TansitionCompleted;
         private readonly int _frameRate;
         private int _frameCount;
+        Stopwatch _gameTimer;
+        private double lastTime;
         private GameControler()
         {
 
@@ -64,10 +67,13 @@ namespace GameLibrary.GameEngine
         private GameControler(RGSSGame game)
         {
             _game = game;
-            GameState = GameState.Freezed;
+            GameState = GameState.Pending;
             DrawOneFrameCompleted = new AutoResetEvent(false);
+            TansitionCompleted = new AutoResetEvent(false);
             _frameRate = 30;
             FrameCount = 0;
+          //  _gameTimer = Stopwatch.StartNew();
+            lastTime = 0;
         }
 
         public static GameControler CreateControler(RGSSGame game)
@@ -78,13 +84,17 @@ namespace GameLibrary.GameEngine
 
         public void TrigerOneFrame()
         {
-           // if (_gameState != GameState.Freezed)
+            if (_gameState == GameState.Transition)
+                TansitionCompleted.WaitOne();
+            if (_gameState == GameState.Pending)
             {
                 _gameState = GameState.Runging;
-                Stopwatch _gameTimer = Stopwatch.StartNew();
+               // double before = _gameTimer.Elapsed.TotalMilliseconds;
                 DrawOneFrameCompleted.WaitOne();
-               // DrawOneFrameCompleted.Set();
-                long elapsedTicks = _gameTimer.Elapsed.Ticks;
+              //  double after = _gameTimer.Elapsed.TotalMilliseconds;
+              //  Debug.WriteLine("befor " + before + " after " + after);
+              // DrawOneFrameCompleted.Set();
+                
                 
                 
 #if false
@@ -106,7 +116,21 @@ namespace GameLibrary.GameEngine
 
         public void FreezeFrame()
         {
-            _gameState = GameState.Freezed;
+            if (_gameState == GameState.Transition)
+                TansitionCompleted.WaitOne();
+            if (_gameState == GameState.Pending)
+            {
+                _gameState = GameState.Freezed;
+            }
+        }
+
+        public void Transition(int duration, string name, int vague)
+        {
+            if (_gameState == GameState.Freezed)
+            {
+                _gameState = GameState.Transition;
+                _game.DrawManager.BeginTransition(duration, name, vague);
+            }
         }
     }
 }

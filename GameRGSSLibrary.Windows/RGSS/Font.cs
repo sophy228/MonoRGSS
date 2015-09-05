@@ -62,6 +62,8 @@ namespace GameLibrary.RGSS
 
         public static Color DefaultColor = new Color(255,255,255);
 
+        private static List<string> quickIgnoreFont = new List<string>();
+
         private string GenerateFontPath(string name)
         {
             string style="";
@@ -84,17 +86,20 @@ namespace GameLibrary.RGSS
             {
                 foreach (var name in Name)
                 {
-                    try
+                    if (quickIgnoreFont.Contains(name))
+                        continue;
+                   
+                    spriteFont = drm.Content.Load<SpriteFont>("Font\\" + GenerateFontPath(name));
+
+                    if (spriteFont == null)
                     {
-                        spriteFont = drm.Content.Load<SpriteFont>("Font\\" + GenerateFontPath(name));
-                    }
-                    catch(Exception ex)
-                    {
+                        quickIgnoreFont.Add(name);
                         continue;
                     }
-                    break;
+                    else
+                        break;
                 }
-                if (spriteFont == null)
+                if (spriteFont == null) 
                     spriteFont = drm.Content.Load<SpriteFont>("Font\\default");
             }
 

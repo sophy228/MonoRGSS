@@ -31,7 +31,8 @@ namespace GameLibrary.GameEngine
             if (state == EngineState.UnInitialized)
             {
                 game = XamlGame<RGSSGame>.Create(launchParameters, window, swapChainBackgroundPanel);
-                game.IsFixedTimeStep = true;
+              // game.IsFixedTimeStep = true;
+              // game.TargetElapsedTime = TimeSpan.FromSeconds(1f/50f);
                 game.GameControler = (GameControler.CreateControler(game));
                 state = EngineState.Initialized;
             }
@@ -45,7 +46,7 @@ namespace GameLibrary.GameEngine
             if (state != EngineState.Runing)
             {
                 EntryCallback = entry;
-                IAsyncAction asyncAction = ThreadPool.RunAsync(Worker, WorkItemPriority.Low);
+                IAsyncAction asyncAction = ThreadPool.RunAsync(Worker, WorkItemPriority.Normal);
                 return asyncAction.AsTask();
             }
             return null;

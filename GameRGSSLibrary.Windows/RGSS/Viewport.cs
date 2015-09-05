@@ -22,6 +22,17 @@ namespace GameLibrary.RGSS
 
         private int id;
 
+        private int flashDuration = 0;
+        private Color flashColor;
+        private bool flashing;
+        private int flashAlphaStep;
+
+        private Tone tone;
+        private Color color;
+
+        internal int drawCount = 0;
+        internal bool selfManaged;
+
         private Viewport()
         {
 
@@ -35,6 +46,8 @@ namespace GameLibrary.RGSS
             _spriteHeader = new Sprite(this,true);
             _windowHeader = new LinkNode();
             Visible = true;
+            color = new Color(0, 0, 0, 0);
+            tone = new Tone(0, 0, 0, 0);
             //_rect.X *= _drawContext.DrawManager.DefaultViewport.Width / 544;
             //_rect.Width *= _drawContext.DrawManager.DefaultViewport.Width / 544;
             //_rect.Y *= _drawContext.DrawManager.DefaultViewport.Height / 416;
@@ -101,6 +114,30 @@ namespace GameLibrary.RGSS
             }
         }
 
+        public Color Color
+        {
+            get
+            {
+                return color;
+            }
+            set
+            {
+                color = value;
+            }
+        }
+
+        public Tone Tone
+        {
+            get
+            {
+                return tone;
+            }
+            set
+            {
+                tone = value;
+            }
+        }
+
         public Rect Rect
         {
             get
@@ -131,12 +168,44 @@ namespace GameLibrary.RGSS
                 Debug.WriteLine(string.Format("ViewPort#{0}- Z:({1}), blend@frameCount:{2}",
                              id, Z, frameCount));
 #endif
-            foreach (Window wd in WindowHeader)
+     //       foreach (Window wd in WindowHeader)
+     //       {
+      //         wd.PreBlend(dm, frameCount);
+      //      }
+     //       foreach (Sprite sp in SpriteHeader)
+    //        {
+        //        sp.PreBlend();
+     //       }
+        }
+
+        public virtual void Update()
+        {
+
+            if (flashDuration > 0)
             {
-               wd.PreBlend(dm, frameCount);
+                if (flashColor != null)
+                {
+                    flashColor.Alpha -= flashAlphaStep;
+                }
+                flashDuration--;
+            }
+            else if (flashDuration == 0)
+            {
+                flashing = false;
             }
         }
-        public void Draw(DrawManager dm, int frameCount)
+
+
+        public void Flash(Color color, int duration)
+        {
+            flashColor = color;
+            flashDuration = duration;
+            flashing = true;
+            if (flashColor != null)
+                flashAlphaStep = flashColor.Alpha / duration;
+        }
+
+        public void Draw(DrawManager dm, int frameCount, float brightness = 255)
         {
 #if DEBUGOUT
             if(_rect != null )
@@ -146,35 +215,59 @@ namespace GameLibrary.RGSS
                 Debug.WriteLine(string.Format("ViewPort#{0}- Z:({1}), draw@frameCount:{2}",
                              id, Z, frameCount));
 #endif
-            if (!Visible)
+            drawCount = 0;
+            if (!Visible || (flashing && flashColor == null))
                 return;
+
+
+            var viewportEffect = dm.Content.Load<Effect>("Effect\\ViewportEffect");
+
+            viewportEffect.Parameters["tone"].SetValue(new Vector4(Tone.Red / 255.0f, Tone.Green / 255.0f, Tone.Blue / 255.0f, Tone.Gray / 255.0f));
+            viewportEffect.Parameters["brightness"].SetValue(brightness / 255.0f);
+            Color actualColor;
+            if (flashing && flashColor != null)
+                actualColor = flashColor;
+            else
+                actualColor = Color;
+
+            viewportEffect.Parameters["blendcolor"].SetValue(new Vector4(actualColor.Red / 255.0f, actualColor.Green / 255.0f, actualColor.Blue / 255.0f, actualColor.Alpha / 255.0f));
+
             Matrix origenoffset = Matrix.CreateTranslation(-Ox, -Oy, 0);
-            Matrix scaleTranslation = Matrix.CreateScale((float)(dm.DefaultViewport.Width / 544.0f), (float)(dm.DefaultViewport.Height / 416.0f), 1.0f);
-            dm.SpriteBatch.Begin(
-                SpriteSortMode.Deferred,
-                BlendState.AlphaBlend,
-                SamplerState.LinearClamp,
-                DepthStencilState.Default,
-                RasterizerState.CullNone,
-                null,
-                origenoffset);
-            var viewport = dm.DefaultViewport;
-
-            viewport.X = this._rect.X;
-            viewport.Y = this._rect.Y ;
-            viewport.Width = this._rect.Width ;
-            viewport.Height = this._rect.Height;
-            dm.GraphicsDevice.Viewport = viewport;
-            foreach(Sprite sp in SpriteHeader)
+          //  Matrix scaleTranslation = Matrix.CreateScale((float)(dm.DefaultViewport.Width / 544.0f), (float)(dm.DefaultViewport.Height / 416.0f), 1.0f);
+            Rect rect = this._rect.IntersectsWith(_drawContext.DefaultWindowRect);
+            if (rect != null)
             {
-                sp.Draw(dm, frameCount);
-            }
+                dm.SpriteBatch.Begin(
+                    SpriteSortMode.Deferred,
+                    BlendState.AlphaBlend,
+                    SamplerState.LinearClamp,
+                    DepthStencilState.Default,
+                    RasterizerState.CullNone,
+                    viewportEffect,
+                    origenoffset);
+                var viewport = dm.DefaultViewport;
+                viewport.X = rect.X;
+                viewport.Y = rect.Y;
+                viewport.Width = rect.Width;
+                viewport.Height = rect.Height;
+                dm.GraphicsDevice.Viewport = viewport;
+                foreach (Sprite sp in SpriteHeader)
+                {
+                    sp.Draw(dm, frameCount);
+                    drawCount++;
+                }
 
-            foreach(Window wd in WindowHeader)
-            {
-                wd.Draw(dm, frameCount);
+                foreach (Window wd in WindowHeader)
+                {
+                    wd.Draw(dm, frameCount);
+                    drawCount++;
+                }
+                dm.SpriteBatch.End();
             }
-            dm.SpriteBatch.End();
+            else
+            {
+                //do-nothing;
+            }
         }
 
         public void Dispose()

@@ -866,7 +866,6 @@ end
   class BGM < AudioFile
     @@last = BGM.new
     def play
-=begin
       if @name.empty?
         Audio.bgm_stop
         @@last = BGM.new
@@ -874,19 +873,14 @@ end
         Audio.bgm_play("Audio/BGM/" + @name, @volume, @pitch)
         @@last = self
       end
-=end
     end
     def self.stop
-=begin
       Audio.bgm_stop
       @@last = BGM.new
-=end
     end
     def self.fade(time)
-=begin
       Audio.bgm_fade(time)
       @@last = BGM.new
-=end
     end
     def self.last
       @@last
@@ -896,7 +890,6 @@ end
   class BGS < AudioFile
     @@last = BGS.new
     def play
-=begin
       if @name.empty?
         Audio.bgs_stop
         @@last = BGS.new
@@ -904,19 +897,14 @@ end
         Audio.bgs_play("Audio/BGS/" + @name, @volume, @pitch)
         @@last = self
       end
-=end
     end
     def self.stop
-=begin
       Audio.bgs_stop
       @@last = BGS.new
-=end
     end
     def self.fade(time)
-=begin
       Audio.bgs_fade(time)
       @@last = BGS.new
-=end
     end
     def self.last
       @@last
@@ -925,29 +913,27 @@ end
 
   class ME < AudioFile
     def play
-=begin
       if @name.empty?
         Audio.me_stop
       else
         Audio.me_play("Audio/ME/" + @name, @volume, @pitch)
       end
-=end
     end
     def self.stop
-    #  Audio.me_stop
+     Audio.me_stop
     end
     def self.fade(time)
-     # Audio.me_fade(time)
+     Audio.me_fade(time)
     end
   end
   class SE < AudioFile
     def play
-      #unless @name.empty?
-    #    Audio.se_play("Audio/SE/" + @name, @volume, @pitch)
-    #  end
+      unless @name.empty?
+        Audio.se_play("Audio/SE/" + @name, @volume, @pitch)
+      end
     end
     def self.stop
-     # Audio.se_stop
+      Audio.se_stop
     end
   end
 

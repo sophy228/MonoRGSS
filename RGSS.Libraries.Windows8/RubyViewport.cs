@@ -36,18 +36,28 @@ namespace RGSS.Libraries.Builtins
             self.Dispose();
         }
 
-        [RubyMethod("color")]
         [RubyMethod("tone")]
         public static Tone GetTone(Viewport self)
         {
-            return null;
+            return self.Tone;
+        }
+
+        [RubyMethod("tone=")]
+        public static void SetTone(Viewport self, Tone tone)
+        {
+            self.Tone = tone;
+        }
+
+        [RubyMethod("color")]
+        public static Color GetColor(Viewport self)
+        {
+            return self.Color;
         }
 
         [RubyMethod("color=")]
-        [RubyMethod("tone=")]
-        public static void SetTone(Viewport self, object tone)
+        public static void SetColor(Viewport self, Color color)
         {
-
+            self.Color = color;
         }
 
         [RubyMethod("ox")]
@@ -74,7 +84,7 @@ namespace RGSS.Libraries.Builtins
         [RubyMethod("update")]
         public static void Update(Viewport self)
         {
-            
+            self.Update();
         }
         [RubyMethod("visible")]
         public static bool GetVisible(Viewport self)
@@ -85,6 +95,12 @@ namespace RGSS.Libraries.Builtins
         public static void SetVisible(Viewport self, bool visible)
         {
             self.Visible = visible;
+        }
+
+        [RubyMethod("flash")]
+        public static void Flash(Viewport self, Color color, int duration)
+        {
+            self.Flash(color, duration);
         }
     }
 }

@@ -445,5 +445,10 @@ namespace RGSS.Libraries.Builtins
         {
             self.sp.WavePhase = value;
         }
+        [RubyMethod("flash")]
+        public static void Flash(RubySprite self, Color color, int duration)
+        {
+            self.sp.Flash(color, duration);
+        }
     }
 }

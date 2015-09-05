@@ -110,7 +110,7 @@
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.3.0.2210, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsPhone81\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone81\AnyCPU\Debug\MonoGame.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -152,6 +152,7 @@ namespace GameLibrary.RGSS
                     sp.Draw(dm,frameCount);
             }
         }
+
         public void dispose()
         {
             foreach(var sp in m_aBorderSprites)

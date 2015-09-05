@@ -62,7 +62,7 @@ namespace GameLibrary.RGSS
             openness = 255;
             content = new Bitmap(10,10);
             var context = RGSSEngine.GetDrawManager().CurrentDrawContext;
-            _viewport = context.ViewPortHeaer;
+            _viewport = context.FindSelfManagedViewport();
             this.InsertInZorder(_viewport.WindowHeader);
             cursorRect = new Rect(-16, -16, 0, 0);
             this.Visible = true;

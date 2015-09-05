@@ -22,6 +22,9 @@ namespace GameRGSS
             this.InitializeComponent();
            // isNative = true;
             // Create the game.
+            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
+            
+
 #if false
            _game = XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, this);
            _game.IsFixedTimeStep = true;
@@ -40,6 +43,8 @@ namespace GameRGSS
            }
 #endif
         }
+
+        
 
         private int mainLoop()
         {

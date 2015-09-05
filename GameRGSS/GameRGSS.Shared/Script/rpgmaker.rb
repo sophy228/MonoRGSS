@@ -8355,7 +8355,6 @@ class Sprite_Base < Sprite
   #--------------------------------------------------------------------------
   def animation_set_sprites(frame)
     cell_data = frame.cell_data
-    Debug.test(cell_data)
     for i in 0..15
       sprite = @animation_sprites[i]
       next if sprite == nil
@@ -8748,6 +8747,7 @@ class Sprite_Battler < Sprite_Base
     self.blend_type = 1
     self.color.set(255, 128, 128, 128)
     self.opacity = 256 - (48 - @effect_duration) * 6
+    Debug.test(self.opacity)
   end
 end
 
@@ -11888,9 +11888,9 @@ class Scene_Title < Scene_Base
   # ● 播放标题音乐
   #--------------------------------------------------------------------------
   def play_title_music
-   # $data_system.title_bgm.play
-   # RPG::BGS.stop
-    #RPG::ME.stop
+    $data_system.title_bgm.play
+    RPG::BGS.stop
+    RPG::ME.stop
   end
   #--------------------------------------------------------------------------
   # ● 检查主角初期位置是否存在
@@ -12650,14 +12650,17 @@ class Scene_Item < Scene_Base
   def start
     super
     create_menu_background
-    @viewport = Viewport.new(0, 0, 544, 416)
+    @viewport = Viewport.new(0, 0, 500, 416)
     @help_window = Window_Help.new
-    @help_window.viewport = @viewport
+   #@help_window.viewport = @viewport
     @item_window = Window_Item.new(0, 56, 544, 360)
-    @item_window.viewport = @viewport
+   @item_window.viewport = @viewport
     @item_window.help_window = @help_window
     @item_window.active = false
     @target_window = Window_MenuStatus.new(0, 0)
+    #@bitmap = Cache.system("Title")
+    #@sp1 = Sprite.new(@viewport)
+    #@sp1.bitmap = @bitmap
     hide_target_window
   end
   #--------------------------------------------------------------------------
@@ -14475,22 +14478,102 @@ class Scene_End < Scene_Base
   end
 end
 
+#==============================================================================
+# ■ Scene_Gameover
+#------------------------------------------------------------------------------
+# 　处理游戏结束画面的类。
+#==============================================================================
 
-
-vp1 = Viewport.new(0,0,100,100)
-sp1 = Sprite.new
-bitmap = Cache.system("Balloon")
-sp1.bitmap = bitmap
-sp1.color.set(0,0,255,128)
-sp1.opacity = 255
-
-Input.update
-while true do
-  sp1.update
-
-  Graphics.update
-  Input.update
+class Scene_Gameover < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    RPG::BGM.stop
+    RPG::BGS.stop
+    $data_system.gameover_me.play
+    Graphics.transition(120)
+    Graphics.freeze
+    create_gameover_graphic
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_gameover_graphic
+    $scene = nil if $BTEST
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    if Input.trigger?(Input::C)
+      $scene = Scene_Title.new
+      Graphics.fadeout(120)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行渐变
+  #--------------------------------------------------------------------------
+  def perform_transition
+    Graphics.transition(180)
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成游戏结束图档
+  #--------------------------------------------------------------------------
+  def create_gameover_graphic
+    @sprite = Sprite.new
+    @sprite.bitmap = Cache.system("GameOver")
+  end
+  #--------------------------------------------------------------------------
+  # ● 释放游戏结束图档
+  #--------------------------------------------------------------------------
+  def dispose_gameover_graphic
+    @sprite.bitmap.dispose
+    @sprite.dispose
+  end
 end
+
+
+class Test
+  def initialize
+  @map = load_data(sprintf("Data/Map%03d.rvdata", 1))
+  create_tilemap
+  end
+
+  def create_tilemap
+    @tilemap = Tilemap.new(@viewport1)
+    @tilemap.bitmaps[0] = Cache.system("TileA1")
+    @tilemap.bitmaps[1] = Cache.system("TileA2")
+    @tilemap.bitmaps[2] = Cache.system("TileA3")
+    @tilemap.bitmaps[3] = Cache.system("TileA4")
+    @tilemap.bitmaps[4] = Cache.system("TileA5")
+    @tilemap.bitmaps[5] = Cache.system("TileB")
+    @tilemap.bitmaps[6] = Cache.system("TileC")
+    @tilemap.bitmaps[7] = Cache.system("TileD")
+    @tilemap.bitmaps[8] = Cache.system("TileE")
+    @tilemap.map_data = @map.data
+   # @tilemap.passages = @map.passages
+  end
+  
+  def test
+    Graphics.freeze
+    Graphics.transition(10)
+    while true
+      Graphics.update
+      Input.update
+      @tilemap.update
+    end
+  end
+end
+
+#test = Test.new
+#test.test
+
+
 
 
 Font.default_name = ["黑体", "DFKai-SB", "標楷體", "Verdana", "Arial Unicode MS"]

@@ -44,5 +44,31 @@ namespace GameLibrary.RGSS
             Width = 0;
             Height = 0;
         }
+
+        public Rect IntersectsWith(Rect rect)
+        {
+            Microsoft.Xna.Framework.Rectangle rect1 = this.toXnaRect();
+            Microsoft.Xna.Framework.Rectangle rect2 = rect.toXnaRect();
+            if (rect1.Intersects(rect2))
+            {
+                int xa1 = rect.X;
+                int ya1 = rect.Y;
+                int xa2 = rect.X + rect.Width;
+                int ya2 = rect.Y + rect.Height;
+
+                int xb1 = this.X;
+                int yb1 = this.Y;
+                int xb2 = this.X + this.Width;
+                int yb2 = this.Y + this.Height;
+
+                int xc1 = Math.Max(xa1, xb1);
+                int yc1 = Math.Max(ya1, yb1);
+                int xc2 = Math.Min(xa2, xb2);
+                int yc2 = Math.Min(ya2, yb2);
+                return new Rect(xc1, yc1, xc2 - xc1, yc2 - yc1);
+            }
+            else
+                return null;
+        }
     }
 }
