@@ -63,7 +63,7 @@ namespace GameLibrary.RGSS
         private Color flashColor;
         private bool flashing;
         private int flashAlphaStep;
-
+        bool needUpdate = false;
         private void initialSprite()
         {
             Inialize();
@@ -177,6 +177,7 @@ namespace GameLibrary.RGSS
                     m_fVisible = true;
                     var rect = m_Bitmap.Texture.Bounds;
                     mSrcRect.Set(rect.X, rect.Y, rect.Width, rect.Height);
+                    needUpdate = true;
                 }
             }
         }
@@ -431,13 +432,9 @@ namespace GameLibrary.RGSS
             else
                 speffect = SpriteEffects.None;
 
-            if(opacity < 255)
-            {
-
-            }
             Color color = new RGSS.Color(opacity, opacity, opacity, opacity);
             dm.SpriteBatch.Draw(toRenderTexture, vDest, rSource, color.toXnaColor(), m_fpRotation, vOrigin, vScale, speffect, m_fpDepth);
-           
+            
         }
         
         public void Flash(Color color, int duration)
@@ -451,7 +448,7 @@ namespace GameLibrary.RGSS
         public virtual void Update()
         {
          
-            bool needUpdate = false;
+           
             if(waveAmp != 0 && waveLength != 0 && waveSpeed != 0 )
             {
                 vaveTime += 1 / (float)RGSSEngine.GetGame().GameControler.FrameRate;
@@ -475,7 +472,10 @@ namespace GameLibrary.RGSS
             }
 
             if (needUpdate)
+            {
                 UpdateTexture();
+                needUpdate = false;
+            }
         }
 
         public void ColorValueChangedHandler(object obj)
@@ -495,7 +495,7 @@ namespace GameLibrary.RGSS
                 {
                     if (renderTextureBuffer != null)
                         renderTextureBuffer.Dispose();
-                    renderTextureBuffer = new RenderTarget2D(dm.GraphicsDevice, Bitmap.Texture.Width, Bitmap.Texture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+                    renderTextureBuffer = new RenderTarget2D(dm.GraphicsDevice, Bitmap.Texture.Width, Bitmap.Texture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
                     var spriteEffect = dm.Content.Load<Effect>("Effect\\SpriteEffect");
 
                     dm.GraphicsDevice.SetRenderTarget(renderTextureBuffer);

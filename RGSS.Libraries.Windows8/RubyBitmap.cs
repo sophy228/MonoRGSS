@@ -1,7 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using GameLibrary.RGSS;
 using IronRuby.Builtins;
 using IronRuby.Runtime;
+using IronRuby.Runtime.Calls;
+using Microsoft.Scripting.Runtime;
 
 namespace RGSS.Libraries.Builtins
 {
@@ -170,6 +173,24 @@ namespace RGSS.Libraries.Builtins
         public static bool IsDisposed(Bitmap self)
         {
             return self.IsDisposed;
+        }
+
+        [RubyMethod("allocate",RubyMethodAttributes.PublicSingleton)]
+        public static object Allocate(RubyClass/*!*/ self)
+        {
+            //return self;
+            return new Bitmap();
+        }
+
+        [RubyMethod("initialize_copy", RubyMethodAttributes.PrivateInstance)]
+        public static Bitmap/*!*/ InitializeCopy(Bitmap/*!*/ self, [NotNull]Bitmap/*!*/ other)
+        {
+            self.CopyFrom(other);
+            return self;
+        }
+        public static void InstanceAllocator(MetaObjectBuilder metaBuilder, CallArguments args, string name)
+        {
+
         }
     }
 }

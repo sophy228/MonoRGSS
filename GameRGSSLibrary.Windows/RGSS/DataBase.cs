@@ -10,34 +10,31 @@ namespace GameLibrary.RGSS
 {
     public class DataBase
     {
-        private string _path;
-        public DataBase(string path)
+        private string _rootDir;
+        public DataBase()
         {
-            _path = @"GameLibrary/"+path;
-            _path = _path.Replace("/", "\\");
+            _rootDir = "";
         }
 
-        private async Task<Stream> OpenStreamAsync(string name)
+        public string RootDir
         {
-            var package = Windows.ApplicationModel.Package.Current;
-
-            try
+            get
             {
-                var storageFile = await package.InstalledLocation.GetFileAsync(_path);
-                var randomAccessStream = await storageFile.OpenReadAsync();
-                return randomAccessStream.AsStreamForRead();
+                return _rootDir;
             }
-            catch (Exception ex)
+            set
             {
-                // The file must not exist... return a null stream.
-                Debug.WriteLine(ex.Message);
-                return null;
+                _rootDir = value;
             }
         }
-        public Stream GetStream()
+
+        
+        public Stream GetStream(string path)
         {
-            var stream = Task.Run(() => OpenStreamAsync(_path).Result).Result;
-            return stream;
+            var storage = Storage.LocalStorage;
+            string filePath = Path.Combine(_rootDir, path);
+            filePath = filePath.Replace("/", "\\");
+           return storage.OpenStream(filePath, (int)FileMode.Open, (int)FileAccess.Read);
         }
     }
 }

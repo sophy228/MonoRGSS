@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IronRuby.Builtins;
 using IronRuby.Runtime;
 
 namespace RGSS.Libraries.Builtins
@@ -14,7 +15,7 @@ namespace RGSS.Libraries.Builtins
         [RubyMethodAttribute("test", RubyMethodAttributes.PublicSingleton)]
         public static void Update(object/*!*/ self, object arg)
         {
-            Debug.WriteLine(arg);
+           Debug.WriteLine(arg);
         }
     }
 }

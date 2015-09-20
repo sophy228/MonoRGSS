@@ -37,6 +37,9 @@ namespace GameLibrary.RGSS
         private Sprite[] m_aBorderSprites = new Sprite[(int)BorderPieces.MAX];
         private int m_pxLeft, m_pxTop, m_pxRight, m_pxBottom;
 
+        public int Opacity;
+        public int BackOpacity;
+
         public Border([Optional]Viewport viewPort, int x, int y, int width, int height, string boardTexturePath)
         {
             pxLocX = x;
@@ -57,6 +60,8 @@ namespace GameLibrary.RGSS
             AddBorderSprite(viewPort, BorderPieces.BottomLeft);
             AddBorderSprite(viewPort, BorderPieces.Bottom);
             AddBorderSprite(viewPort, BorderPieces.BottomRight);
+            Opacity = 255;
+            BackOpacity = 255;
         }
 
        public int BorderMargin
@@ -77,7 +82,33 @@ namespace GameLibrary.RGSS
             return y + pxLocY;
         }
 
-        private void AddBorderSprite([Optional]Viewport viewPort, BorderPieces ePiece)
+       public void Resize([Optional]Viewport viewPort,int x, int y, int width, int height)
+       {
+           foreach (var sp in m_aBorderSprites)
+           {
+               if (sp != null)
+                   sp.Dispose();
+           }
+           pxLocX = x;
+           pxLocY = y;
+           pxWidth = width;
+           pxHeight = height;
+           m_pxLeft = m_pxRight = (boarderBitmap.Width - 1) / 2;
+           m_pxTop = m_pxBottom = (boarderBitmap.Height - 1) / 2;
+           pxWidth -= 2 * BorderMargin;
+           pxHeight -= 2 * BorderMargin;
+           AddBorderSprite(viewPort, BorderPieces.TopLeft).Opacity = Opacity;
+           AddBorderSprite(viewPort, BorderPieces.Top).Opacity = Opacity;
+           AddBorderSprite(viewPort, BorderPieces.TopRight).Opacity = Opacity;
+           AddBorderSprite(viewPort, BorderPieces.Left).Opacity = Opacity;
+           AddBorderSprite(viewPort, BorderPieces.Center).Opacity = BackOpacity*Opacity;
+           AddBorderSprite(viewPort, BorderPieces.Right).Opacity = Opacity;
+           AddBorderSprite(viewPort, BorderPieces.BottomLeft).Opacity = Opacity;
+           AddBorderSprite(viewPort, BorderPieces.Bottom).Opacity = Opacity;
+           AddBorderSprite(viewPort, BorderPieces.BottomRight).Opacity = Opacity;
+       }
+
+        private Sprite AddBorderSprite([Optional]Viewport viewPort, BorderPieces ePiece)
         {
            var sp = m_aBorderSprites[(int)ePiece] = new Sprite(viewPort,true);
            sp.Bitmap = boarderBitmap;
@@ -141,6 +172,7 @@ namespace GameLibrary.RGSS
                sp.Y = MAPY(m_pxTop + pxHeight);
                sp.SrcRect = new Rect(m_pxLeft + 1, m_pxTop + 1, m_pxRight, m_pxBottom);
            }
+           return sp;
            
         }
 

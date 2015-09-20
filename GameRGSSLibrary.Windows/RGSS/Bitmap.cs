@@ -32,7 +32,7 @@ namespace GameLibrary.RGSS
             path = path.Replace("/", "\\");
             mTexture = drm.Content.Load<Texture2D>(path);
             
-            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             mWidth = mTexture.Width;
             mHeight = mTexture.Height;
             mRect = new Rectangle(0, 0, mWidth, mHeight);
@@ -48,7 +48,7 @@ namespace GameLibrary.RGSS
             mWidth = width;
             mHeight = height;
            // mTexture = new Texture2D(drm.GraphicsDevice, width, height);
-            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             mRect = new Rectangle(0, 0, mWidth, mHeight);
             mTexture = (Texture2D)mRenderTexture;
             //Font = new ContentFont(drm.Content.Load<SpriteFont>("Font\\default"));
@@ -61,7 +61,7 @@ namespace GameLibrary.RGSS
         {
             drm = RGSSEngine.GetDrawManager();
             mTexture = texture;
-            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             mWidth = mTexture.Width;
             mHeight = mTexture.Height;
             mRect = new Rectangle(0, 0, mWidth, mHeight);
@@ -69,6 +69,11 @@ namespace GameLibrary.RGSS
             font = new Font((string)null);
             RenderTexture();
             isDisposed = false;
+        }
+
+        public Bitmap()
+        {
+            drm = RGSSEngine.GetDrawManager();
         }
 
         public Texture2D Texture
@@ -142,6 +147,7 @@ namespace GameLibrary.RGSS
                 //mTexture.Dispose();
                 orignalTexture = mTexture;
             }
+           // drm.GraphicsDevice.Present();
             drm.GraphicsDevice.SetRenderTarget(null);
            }
             mTexture = (Texture2D)mRenderTexture;
@@ -417,7 +423,7 @@ namespace GameLibrary.RGSS
             if (division > 100)
                 division = 100;
             effect = drm.Content.Load<Effect>("Effect\\SpinBlur");
-            var renderTarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            var renderTarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             lock (drm)
             {
                 drm.GraphicsDevice.SetRenderTarget(renderTarget);
@@ -441,7 +447,7 @@ namespace GameLibrary.RGSS
         public void Blur()
         {
            effect = drm.Content.Load<Effect>("Effect\\Blur");
-           var renderTarget =  new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+           var renderTarget =  new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
            lock (drm)
            {
                drm.GraphicsDevice.SetRenderTarget(renderTarget);
@@ -461,7 +467,7 @@ namespace GameLibrary.RGSS
 
         internal void ApplyEffect(Effect effect)
         {
-            var renderTarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+            var renderTarget = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             lock (drm)
             {
                 drm.GraphicsDevice.SetRenderTarget(renderTarget);
@@ -484,7 +490,33 @@ namespace GameLibrary.RGSS
           //  orignalTexture.Dispose();
             isDisposed = true;
         }
+
+        public void CopyFrom(Bitmap bitmap)
+        {
+            var sourceTexture = bitmap.Texture;
+            if (mTexture != null)
+                mTexture.Dispose();
+            
+            mTexture = new Texture2D(drm.GraphicsDevice, sourceTexture.Width, sourceTexture.Height);
+
+            Microsoft.Xna.Framework.Color[] colors = new Microsoft.Xna.Framework.Color[sourceTexture.Width * sourceTexture.Height];
+            sourceTexture.GetData(colors);
+            mTexture.SetData(colors);
+
+            if (mRenderTexture != null)
+                mRenderTexture.Dispose();
+            mRenderTexture = new RenderTarget2D(drm.GraphicsDevice, mTexture.Width, mTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+
+            mWidth = sourceTexture.Width;
+            mHeight = sourceTexture.Height;
+            mRect = new Rectangle(bitmap.Rect.X, bitmap.Rect.Y, bitmap.Rect.Width, bitmap.Rect.Height);
+            font = bitmap.Font;
+            RenderTexture();
+            isDisposed = false;
+        }
     }
+
+    
 
 
     internal class BitMapHelper

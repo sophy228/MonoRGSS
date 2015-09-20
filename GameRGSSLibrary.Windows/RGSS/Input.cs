@@ -7,6 +7,7 @@ using GameLibrary.GameEngine;
 using GameLibrary.Ulitilies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using RPGVXLibrary.Input;
 
 namespace RPGVXLibrary.Input
@@ -21,6 +22,9 @@ namespace RPGVXLibrary.Input
         B,
         C,
         D,
+        X,
+        Y,
+        Z,
     }
     public enum KeyState
     {
@@ -183,6 +187,24 @@ namespace RPGVXLibrary.Input
                         InputState.SetKeyDown(Keys.Down);
                     else
                         InputState.SetKeyDown(Keys.LEFT);
+
+
+                }
+                else if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up))
+                {
+                    InputState.SetKeyDown(Keys.UP);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
+                {
+                    InputState.SetKeyDown(Keys.Down);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
+                {
+                    InputState.SetKeyDown(Keys.LEFT);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
+                {
+                    InputState.SetKeyDown(Keys.RIGHT);
                 }
                 else
                 {
@@ -207,6 +229,14 @@ namespace RPGVXLibrary.Input
                         InputState.SetKeyDown(Keys.D);
                     else
                         InputState.SetKeyDown(Keys.A);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
+                {
+                    InputState.SetKeyDown(Keys.C);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+                {
+                    InputState.SetKeyDown(Keys.B);
                 }
                 else
                 {
@@ -261,7 +291,7 @@ namespace RPGVXLibrary.Input
                     SpriteSortMode.Deferred,
                     BlendState.AlphaBlend,
                     SamplerState.LinearClamp,
-                    DepthStencilState.Default,
+                    DepthStencilState.None,
                     RasterizerState.CullNone,
                     null,
                     origenoffset * scaleTranslation * origenoffsetback);
@@ -295,10 +325,10 @@ namespace RPGVXLibrary.Input
 
 
                     dm.SpriteBatch.Begin(
-                    SpriteSortMode.Deferred,
+                    SpriteSortMode.Immediate,
                     BlendState.AlphaBlend,
                     SamplerState.LinearClamp,
-                    DepthStencilState.Default,
+                    DepthStencilState.None,
                     RasterizerState.CullNone,
                     null,
                     origenoffset * scaleTranslation * origenoffsetback);

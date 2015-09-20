@@ -142,5 +142,22 @@ namespace GameLibrary.RGSS
             int a = (int)reader.ReadDouble();
             return new Color((int)r, g, b, a);
         }
+
+        public static byte[] Store(Color color)
+        {
+
+            Stream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write((double)color.Red);
+            writer.Write((double)color.Green);
+            writer.Write((double)color.Blue);
+            writer.Write((double)color.Alpha);
+            byte[] buffer = new byte[stream.Length];
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.Read(buffer, 0, (int)stream.Length);
+            stream.Dispose();
+            return buffer;
+        }
+    
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using GameLibrary.RGSS;
 using IronRuby.Builtins;
 using IronRuby.Runtime;
@@ -75,6 +78,13 @@ namespace RGSS.Libraries.Builtins
         {
             byte[] colors = str.ConvertToBytes();
             return Color.Load(colors);
+        }
+
+        [RubyMethod("_dump")]
+        public static MutableString Dump(RubyContext/*!*/ context, Color/*!*/ self, [Optional]int depth)
+        {
+            byte[] buffer = Color.Store(self);
+            return MutableString.CreateBinary(buffer.ToArray());
         }
     }
 }

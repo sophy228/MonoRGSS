@@ -105,7 +105,7 @@ namespace GameLibrary.RGSS
         public void Update()
         {
           tileManager = TileManager.CreateInstance(this);
-          tileManager.UpdataMapSprites(framecount++);
+          tileManager.UpdataMapSprites( (framecount++) /5);
         }
 
         public void Dispose()

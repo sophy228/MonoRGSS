@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,13 @@ namespace GameLibrary.RGSS
             Green = green;
             Blue = blue;
             Gray = gray;
+        }
+        public Tone()
+        {
+            Red = 0;
+            Green = 0;
+            Blue = 0;
+            Gray = 0;
         }
 
         public int Red
@@ -96,6 +104,33 @@ namespace GameLibrary.RGSS
             Gray = gray;
             if (ValueChanged != null)
                 ValueChanged(this);
+        }
+
+        public static Tone Load(byte[] data)
+        {
+            Stream stream = new MemoryStream(data);
+            BinaryReader reader = new BinaryReader(stream);
+            double r = reader.ReadDouble();
+            int g = (int)reader.ReadDouble();
+            int b = (int)reader.ReadDouble();
+            int gray = (int)reader.ReadDouble();
+            return new Tone((int)r, g, b, gray);
+        }
+
+        public static byte[] Store(Tone tone)
+        {
+            
+            Stream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write((double)tone.Red);
+            writer.Write((double)tone.Green);
+            writer.Write((double)tone.Blue);
+            writer.Write((double)tone.Gray);
+            byte[] buffer = new byte[stream.Length];
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.Read(buffer, 0, (int)stream.Length);
+            stream.Dispose();
+            return buffer;
         }
     }
 }

@@ -11,15 +11,25 @@ namespace GameLibrary.RGSS
     public class Table
     {
         private Array array;
+        private int _xsize;
+        private int _ysize;
+        private int _zsize;
         public Table(int xsize, int ysize = 0, int zsize = 0)
         {
 
             array = CreateNewArray(xsize, ysize, zsize);
         }
+        public Table()
+        {
+            array = CreateNewArray(1);
+        }
 
         private Array CreateNewArray(int xsize, int ysize = 0, int zsize = 0)
         {
             Array narray;
+            _xsize = xsize;
+            _ysize = ysize;
+            _zsize = zsize;
            if (ysize == 0 && zsize == 0)
                narray = Array.CreateInstance(typeof(int), new int[] { xsize });
            else if(zsize == 0)
@@ -111,7 +121,7 @@ namespace GameLibrary.RGSS
         {
             get
             {
-                return array.GetLength(0);
+                return _xsize;
             }
         }
 
@@ -119,7 +129,7 @@ namespace GameLibrary.RGSS
         {
             get
             {
-                return array.GetLength(1);
+                return _ysize;
             }
         }
 
@@ -127,7 +137,7 @@ namespace GameLibrary.RGSS
         {
             get
             {
-                return array.GetLength(2);
+                return _zsize;
             }
         }
 
@@ -141,6 +151,7 @@ namespace GameLibrary.RGSS
             for(int i = 0; i < 3;i++)
             {
                 size[i] = reader.ReadInt32();
+                if(size[i] != 0)
                 count *= size[i];
             }
 
@@ -183,6 +194,64 @@ namespace GameLibrary.RGSS
                     }
             }
             return tlb;
+        }
+
+        public static byte[] Store(Table tlb)
+        {
+            Stream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            int dim;
+            int count;
+            if (( tlb.ZSize == 0 )
+                && ( tlb.YSize == 0))
+            {
+                dim = 1;
+                count = tlb.XSize;
+            }
+            else if ( tlb.ZSize == 0)
+            {
+                dim = 2;
+                count = tlb.XSize * tlb.YSize;
+            }
+            else
+            {
+                dim = 3;
+                count = tlb.XSize * tlb.YSize * tlb.ZSize;
+            }
+            writer.Write(dim);
+            writer.Write(tlb.XSize);
+            writer.Write(tlb.YSize);
+            writer.Write(tlb.ZSize);
+            writer.Write(count);
+            if(dim == 3)
+            {
+                for (int z = 0; z < tlb.ZSize; z++)
+                    for (int y = 0; y < tlb.YSize; y++)
+                        for (int x = 0; x < tlb.XSize; x++)
+                        {
+                            writer.Write((Int16)tlb[x, y, z]);
+                        }
+            }
+            else if(dim == 2)
+            {
+                    for (int y = 0; y < tlb.YSize; y++)
+                        for (int x = 0; x < tlb.XSize; x++)
+                        {
+                            writer.Write((Int16)tlb[x, y]);
+                        }
+            }
+            else if(dim == 1)
+            {
+                for (int x = 0; x < tlb.XSize; x++)
+                {
+                    writer.Write((Int16)tlb[x]);
+                }
+            }
+            byte[] buffer = new byte[stream.Length];
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.Read(buffer, 0, (int)stream.Length);
+            stream.Dispose();
+            return buffer;
         }
     }
 }

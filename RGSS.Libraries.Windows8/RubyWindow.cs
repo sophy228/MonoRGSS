@@ -148,11 +148,23 @@ namespace RGSS.Libraries.Builtins
         {
             return self.window.Openness;
         }
+
+        [RubyMethod("opacity")]
+        public static int GetOpacity(RubyWindow self)
+        {
+            return self.window.Opacity;
+        }
+
         [RubyMethod("contents_opacity")]
+        public static int GetContentsOpacity(RubyWindow self)
+        {
+            return self.window.ContentsOpacity;
+        }
+
         [RubyMethod("back_opacity")]
         public static int GetBackOpacity(RubyWindow self)
         {
-            return 255;
+            return self.window.BackOpacity;
         }
 
         [RubyMethod("openness=")]
@@ -160,12 +172,27 @@ namespace RGSS.Libraries.Builtins
         {
             self.window.Openness = openness;
         }
-        [RubyMethod("contents_opacity=")]
-        [RubyMethod("back_opacity=")]
+
+
         [RubyMethod("opacity=")]
-        public static void SetBackOpacity(RubyWindow self,int backopacity)
+        public static void SetOpacity(RubyWindow self, int value)
         {
             //todo
+            self.window.Opacity = value;
+        }
+
+        [RubyMethod("contents_opacity=")]
+        public static void SetContentsOpacity(RubyWindow self, int value)
+        {
+            //todo
+            self.window.ContentsOpacity = value;
+        }
+
+        [RubyMethod("back_opacity=")]
+        public static void SetBackOpacity(RubyWindow self,int value)
+        {
+            //todo
+            self.window.BackOpacity = value;
         }
 
         

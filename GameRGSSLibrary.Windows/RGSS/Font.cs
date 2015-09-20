@@ -34,7 +34,7 @@ namespace GameLibrary.RGSS
             Bold = DefaultBold;
             Italic = DefaultItalic;
             Shadow = DefaultShadow;
-            Color = DefaultColor;
+            Color.SetColor(DefaultColor);
         }
 
         public Font(string names = null)
@@ -47,7 +47,7 @@ namespace GameLibrary.RGSS
             Bold = DefaultBold;
             Italic = DefaultItalic;
             Shadow = DefaultShadow;
-            Color = DefaultColor;
+            Color.SetColor(DefaultColor);
         }
 
         public static string[] DefaultName;
@@ -60,7 +60,7 @@ namespace GameLibrary.RGSS
 
         public static bool DefaultShadow = false;
 
-        public static Color DefaultColor = new Color(255,255,255);
+        public static Color DefaultColor = new Color(255, 255, 255, 255);
 
         private static List<string> quickIgnoreFont = new List<string>();
 

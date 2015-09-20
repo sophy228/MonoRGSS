@@ -19,6 +19,12 @@ namespace RGSS.Libraries.Builtins
             Tone tone = new Tone(r, g, b, gray);
             return tone;
         }
+        [RubyConstructor]
+        public static Tone Create(RubyClass self)
+        {
+            Tone tone = new Tone();
+            return tone;
+        }
 
         [RubyMethod("red")]
         public static int GetRed(Tone self)
@@ -65,5 +71,20 @@ namespace RGSS.Libraries.Builtins
         {
             self.SetTone(r, g, b, gray);
         }
+        [RubyMethod("_load", RubyMethodAttributes.PublicSingleton)]
+        public static Tone Load(RubyContext/*!*/ context, RubyClass/*!*/ self, [DefaultProtocol]MutableString/*!*/ str)
+        {
+            byte[] tones = str.ConvertToBytes();
+            return Tone.Load(tones);
+        }
+
+
+        [RubyMethod("_dump")]
+        public static MutableString Dump(RubyContext/*!*/ context, Tone/*!*/ self, [Optional]int depth)
+        {
+            var buffer = Tone.Store(self);
+            return MutableString.CreateBinary(buffer.ToArray());
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,6 +70,34 @@ namespace GameLibrary.RGSS
             }
             else
                 return null;
+        }
+
+        public static Rect Load(byte[] data)
+        {
+
+            Stream stream = new MemoryStream(data);
+            BinaryReader reader = new BinaryReader(stream);
+            int x = reader.ReadInt32();
+            int y = (int)reader.ReadInt32();
+            int width = (int)reader.ReadInt32();
+            int height = (int)reader.ReadInt32();
+            return new Rect(x, y, width, height);
+        }
+
+        public static byte[] Store(Rect rect)
+        {
+
+            Stream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write(rect.X);
+            writer.Write(rect.Y);
+            writer.Write(rect.Width);
+            writer.Write(rect.Height);
+            byte[] buffer = new byte[stream.Length];
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.Read(buffer, 0, (int)stream.Length);
+            stream.Dispose();
+            return buffer;
         }
     }
 }

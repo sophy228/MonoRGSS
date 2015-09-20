@@ -40,10 +40,15 @@ namespace RGSS.Libraries.Builtins
             self.Name = new string[] { (string)name };
         }
         [RubyMethod("name=")]
-        public static void SetName(Font self, string[] name)
+        public static void SetName(RubyContext context, Font self, RubyArray name)
         {
-
-            self.Name = name;
+            string[] names = new string[name.Count];
+            int i = 0;
+            foreach (var s in name)
+            {
+                names[i++] = context.DecodePath((MutableString)s);
+            }
+            self.Name = names;
 
         }
 
@@ -56,7 +61,7 @@ namespace RGSS.Libraries.Builtins
         [RubyMethod("size=")]
         public static void SetSize(Font self, int size)
         {
-            self.Size = 0;
+            self.Size = size;
         }
 
         [RubyMethod("bold")]
@@ -125,6 +130,16 @@ namespace RGSS.Libraries.Builtins
             
              Font.DefaultName = names;
         }
+        [RubyMethod("default_color", RubyMethodAttributes.PublicSingleton)]
+        public static Color GetDefaultColor(object self)
+        {
+            return Font.DefaultColor;
+        }
 
+        [RubyMethod("default_color=", RubyMethodAttributes.PublicSingleton)]
+        public static void SetDefaultColor(RubyClass self, Color value)
+        {
+            Font.DefaultColor = value;
+        }
     }
 }

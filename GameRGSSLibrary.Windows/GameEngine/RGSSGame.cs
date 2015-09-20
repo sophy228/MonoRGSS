@@ -1,4 +1,6 @@
-﻿using GameLibrary.RGSS;
+﻿using System;
+using System.Diagnostics;
+using GameLibrary.RGSS;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -12,13 +14,15 @@ namespace GameLibrary.GameEngine
        // SpriteBatch spriteBatch;
         GameControler _gameControler;
         DrawManager _drawManager;
-        private int actualDrawCount;
         private double comptime;
+        private DataBase database;
         public RGSSGame()
         {
            // graphics = new GraphicsDeviceManager(this);
             _drawManager = new DrawManager(this);
-            Content.RootDirectory = "GameLibrary/Content";
+            database = new DataBase();
+            Content.RootDirectory = "Content";
+            database.RootDir = "";
             TouchPanel.EnabledGestures = GestureType.Tap | GestureType.VerticalDrag;
         }
 
@@ -39,6 +43,14 @@ namespace GameLibrary.GameEngine
             set
             {
                 _gameControler = value;
+            }
+        }
+
+        public DataBase RGSSData
+        {
+            get
+            {
+                return database;
             }
         }
 
@@ -63,7 +75,7 @@ namespace GameLibrary.GameEngine
         {
             // Create a new SpriteBatch, which can be used to draw textures.
            // spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             // TODO: use this.Content to load your game content here
             _drawManager.LoadContent();
         }
@@ -87,22 +99,19 @@ namespace GameLibrary.GameEngine
         {
             // TODO: Add your update logic here
            // Input.Update();
-            actualDrawCount++;
 
-            string s = string.Format("draw at time:{0}, actualDrawCount:{1}, state:{2}",
-                gameTime.TotalGameTime, actualDrawCount, _gameControler.GameState);
-        ///    Debug.WriteLine(s);
-            switch (_gameControler.GameState)
-            {
-                case GameState.Freezed:
-                case GameState.Pending:
-                  this.SuppressDraw();
-                    break;
-            }
             base.Update(gameTime);
-            if (_gameControler.GameState == GameState.Pending)
+            if (_drawManager.FrameEmpty)
             {
+                this.SuppressDraw();
                 comptime += gameTime.ElapsedGameTime.TotalSeconds;
+                _drawManager.DrawPaused = true;
+                if (_gameControler.GameState == GameState.Freezed)
+                    _drawManager.DrawPausedEvent.Set();
+            }
+            else
+            {
+                _drawManager.DrawPaused = false;
             }
         }
 
@@ -113,56 +122,25 @@ namespace GameLibrary.GameEngine
         protected override void Draw(GameTime gameTime)
         {
 
-            base.Draw(gameTime);
-            
-            // TODO: Add your drawing code here
-            switch(_gameControler.GameState)
-            {
-                case GameState.Freezed:
-                 //  lock (_drawManager)
-                 //  {
-                 //       _drawManager.DrawFreeze();
-                  //  }
-                    break;
-                case GameState.Runging:
-                        GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
-                        _drawManager.Draw(_gameControler.FrameCount);
-                        _gameControler.GameState = GameState.Pending;
-                        _gameControler.DrawOneFrameCompleted.Set();
-                    break;
-                case GameState.Pending:
-                   // lock (_drawManager)
-                  //  {
-                       // _drawManager.Draw(_gameControler.FrameCount);
-                  //      _drawManager.DrawFreeze();
-                  //  }
-                    break;
-                case GameState.Transition:
-                    
-                    lock (_drawManager)
-                    {
-                      //  GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
-                        if (!_drawManager.DrawTransition())
-                        {
-                            _gameControler.GameState = GameState.Pending;
-                            _gameControler.TansitionCompleted.Set();
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
 
-           lock (_drawManager)
+            // TODO: Add your drawing code here
+            _drawManager.Draw();
+
+        
+            lock (_drawManager)
             {
-                Input.Draw(_drawManager, _gameControler.FrameCount);
+                
                 float frameRate = 1 / ((float)gameTime.ElapsedGameTime.TotalSeconds + (float)comptime);
                 _drawManager.SpriteBatch.Begin(
                    SpriteSortMode.Deferred,
                    BlendState.AlphaBlend);
                 _drawManager.SpriteBatch.DrawString(new Font("黑体").ToXnaFont(), frameRate.ToString(), new Vector2(10, 10), Microsoft.Xna.Framework.Color.White);
+               
+               // _drawManager.SpriteBatch.Draw(stickBallTexture, stickBallTexture.Bounds, Microsoft.Xna.Framework.Color.White);
                 _drawManager.SpriteBatch.End();
                 comptime = 0;
+                Input.Draw(_drawManager, _gameControler.FrameCount);
+                base.Draw(gameTime);
             }
            
          }

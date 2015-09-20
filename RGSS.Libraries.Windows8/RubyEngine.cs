@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.Scripting.Hosting;
 using IronRuby;
@@ -8,6 +9,8 @@ using System.IO;
 using Microsoft.Scripting;
 using System.Reflection;
 using System.Threading.Tasks;
+using GameLibrary.RGSS;
+using IronRuby.Builtins;
 namespace RGSS.Libraries
 {
     public class DlrHost : ScriptHost
@@ -26,10 +29,55 @@ namespace RGSS.Libraries
                 {
                     return typeof(IronRuby.Builtins.Integer).GetTypeInfo().Assembly;
                 }
+                else if (name.StartsWith("IronRuby.StandardLibrary.Zlib", StringComparison.OrdinalIgnoreCase))
+                {
+                    return typeof(IronRuby.StandardLibrary.Zlib.Zlib).GetTypeInfo().Assembly;
+                }
 
                 return typeof(RubyEngine).GetTypeInfo().Assembly;
 
                 //return base.LoadAssembly(name);
+            }
+
+            public override Stream OpenFileStream(string path, FileMode mode = FileMode.OpenOrCreate, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.Read, int bufferSize = 8192)
+            {
+                var storage = GameLibrary.RGSS.Storage.UserStorage;
+                return storage.OpenStream(path, (int)mode, (int)access);
+            }
+
+            public override bool FileExists(string path)
+            {
+                var storage = GameLibrary.RGSS.Storage.UserStorage;
+                return storage.FileExists(path);
+            }
+            public override bool DirectoryExists(string path)
+            {
+                var storage = GameLibrary.RGSS.Storage.UserStorage;
+                return storage.DirectoryExists(path);
+            }
+
+            public override string[] GetFileSystemEntries(string path, string searchPattern, bool includeFiles, bool includeDirectories)
+            {
+                var storage = GameLibrary.RGSS.Storage.UserStorage;
+                if (includeFiles && includeDirectories)
+                {
+                    return storage.GetFileDirectoryNames(path, searchPattern);
+                }
+                if (includeFiles)
+                {
+                    return storage.GetFileNames(path, searchPattern);
+                }
+                if (includeDirectories)
+                {
+                    return storage.GetDirectoryNames(path, searchPattern);
+                }
+                return new string[]{};
+            }
+
+            public override DateTime GetFileMTime(string path)
+            {
+                var storage = GameLibrary.RGSS.Storage.UserStorage;
+                return storage.GetFileMTime(path);
             }
         }
 
@@ -38,71 +86,150 @@ namespace RGSS.Libraries
             get { return pal; }
         }
     }
+
+    class ScriptFile
+    {
+       public  string fileName;
+       public string fileContext;
+       public ScriptFile(string file, string context)
+       {
+           fileName = file;
+           fileContext = context;
+       }
+    }
+
+    public class BootLoader
+    {
+        private List<ScriptFile> scriptFiles;
+        ScriptEngine engine;
+        private string scritptText;
+        private CompiledCode compieldCode;
+        private string rootPath;
+        public BootLoader(ScriptEngine eng, string root="")
+        {
+            engine = eng;
+            scriptFiles = new List<ScriptFile>();
+            rootPath = root;
+            PreLoadRPGModule();
+            
+        }
+        
+        public CompiledCode Code
+        {
+            get
+            {
+                return compieldCode;
+            }
+        }
+
+        public void AddScriptFile(MutableString name, MutableString context)
+        {
+
+            string fileName = name.ToString();
+            context.ForceEncoding(RubyEncoding.UTF8);
+            string fileContext = context.ToString();
+            scriptFiles.Add(new ScriptFile(fileName, fileContext));
+        }
+
+
+        public void Compile()
+        {
+            compieldCode = engine.CreateScriptSourceFromString(scritptText + GetScriptText()).Compile();
+        }
+
+        public void Run()
+        {
+            Storage storage = Storage.LocalStorage;
+            string path = Path.Combine(rootPath, "init.rb");
+            using (var stream = storage.OpenStream(path, (int)FileMode.Open, (int)FileAccess.Read))
+            {
+                var  scope = engine.CreateScope(); 
+                scope.SetVariable("bootloader", this);
+                StreamReader reader = new StreamReader(stream);
+                 string text = reader.ReadToEnd();
+                 engine.Execute<object>(text,scope);
+            }
+        }
+
+        private string GetScriptText()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(var sf in scriptFiles)
+            {
+                sb.AppendLine(sf.fileContext);
+            }
+            return sb.ToString();
+        }
+        
+        private void PreLoadRPGModule()
+        {
+            Storage storage = Storage.LocalStorage;
+            string path = Path.Combine(rootPath, "RPG.rb");
+            using (var stream = storage.OpenStream(path, (int)FileMode.Open, (int)FileAccess.Read))
+            {
+                StreamReader reader = new StreamReader(stream);
+                scritptText = reader.ReadToEnd();
+                scritptText += "\n";
+            }
+        }
+
+        
+    }
+
+    public class RubyResult
+    {
+        public object Result;
+        public string Message;
+    }
+
     public class RubyEngine
     {
         private  ScriptEngine engine;
         private  ScriptScope scope;
         private string scritptText;
+       
+        private BootLoader bootloader;
 
-        public RubyEngine()
+        private bool booted;
+        public RubyResult Result;
+        
+
+        public RubyEngine(string rootpath)
         {
-            RubyEngineInit();
+            RubyEngineInit(rootpath);
+            Result = new RubyResult();
         }
 
-         private void RubyEngineInit()
+        private void RubyEngineInit(string rootpath="")
         {
             var setup = new ScriptRuntimeSetup();
             setup.HostType = typeof(DlrHost);
             setup.AddRubySetup();
-             
             var runtime = Ruby.CreateRuntime(setup);
             engine = Ruby.GetEngine(runtime);
             scope = engine.CreateScope();
+            bootloader = new BootLoader(engine,rootpath);
             RubyContext context = (RubyContext)HostingHelpers.GetLanguageContext(engine);
             context.Loader.LoadAssembly("RGSS.Libraries", "RGSS.Libraries.Builtins.BuiltinsLibraryInitializer", true, true);
-            PreLoadRPGModule();
-        }
-         private async Task<Stream> OpenStreamAsync(string name)
-         {
-             var package = Windows.ApplicationModel.Package.Current;
-
-             try
-             {
-                 var storageFile = await package.InstalledLocation.GetFileAsync(name);
-                 var randomAccessStream = await storageFile.OpenReadAsync();
-                 return randomAccessStream.AsStreamForRead();
-             }
-             catch (IOException)
-             {
-                 // The file must not exist... return a null stream.
-                 return null;
-             }
-         }
-        private void PreLoadRPGModule()
-        {
-            var stream = Task.Run(() => OpenStreamAsync(@"RGSS.Libraries\RubyScript\RPG.rb").Result).Result;
-            if (stream == null)
-                throw new FileNotFoundException(@"RGSS.Libraries\RubyScript\RPG.rb");
-            StreamReader reader = new StreamReader(stream);
-            scritptText = reader.ReadToEnd();
-            scritptText += "\n";
-            stream.Dispose();
+            context.Loader.LoadAssembly("IronRuby.StandardLibrary.Zlib", "IronRuby.StandardLibrary.Zlib.ZlibLibraryInitializer", true, true);
+           // bootloader.Run();
+            
         }
 
-        public void ReadRPGScript(string name)
+
+     
+        private void BootCode()
         {
-            var stream = Task.Run(() => OpenStreamAsync(name).Result).Result;
-            if (stream == null)
-                throw new FileNotFoundException(name);
-            StreamReader reader = new StreamReader(stream);
-            scritptText += reader.ReadToEnd();
-            scritptText += "\n";
-            stream.Dispose();
+            if (!booted)
+            {
+                bootloader.Run();
+            }
         }
 
-        public int RunRuby()
-        {
 
+        public object RunRuby()
+        {
+            BootCode();
             string txt = scritptText;
             string outputText;
             object result;
@@ -111,7 +238,7 @@ namespace RGSS.Libraries
                 engine.Runtime.IO.SetOutput(stream, Encoding.UTF8);
                 try
                 {
-                    result = engine.Execute<object>(txt, scope);
+                    result = bootloader.Code.Execute(scope);
                 }
                 catch (Exception ex)
                 {
@@ -120,8 +247,10 @@ namespace RGSS.Libraries
 
                 var a = stream.ToArray();
                 outputText = Encoding.UTF8.GetString(a, 0, a.Length);
+                Result.Message = outputText;
             }
-            return outputText.Length;
+            Result.Result = result;
+            return Result;
         }
 
     }

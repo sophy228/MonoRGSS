@@ -1,7 +1,9 @@
-﻿using GameLibrary.RGSS;
+﻿using System.Runtime.InteropServices;
+using GameLibrary.RGSS;
 using IronRuby.Builtins;
 using IronRuby.Runtime;
-
+using System.Collections.Generic;
+using System.Linq;
 namespace RGSS.Libraries.Builtins
 {
     [RubyClass("Rect", Inherits = typeof(object), Extends = typeof(Rect))]
@@ -65,6 +67,18 @@ namespace RGSS.Libraries.Builtins
         {
             self.Height = height;
             return height;
+        }
+        [RubyMethod("_load", RubyMethodAttributes.PublicSingleton)]
+        public static Rect Load(RubyContext/*!*/ context, RubyClass/*!*/ self, [DefaultProtocol]MutableString/*!*/ str)
+        {
+            byte[] data = str.ConvertToBytes();
+            return Rect.Load(data);
+        }
+        [RubyMethod("_dump")]
+        public static MutableString Dump(RubyContext/*!*/ context, Rect/*!*/ self, [Optional]int depth)
+        {
+            byte[] buffer = Rect.Store(self);
+            return MutableString.CreateBinary(buffer.ToArray());
         }
     }
 }

@@ -84,13 +84,11 @@ namespace GameLibrary.GameEngine
 
         public void TrigerOneFrame()
         {
-            if (_gameState == GameState.Transition)
-                TansitionCompleted.WaitOne();
-            if (_gameState == GameState.Pending)
+            if (_gameState != GameState.Freezed)
             {
                 _gameState = GameState.Runging;
+                _game.DrawManager.UpdateContext(FrameCount);
                // double before = _gameTimer.Elapsed.TotalMilliseconds;
-                DrawOneFrameCompleted.WaitOne();
               //  double after = _gameTimer.Elapsed.TotalMilliseconds;
               //  Debug.WriteLine("befor " + before + " after " + after);
               // DrawOneFrameCompleted.Set();
@@ -116,11 +114,10 @@ namespace GameLibrary.GameEngine
 
         public void FreezeFrame()
         {
-            if (_gameState == GameState.Transition)
-                TansitionCompleted.WaitOne();
-            if (_gameState == GameState.Pending)
+            if (_gameState != GameEngine.GameState.Freezed)
             {
                 _gameState = GameState.Freezed;
+                _game.DrawManager.FreezeContext(FrameCount);
             }
         }
 
@@ -129,7 +126,7 @@ namespace GameLibrary.GameEngine
             if (_gameState == GameState.Freezed)
             {
                 _gameState = GameState.Transition;
-                _game.DrawManager.BeginTransition(duration, name, vague);
+                _game.DrawManager.TransitionContext(duration, name, vague);
             }
         }
     }

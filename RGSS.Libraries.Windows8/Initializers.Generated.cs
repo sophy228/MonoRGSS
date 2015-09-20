@@ -30,16 +30,13 @@ namespace RGSS.Libraries.Builtins {
             DefineGlobalModule("Graphics", typeof(RGSS.Libraries.Builtins.RubyGraphics), 0x00000008, null, LoadGraphics_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
             DefineGlobalModule("Input", typeof(RGSS.Libraries.Builtins.RubyInputOps), 0x00000008, null, LoadInput_Class, LoadInput_Constants, IronRuby.Builtins.RubyModule.EmptyArray);
             ExtendClass(typeof(System.Object), 0x00000000, null, LoadSystem__Object_Instance, LoadSystem__Object_Class, null, IronRuby.Builtins.RubyModule.EmptyArray);
-            DefineGlobalClass("Bitmap", typeof(GameLibrary.RGSS.Bitmap), 0x00000000, Context.ObjectClass, LoadBitmap_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
+            DefineGlobalClass("Bitmap", typeof(GameLibrary.RGSS.Bitmap), 0x00000000, Context.ObjectClass, LoadBitmap_Instance, LoadBitmap_Class, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, IronRuby.Builtins.MutableString, GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Create), 
                 new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.Create)
             );
             DefineGlobalClass("Color", typeof(GameLibrary.RGSS.Color), 0x00000000, Context.ObjectClass, LoadColor_Instance, LoadColor_Class, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyColorOps.Create), 
                 new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyColorOps.Create)
-            );
-            DefineGlobalClass("Database", typeof(RGSS.Libraries.Builtins.RubyDatabase), 0x00000008, Context.ObjectClass, LoadDatabase_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
-                new Func<IronRuby.Builtins.RubyClass, IronRuby.Builtins.MutableString, RGSS.Libraries.Builtins.RubyDatabase>(RGSS.Libraries.Builtins.RubyDatabase.Create)
             );
             DefineGlobalClass("Font", typeof(GameLibrary.RGSS.Font), 0x00000000, Context.ObjectClass, LoadFont_Instance, LoadFont_Class, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, System.String[], GameLibrary.RGSS.Font>(RGSS.Libraries.Builtins.RubyFont.CreateFont), 
@@ -48,20 +45,22 @@ namespace RGSS.Libraries.Builtins {
             DefineGlobalClass("Plane", typeof(GameLibrary.RGSS.Plane), 0x00000000, Context.ObjectClass, LoadPlane_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Viewport, GameLibrary.RGSS.Plane>(RGSS.Libraries.Builtins.RubyPlaneOps.CreateSprite)
             );
-            DefineGlobalClass("Rect", typeof(GameLibrary.RGSS.Rect), 0x00000000, Context.ObjectClass, LoadRect_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
+            DefineGlobalClass("Rect", typeof(GameLibrary.RGSS.Rect), 0x00000000, Context.ObjectClass, LoadRect_Instance, LoadRect_Class, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Rect>(RGSS.Libraries.Builtins.RubyRectOps.Create)
             );
             DefineGlobalClass("Sprite", typeof(RGSS.Libraries.Builtins.RubySprite), 0x00000008, Context.ObjectClass, LoadSprite_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Viewport, RGSS.Libraries.Builtins.RubySprite>(RGSS.Libraries.Builtins.RubySprite.CreateSprite)
             );
             DefineGlobalClass("Table", typeof(GameLibrary.RGSS.Table), 0x00000000, Context.ObjectClass, LoadTable_Instance, LoadTable_Class, null, IronRuby.Builtins.RubyModule.EmptyArray, 
-                new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Table>(RGSS.Libraries.Builtins.RubyTableOps.CreateTable)
+                new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Table>(RGSS.Libraries.Builtins.RubyTableOps.CreateTable), 
+                new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Table>(RGSS.Libraries.Builtins.RubyTableOps.CreateTable)
             );
             DefineGlobalClass("Tilemap", typeof(GameLibrary.RGSS.Tilemap), 0x00000000, Context.ObjectClass, LoadTilemap_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Viewport, GameLibrary.RGSS.Tilemap>(RGSS.Libraries.Builtins.TilemapOps.CreateTilemap)
             );
-            DefineGlobalClass("Tone", typeof(GameLibrary.RGSS.Tone), 0x00000000, Context.ObjectClass, LoadTone_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
-                new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Tone>(RGSS.Libraries.Builtins.RubyToneOps.Create)
+            DefineGlobalClass("Tone", typeof(GameLibrary.RGSS.Tone), 0x00000000, Context.ObjectClass, LoadTone_Instance, LoadTone_Class, null, IronRuby.Builtins.RubyModule.EmptyArray, 
+                new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Tone>(RGSS.Libraries.Builtins.RubyToneOps.Create), 
+                new Func<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Tone>(RGSS.Libraries.Builtins.RubyToneOps.Create)
             );
             DefineGlobalClass("Viewport", typeof(GameLibrary.RGSS.Viewport), 0x00000000, Context.ObjectClass, LoadViewport_Instance, null, null, IronRuby.Builtins.RubyModule.EmptyArray, 
                 new Func<IronRuby.Builtins.RubyClass, System.Int32, System.Int32, System.Int32, System.Int32, GameLibrary.RGSS.Viewport>(RGSS.Libraries.Builtins.RubyViewportOps.CreateViewPort), 
@@ -205,6 +204,11 @@ namespace RGSS.Libraries.Builtins {
                 new Func<GameLibrary.RGSS.Bitmap, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.getHeight)
             );
             
+            DefineLibraryMethod(module, "initialize_copy", 0x12, 
+                0x00000002U, 
+                new Func<GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Bitmap, GameLibrary.RGSS.Bitmap>(RGSS.Libraries.Builtins.RubyBitmapOps.InitializeCopy)
+            );
+            
             DefineLibraryMethod(module, "radial_blur", 0x11, 
                 0x00000000U, 
                 new Action<GameLibrary.RGSS.Bitmap, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyBitmapOps.RadialBlur)
@@ -232,7 +236,20 @@ namespace RGSS.Libraries.Builtins {
             
         }
         
+        private static void LoadBitmap_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "allocate", 0x21, 
+                0x00000000U, 
+                new Func<IronRuby.Builtins.RubyClass, System.Object>(RGSS.Libraries.Builtins.RubyBitmapOps.Allocate)
+            );
+            
+        }
+        
         private static void LoadColor_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "_dump", 0x11, 
+                0x00000000U, 
+                new Func<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Color, System.Int32, IronRuby.Builtins.MutableString>(RGSS.Libraries.Builtins.RubyColorOps.Dump)
+            );
+            
             DefineLibraryMethod(module, "alpha", 0x11, 
                 0x00000000U, 
                 new Func<GameLibrary.RGSS.Color, System.Int32>(RGSS.Libraries.Builtins.RubyColorOps.GetAlpha)
@@ -289,19 +306,6 @@ namespace RGSS.Libraries.Builtins {
             
         }
         
-        private static void LoadDatabase_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
-            DefineLibraryMethod(module, "initialize", 0x12, 
-                0x00000002U, 
-                new Func<RGSS.Libraries.Builtins.RubyDatabase, IronRuby.Builtins.MutableString, RGSS.Libraries.Builtins.RubyDatabase>(RGSS.Libraries.Builtins.RubyDatabase.Reinitialize)
-            );
-            
-            DefineLibraryMethod(module, "open", 0x11, 
-                0x00000000U, 
-                new Func<RGSS.Libraries.Builtins.RubyDatabase, IronRuby.Builtins.RubyIO>(RGSS.Libraries.Builtins.RubyDatabase.Open)
-            );
-            
-        }
-        
         private static void LoadDebug_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
             DefineLibraryMethod(module, "test", 0x21, 
                 0x00000000U, 
@@ -349,7 +353,7 @@ namespace RGSS.Libraries.Builtins {
             DefineLibraryMethod(module, "name=", 0x11, 
                 0x00000000U, 0x00000000U, 
                 new Action<GameLibrary.RGSS.Font, System.String>(RGSS.Libraries.Builtins.RubyFont.SetName), 
-                new Action<GameLibrary.RGSS.Font, System.String[]>(RGSS.Libraries.Builtins.RubyFont.SetName)
+                new Action<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Font, IronRuby.Builtins.RubyArray>(RGSS.Libraries.Builtins.RubyFont.SetName)
             );
             
             DefineLibraryMethod(module, "shadow", 0x11, 
@@ -375,6 +379,16 @@ namespace RGSS.Libraries.Builtins {
         }
         
         private static void LoadFont_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "default_color", 0x21, 
+                0x00000000U, 
+                new Func<System.Object, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyFont.GetDefaultColor)
+            );
+            
+            DefineLibraryMethod(module, "default_color=", 0x21, 
+                0x00000000U, 
+                new Action<IronRuby.Builtins.RubyClass, GameLibrary.RGSS.Color>(RGSS.Libraries.Builtins.RubyFont.SetDefaultColor)
+            );
+            
             DefineLibraryMethod(module, "default_name", 0x21, 
                 0x00000000U, 
                 new Func<System.Object, System.String[]>(RGSS.Libraries.Builtins.RubyFont.GetDefaultName)
@@ -486,6 +500,9 @@ namespace RGSS.Libraries.Builtins {
             SetConstant(module, "R", RGSS.Libraries.Builtins.RubyInputOps.R);
             SetConstant(module, "RIGHT", RGSS.Libraries.Builtins.RubyInputOps.RIGHT);
             SetConstant(module, "UP", RGSS.Libraries.Builtins.RubyInputOps.UP);
+            SetConstant(module, "X", RGSS.Libraries.Builtins.RubyInputOps.X);
+            SetConstant(module, "Y", RGSS.Libraries.Builtins.RubyInputOps.Y);
+            SetConstant(module, "Z", RGSS.Libraries.Builtins.RubyInputOps.Z);
             
         }
         
@@ -656,6 +673,11 @@ namespace RGSS.Libraries.Builtins {
         }
         
         private static void LoadRect_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "_dump", 0x11, 
+                0x00000000U, 
+                new Func<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Rect, System.Int32, IronRuby.Builtins.MutableString>(RGSS.Libraries.Builtins.RubyRectOps.Dump)
+            );
+            
             DefineLibraryMethod(module, "height", 0x11, 
                 0x00000000U, 
                 new Func<GameLibrary.RGSS.Rect, System.Int32>(RGSS.Libraries.Builtins.RubyRectOps.GetHeight)
@@ -699,6 +721,14 @@ namespace RGSS.Libraries.Builtins {
             DefineLibraryMethod(module, "y=", 0x11, 
                 0x00000000U, 
                 new Func<GameLibrary.RGSS.Rect, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyRectOps.SetY)
+            );
+            
+        }
+        
+        private static void LoadRect_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "_load", 0x21, 
+                0x00020000U, 
+                new Func<IronRuby.Runtime.RubyContext, IronRuby.Builtins.RubyClass, IronRuby.Builtins.MutableString, GameLibrary.RGSS.Rect>(RGSS.Libraries.Builtins.RubyRectOps.Load)
             );
             
         }
@@ -957,6 +987,11 @@ namespace RGSS.Libraries.Builtins {
         }
         
         private static void LoadSystem__Object_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "add_script", 0x12, 
+                0x00000000U, 
+                new Action<IronRuby.Runtime.RubyScope, System.Object, IronRuby.Builtins.MutableString, IronRuby.Builtins.MutableString>(RGSS.Libraries.Builtins.RGSSKernelOps.SetScript)
+            );
+            
             DefineLibraryMethod(module, "debugp", 0x12, 
                 0x00000000U, 
                 new Action<IronRuby.Runtime.RubyScope, System.Object, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.DebugPrint)
@@ -967,9 +1002,19 @@ namespace RGSS.Libraries.Builtins {
                 new Func<IronRuby.Builtins.RubyMarshal.ReaderSites, IronRuby.Runtime.RubyScope, System.Object, IronRuby.Builtins.MutableString, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.Load_Data)
             );
             
+            DefineLibraryMethod(module, "set_script", 0x12, 
+                0x00000000U, 
+                new Action<IronRuby.Runtime.RubyScope, System.Object, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.SetScript)
+            );
+            
         }
         
         private static void LoadSystem__Object_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "add_script", 0x21, 
+                0x00000000U, 
+                new Action<IronRuby.Runtime.RubyScope, System.Object, IronRuby.Builtins.MutableString, IronRuby.Builtins.MutableString>(RGSS.Libraries.Builtins.RGSSKernelOps.SetScript)
+            );
+            
             DefineLibraryMethod(module, "debugp", 0x21, 
                 0x00000000U, 
                 new Action<IronRuby.Runtime.RubyScope, System.Object, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.DebugPrint)
@@ -980,9 +1025,19 @@ namespace RGSS.Libraries.Builtins {
                 new Func<IronRuby.Builtins.RubyMarshal.ReaderSites, IronRuby.Runtime.RubyScope, System.Object, IronRuby.Builtins.MutableString, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.Load_Data)
             );
             
+            DefineLibraryMethod(module, "set_script", 0x21, 
+                0x00000000U, 
+                new Action<IronRuby.Runtime.RubyScope, System.Object, System.Object>(RGSS.Libraries.Builtins.RGSSKernelOps.SetScript)
+            );
+            
         }
         
         private static void LoadTable_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "_dump", 0x11, 
+                0x00000000U, 
+                new Func<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Table, System.Int32, IronRuby.Builtins.MutableString>(RGSS.Libraries.Builtins.RubyTableOps.Dump)
+            );
+            
             DefineLibraryMethod(module, "resize", 0x11, 
                 0x00000000U, 
                 new Action<GameLibrary.RGSS.Table, System.Int32, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyTableOps.Reseize)
@@ -1072,6 +1127,11 @@ namespace RGSS.Libraries.Builtins {
         }
         
         private static void LoadTone_Instance(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "_dump", 0x11, 
+                0x00000000U, 
+                new Func<IronRuby.Runtime.RubyContext, GameLibrary.RGSS.Tone, System.Int32, IronRuby.Builtins.MutableString>(RGSS.Libraries.Builtins.RubyToneOps.Dump)
+            );
+            
             DefineLibraryMethod(module, "blue", 0x11, 
                 0x00000000U, 
                 new Func<GameLibrary.RGSS.Tone, System.Int32>(RGSS.Libraries.Builtins.RubyToneOps.GetBlue)
@@ -1115,6 +1175,14 @@ namespace RGSS.Libraries.Builtins {
             DefineLibraryMethod(module, "set", 0x11, 
                 0x00000000U, 
                 new Action<GameLibrary.RGSS.Tone, System.Int32, System.Int32, System.Int32, System.Int32>(RGSS.Libraries.Builtins.RubyToneOps.Set)
+            );
+            
+        }
+        
+        private static void LoadTone_Class(IronRuby.Builtins.RubyModule/*!*/ module) {
+            DefineLibraryMethod(module, "_load", 0x21, 
+                0x00020000U, 
+                new Func<IronRuby.Runtime.RubyContext, IronRuby.Builtins.RubyClass, IronRuby.Builtins.MutableString, GameLibrary.RGSS.Tone>(RGSS.Libraries.Builtins.RubyToneOps.Load)
             );
             
         }
@@ -1225,12 +1293,12 @@ namespace RGSS.Libraries.Builtins {
             
             DefineLibraryMethod(module, "contents_opacity", 0x11, 
                 0x00000000U, 
-                new Func<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.GetBackOpacity)
+                new Func<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.GetContentsOpacity)
             );
             
             DefineLibraryMethod(module, "contents_opacity=", 0x11, 
                 0x00000000U, 
-                new Action<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.SetBackOpacity)
+                new Action<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.SetContentsOpacity)
             );
             
             DefineLibraryMethod(module, "contents=", 0x11, 
@@ -1268,9 +1336,14 @@ namespace RGSS.Libraries.Builtins {
                 new Func<RGSS.Libraries.Builtins.RubyWindow, RGSS.Libraries.Builtins.RubyWindow>(RGSS.Libraries.Builtins.RubyWindow.Reinitialize)
             );
             
+            DefineLibraryMethod(module, "opacity", 0x11, 
+                0x00000000U, 
+                new Func<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.GetOpacity)
+            );
+            
             DefineLibraryMethod(module, "opacity=", 0x11, 
                 0x00000000U, 
-                new Action<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.SetBackOpacity)
+                new Action<RGSS.Libraries.Builtins.RubyWindow, System.Int32>(RGSS.Libraries.Builtins.RubyWindow.SetOpacity)
             );
             
             DefineLibraryMethod(module, "openness", 0x11, 

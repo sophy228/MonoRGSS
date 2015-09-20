@@ -29,16 +29,18 @@ namespace GameRGSS
            _game = XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, this);
            _game.IsFixedTimeStep = true;
 #else
-           RubyEngine re = new RubyEngine();
 
-           RGSSEngine.Init(launchArguments, Windows.UI.Xaml.Window.Current.CoreWindow, this);
-           if (isNative)
+            RubyEngine re = new RubyEngine("RubyScript");
+            
+            RGSSEngine.Init(launchArguments, Windows.UI.Xaml.Window.Current.CoreWindow, this);
+
+            if (isNative)
            {
-               RGSSEngine.Run(mainLoop);
+             //  RGSSEngine.Run(mainLoop);
            }
            else
            {
-               re.ReadRPGScript(@"Script\rpgmaker.rb");
+            //   re.ReadRPGScript(@"Script\rpgmaker.rb");
                RGSSEngine.Run(re.RunRuby);
            }
 #endif

@@ -29,11 +29,13 @@ namespace GameLibrary.RGSS
 
         private static SoundEffect seSound;
         private static SoundEffectInstance seSoundInstance;
-
+      
         private static void Play(SoundType type,string filename, int volume = 100, int pitch = 100)
         {
             SoundEffect effect;
             SoundEffectInstance instance;
+            if (RGSSEngine.IsMuted)
+                return;
 
             var game = RGSSEngine.GetGame();
             filename = filename.Replace("/", "\\");
@@ -71,6 +73,7 @@ namespace GameLibrary.RGSS
         {
             SoundEffectInstance instance = null;
             SoundEffect effect = null;
+
             if (type == SoundType.BGM)
             {
                 instance = bgmSoundInstance;
@@ -94,7 +97,8 @@ namespace GameLibrary.RGSS
             if(instance != null && instance.State != SoundState.Stopped)
             {
                 instance.Stop();
-                effect.Dispose();
+                instance.Dispose();
+               // effect.Dispose();
             }
         }
 

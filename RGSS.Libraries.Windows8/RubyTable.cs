@@ -19,6 +19,12 @@ namespace RGSS.Libraries.Builtins
             return new Table(xsize, ysize, zsize);
         }
 
+        [RubyConstructor]
+        public static Table CreateTable(RubyClass self)
+        {
+            return new Table();
+        }
+
         [RubyMethod("xsize")]
         public static int GetXsize(Table self)
         {
@@ -48,6 +54,13 @@ namespace RGSS.Libraries.Builtins
         {
             Table table = Table.LoadTable(str.ConvertToBytes());
             return table;
+        }
+
+        [RubyMethod("_dump")]
+        public static MutableString Dump(RubyContext/*!*/ context, Table/*!*/ self, [Optional]int depth)
+        {
+            var buffer = Table.Store(self);
+            return MutableString.CreateBinary(buffer.ToArray());
         }
     }
 }

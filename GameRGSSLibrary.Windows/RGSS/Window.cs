@@ -30,6 +30,13 @@ namespace GameLibrary.RGSS
         private RenderTarget2D mRenderTexture;
         private Texture2D curseTexture;
         private int openness;
+
+        private int opacity;
+        private int back_opacity;
+        private int content_opacity;
+
+        private int pauseIndex;
+
         public Window(int x, int y, int width, int height)
         {
             ox = 0;
@@ -54,6 +61,9 @@ namespace GameLibrary.RGSS
            // padding = border.BorderMargin;
             this.Visible = true;
             this.Active = true;
+            Opacity = 255;
+            BackOpacity = 255;
+            ContentsOpacity = 255;
         }
 
         public Window()
@@ -67,6 +77,9 @@ namespace GameLibrary.RGSS
             cursorRect = new Rect(-16, -16, 0, 0);
             this.Visible = true;
             this.Active = true;
+            Opacity = 255;
+            BackOpacity = 255;
+            ContentsOpacity = 255;
         }
 
         public int Z
@@ -92,6 +105,7 @@ namespace GameLibrary.RGSS
             set
             {
                 pxLocX = value;
+                updateBorder();
             }
         }
 
@@ -104,6 +118,7 @@ namespace GameLibrary.RGSS
             set
             {
                 pxLocY = value;
+                updateBorder();
             }
         }
 
@@ -116,6 +131,7 @@ namespace GameLibrary.RGSS
             set
             {
                 pWidth = value;
+                updateBorder();
             }
         }
 
@@ -128,6 +144,7 @@ namespace GameLibrary.RGSS
             set
             {
                 pHeight = value;
+                updateBorder();
             }
         }
 
@@ -236,6 +253,58 @@ namespace GameLibrary.RGSS
                 if (value < 0)
                     value = 0;
                 openness = value;
+                if(openness > 0)
+                    updateBorder();
+            }
+        }
+
+        public int Opacity
+        {
+            get
+            {
+                return opacity;
+            }
+            set
+            {
+                if (value > 255)
+                    value = 255;
+                if (value < 0)
+                    value = 0;
+                opacity = value;
+                updateBorder();
+            }
+        }
+
+        public int BackOpacity
+        {
+            get
+            {
+                return back_opacity;
+            }
+            set
+            {
+                if (value > 255)
+                    value = 255;
+                if (value < 0)
+                    value = 0;
+                back_opacity = value;
+                updateBorder();
+            }
+        }
+
+        public int ContentsOpacity
+        {
+            get
+            {
+                return content_opacity;
+            }
+            set
+            {
+                if (value > 255)
+                    value = 255;
+                if (value < 0)
+                    value = 0;
+                content_opacity = value;
             }
         }
 
@@ -252,10 +321,13 @@ namespace GameLibrary.RGSS
 
         private void updateBorder()
         {
-           if (border != null)
-              border.dispose();
-           border = new Border(_viewport, pxLocX, pxLocY, pWidth * openness / 255, pHeight * openness / 255, "Graphics/System/Border");
+            if (border == null)
+                border = new Border(_viewport, pxLocX, pxLocY, pWidth * openness / 255, pHeight * openness / 255, "Graphics/System/Border");
+            else
+                border.Resize(_viewport, pxLocX, pxLocY, pWidth * openness / 255, pHeight * openness / 255);
             padding = border.BorderMargin;
+            border.Opacity = Opacity;
+            border.BackOpacity = BackOpacity;
         }
 
         public void InsertInZorder(LinkNode header)
@@ -277,8 +349,42 @@ namespace GameLibrary.RGSS
             {
                 if (curseTexture != null)
                     curseTexture.Dispose();
+                Color color = new RGSS.Color(ContentsOpacity, ContentsOpacity, ContentsOpacity, ContentsOpacity);
                 curseTexture = this.CreateFilledTexture(dm, curseRect.Width, curseRect.Height, backcolor, 2, bordercolor);
-                dm.SpriteBatch.Draw(curseTexture, new Vector2(curseRect.X, curseRect.Y), curseTexture.Bounds, Microsoft.Xna.Framework.Color.White);
+                dm.SpriteBatch.Draw(curseTexture, new Vector2(curseRect.X, curseRect.Y), color.toXnaColor());
+            }
+        }
+
+        private void BlendPauseSign(DrawManager dm, int px, int py)
+        {
+            if(Pause)
+            {
+                int index = ((pauseIndex++) / 5);
+                index = index   % 4;
+                int x,y;
+                if(index % 2 ==0)
+                {
+                    x = 96;
+                }
+                else
+                {
+                    x = 96 +16;
+                }
+                if(index < 2)
+                {
+                    y = 64;
+                }
+                else
+                {
+                    y = 64 + 16;
+                }
+                Rect rect = new Rect(x, y, 16, 16);
+                Color color = new RGSS.Color(ContentsOpacity, ContentsOpacity, ContentsOpacity, ContentsOpacity);
+                dm.SpriteBatch.Draw(windowSkin.Texture, new Vector2(px, py), rect.toXnaRect(), color.toXnaColor());
+            }
+            else
+            {
+                pauseIndex = 0;
             }
         }
 
@@ -289,14 +395,16 @@ namespace GameLibrary.RGSS
 
                  var contentTexture = Contents.Texture;
                  if (mRenderTexture == null)
-                    mRenderTexture = new RenderTarget2D(dm.GraphicsDevice, contentTexture.Width, contentTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
+                    mRenderTexture = new RenderTarget2D(dm.GraphicsDevice, contentTexture.Width, contentTexture.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
                  lock (dm)
                  {
                      dm.GraphicsDevice.SetRenderTarget(mRenderTexture);
                      dm.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+                     Color color = new RGSS.Color(ContentsOpacity, ContentsOpacity, ContentsOpacity, ContentsOpacity);
                      dm.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                     dm.SpriteBatch.Draw(contentTexture, Contents.Rect.toXnaRect(), Microsoft.Xna.Framework.Color.White);
+                     dm.SpriteBatch.Draw(contentTexture, Contents.Rect.toXnaRect(), color.toXnaColor());
                      BlendCurse(dm, curseRect, curseRectBackcolor, curseBordercolor);
+                     BlendPauseSign(dm, Contents.Rect.Width /2, Contents.Rect.Height - 16);
                      dm.SpriteBatch.End();
                      dm.GraphicsDevice.SetRenderTarget(null);
                  }
@@ -332,8 +440,8 @@ namespace GameLibrary.RGSS
         {
             if (!Visible)
                 return;
-           if(openness > 0)
-                updateBorder();
+         //  if(openness > 0)
+           //     updateBorder();
             if (openness < 255)
                 return;
             
@@ -359,6 +467,7 @@ namespace GameLibrary.RGSS
         {
             if (!Visible)
                 return;
+            
             if (border != null && openness > 0)
                 border.Draw(dm, frameCount);
             if (openness < 255)

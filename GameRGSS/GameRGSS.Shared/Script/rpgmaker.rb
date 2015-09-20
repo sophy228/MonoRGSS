@@ -2130,6 +2130,7 @@ class Game_BattleAction
   #     battler : 战斗者
   #--------------------------------------------------------------------------
   def initialize(battler)
+    Debug.test(battler)
     @battler = battler
     clear
   end
@@ -2314,6 +2315,7 @@ class Game_BattleAction
   # ● 确认行动速度
   #--------------------------------------------------------------------------
   def make_speed
+   Debug.test(battler)
     @speed = battler.agi + rand(5 + battler.agi / 4)
     @speed += skill.speed if skill?
     @speed += item.speed if item?
@@ -8747,7 +8749,6 @@ class Sprite_Battler < Sprite_Base
     self.blend_type = 1
     self.color.set(255, 128, 128, 128)
     self.opacity = 256 - (48 - @effect_duration) * 6
-    Debug.test(self.opacity)
   end
 end
 
@@ -10816,6 +10817,121 @@ class Window_Status < Window_Base
 end
 
 #==============================================================================
+# ■ Window_SaveFile
+#------------------------------------------------------------------------------
+# 　显示存档以及读档画面、保存文件的窗口。
+#==============================================================================
+
+class Window_SaveFile < Window_Base
+  #--------------------------------------------------------------------------
+  # ● 定义实例变量
+  #--------------------------------------------------------------------------
+  attr_reader   :filename                 # 文件名称
+  attr_reader   :file_exist               # 文件存在标志
+  attr_reader   :time_stamp               # 时间标记
+  attr_reader   :selected                 # 选择状态
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     file_index : 存档文件的索引（0-3）
+  #     filename   : 文件名称
+  #--------------------------------------------------------------------------
+  def initialize(file_index, filename)
+    super(0, 56 + file_index % 4 * 90, 544, 90)
+    @file_index = file_index
+    @filename = filename
+    load_gamedata
+    refresh
+    @selected = false
+  end
+  #--------------------------------------------------------------------------
+  # ● 载入部分游戏资料
+  #    默认情况下，开关和变数不会用到。（以备扩充情况下如：显示地名等时使用）
+  #--------------------------------------------------------------------------
+  def load_gamedata
+    @time_stamp = Time.at(0)
+    @file_exist = FileTest.exist?(@filename)
+    if @file_exist
+      file = File.open(@filename, "r")
+      @time_stamp = file.mtime
+      begin
+        @characters     = Marshal.load(file)
+        @frame_count    = Marshal.load(file)
+        @last_bgm       = Marshal.load(file)
+        @last_bgs       = Marshal.load(file)
+        @game_system    = Marshal.load(file)
+        @game_message   = Marshal.load(file)
+        @game_switches  = Marshal.load(file)
+        @game_variables = Marshal.load(file)
+        @total_sec = @frame_count / Graphics.frame_rate
+      rescue
+        @file_exist = false
+      ensure
+        file.close
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新
+  #--------------------------------------------------------------------------
+  def refresh
+    self.contents.clear
+    self.contents.font.color = normal_color
+    name = Vocab::File + " #{@file_index + 1}"
+    self.contents.draw_text(4, 0, 200, WLH, name)
+    @name_width = contents.text_size(name).width
+    if @file_exist
+      draw_party_characters(152, 58)
+      draw_playtime(0, 34, contents.width - 4, 2)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 描绘队员
+  #     x : 绘制点 X 座标
+  #     y : 绘制点 Y 座标
+  #--------------------------------------------------------------------------
+  def draw_party_characters(x, y)
+    for i in 0...@characters.size
+      name = @characters[i][0]
+      index = @characters[i][1]
+      draw_character(name, index, x + i * 48, y)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 描绘游戏时间
+  #     x : 绘制点 X 座标
+  #     y : 绘制点 Y 座标
+  #     width : 描绘区域宽度
+  #     align : 对齐方式
+  #--------------------------------------------------------------------------
+  def draw_playtime(x, y, width, align)
+    hour = @total_sec / 60 / 60
+    min = @total_sec / 60 % 60
+    sec = @total_sec % 60
+    time_string = sprintf("%02d:%02d:%02d", hour, min, sec)
+    self.contents.font.color = normal_color
+    self.contents.draw_text(x, y, width, WLH, time_string, 2)
+  end
+  #--------------------------------------------------------------------------
+  # ● 设置选择状态
+  #     selected : 新的选择状态 (true=选择 false=不选择)
+  #--------------------------------------------------------------------------
+  def selected=(selected)
+    @selected = selected
+    update_cursor
+  end
+  #--------------------------------------------------------------------------
+  # ● 刷新光标
+  #--------------------------------------------------------------------------
+  def update_cursor
+    if @selected
+      self.cursor_rect.set(0, 0, @name_width + 8, WLH)
+    else
+      self.cursor_rect.empty
+    end
+  end
+end
+
+#==============================================================================
 # ■ Window_Message
 #------------------------------------------------------------------------------
 # 　显示文章的信息窗口。
@@ -11820,10 +11936,9 @@ class Scene_Title < Scene_Base
   # ● 判断继续的有效性
   #--------------------------------------------------------------------------
   def check_continue
-=begin
+
     @continue_enabled = (Dir.glob('Save*.rvdata').size > 0)
-=end
-    @continue_enabled = false
+
   end
   #--------------------------------------------------------------------------
   # ● 生成标题图形
@@ -11926,25 +12041,23 @@ class Scene_Title < Scene_Base
   # ● 命令：继续游戏
   #--------------------------------------------------------------------------
   def command_continue
-=begin
     if @continue_enabled
       Sound.play_decision
       $scene = Scene_File.new(false, true, false)
     else
       Sound.play_buzzer
     end
-=end
   end
   #--------------------------------------------------------------------------
   # ● 命令：离开游戏
   #--------------------------------------------------------------------------
   def command_shutdown
-=begin
+
     Sound.play_decision
     RPG::BGM.fade(800)
     RPG::BGS.fade(800)
     RPG::ME.fade(800)
-=end
+
     $scene = nil
   end
   #--------------------------------------------------------------------------
@@ -11962,6 +12075,257 @@ class Scene_Title < Scene_Base
     snapshot_for_background
     $scene = Scene_Battle.new
 =end
+  end
+end
+
+#==============================================================================
+# ■ Scene_File
+#------------------------------------------------------------------------------
+# 　存档画面及读档画面的类。
+#==============================================================================
+
+class Scene_File < Scene_Base
+  #--------------------------------------------------------------------------
+  # ● 初始化对像
+  #     saving     : 存档标志（false则为读档）
+  #     from_title : 标志：是由标题画面的「继续游戏」调用的
+  #     from_event : 标志：是由事件「呼叫存档画面」命令调用的
+  #--------------------------------------------------------------------------
+  def initialize(saving, from_title, from_event)
+    @saving = saving
+    @from_title = from_title
+    @from_event = from_event
+  end
+  #--------------------------------------------------------------------------
+  # ● 开始处理
+  #--------------------------------------------------------------------------
+  def start
+    super
+    create_menu_background
+    @help_window = Window_Help.new
+    create_savefile_windows
+    if @saving
+      @index = $game_temp.last_file_index
+      @help_window.set_text(Vocab::SaveMessage)
+    else
+      @index = self.latest_file_index
+      @help_window.set_text(Vocab::LoadMessage)
+    end
+    @savefile_windows[@index].selected = true
+  end
+  #--------------------------------------------------------------------------
+  # ● 结束处理
+  #--------------------------------------------------------------------------
+  def terminate
+    super
+    dispose_menu_background
+    @help_window.dispose
+    dispose_item_windows
+  end
+  #--------------------------------------------------------------------------
+  # ● 回到原画面
+  #--------------------------------------------------------------------------
+  def return_scene
+    if @from_title
+      $scene = Scene_Title.new
+    elsif @from_event
+      $scene = Scene_Map.new
+    else
+      $scene = Scene_Menu.new(4)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新画面
+  #--------------------------------------------------------------------------
+  def update
+    super
+    update_menu_background
+    @help_window.update
+    update_savefile_windows
+    update_savefile_selection
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成存档窗口
+  #--------------------------------------------------------------------------
+  def create_savefile_windows
+    @savefile_windows = []
+    for i in 0..3
+      @savefile_windows.push(Window_SaveFile.new(i, make_filename(i)))
+    end
+    @item_max = 4
+  end
+  #--------------------------------------------------------------------------
+  # ● 释放存档窗口
+  #--------------------------------------------------------------------------
+  def dispose_item_windows
+    for window in @savefile_windows
+      window.dispose
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新存档窗口
+  #--------------------------------------------------------------------------
+  def update_savefile_windows
+    for window in @savefile_windows
+      window.update
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 更新存档文件选择
+  #--------------------------------------------------------------------------
+  def update_savefile_selection
+    if Input.trigger?(Input::C)
+      determine_savefile
+    elsif Input.trigger?(Input::B)
+      Sound.play_cancel
+      return_scene
+    else
+      last_index = @index
+      if Input.repeat?(Input::DOWN)
+        cursor_down(Input.trigger?(Input::DOWN))
+      end
+      if Input.repeat?(Input::UP)
+        cursor_up(Input.trigger?(Input::UP))
+      end
+      if @index != last_index
+        Sound.play_cursor
+        @savefile_windows[last_index].selected = false
+        @savefile_windows[@index].selected = true
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 确认存档文件
+  #--------------------------------------------------------------------------
+  def determine_savefile
+    if @saving
+      Sound.play_save
+      do_save
+    else
+      if @savefile_windows[@index].file_exist
+        Sound.play_load
+        do_load
+      else
+        Sound.play_buzzer
+        return
+      end
+    end
+    $game_temp.last_file_index = @index
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标下移
+  #     wrap : 允许循环
+  #--------------------------------------------------------------------------
+  def cursor_down(wrap)
+    if @index < @item_max - 1 or wrap
+      @index = (@index + 1) % @item_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 光标上移
+  #     wrap : 允许循环
+  #--------------------------------------------------------------------------
+  def cursor_up(wrap)
+    if @index > 0 or wrap
+      @index = (@index - 1 + @item_max) % @item_max
+    end
+  end
+  #--------------------------------------------------------------------------
+  # ● 生成文件名称
+  #     file_index : 存档位置（0～3）
+  #--------------------------------------------------------------------------
+  def make_filename(file_index)
+    return "Save#{file_index + 1}.rvdata"
+  end
+  #--------------------------------------------------------------------------
+  # ● 选择最近存档的文件
+  #--------------------------------------------------------------------------
+  def latest_file_index
+    index = 0
+    latest_time = Time.at(0)
+    for i in 0...@savefile_windows.size
+      if @savefile_windows[i].time_stamp > latest_time
+        latest_time = @savefile_windows[i].time_stamp
+        index = i
+      end
+    end
+    return index
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行存档
+  #--------------------------------------------------------------------------
+  def do_save
+    file = File.open(@savefile_windows[@index].filename, "wb")
+    write_save_data(file)
+    file.close
+    return_scene
+  end
+  #--------------------------------------------------------------------------
+  # ● 执行读档
+  #--------------------------------------------------------------------------
+  def do_load
+    file = File.open(@savefile_windows[@index].filename, "rb")
+    read_save_data(file)
+    file.close
+    $scene = Scene_Map.new
+    RPG::BGM.fade(1500)
+    Graphics.fadeout(60)
+    Graphics.wait(40)
+    @last_bgm.play
+    @last_bgs.play
+  end
+  #--------------------------------------------------------------------------
+  # ● 写入存档数据
+  #     file : 写入存档对象（已开启）
+  #--------------------------------------------------------------------------
+  def write_save_data(file)
+    characters = []
+    for actor in $game_party.members
+      characters.push([actor.character_name, actor.character_index])
+    end
+    $game_system.save_count += 1
+    $game_system.version_id = $data_system.version_id
+    @last_bgm = RPG::BGM::last
+    @last_bgs = RPG::BGS::last
+    Marshal.dump(characters,           file)
+    Marshal.dump(Graphics.frame_count, file)
+    Marshal.dump(@last_bgm,            file)
+    Marshal.dump(@last_bgs,            file)
+    Marshal.dump($game_system,         file)
+    Marshal.dump($game_message,        file)
+    Marshal.dump($game_switches,       file)
+    Marshal.dump($game_variables,      file)
+    Marshal.dump($game_self_switches,  file)
+    Marshal.dump($game_actors,         file)
+    Marshal.dump($game_party,          file)
+    Marshal.dump($game_troop,          file)
+    Marshal.dump($game_map,            file)
+    Marshal.dump($game_player,         file)
+  end
+  #--------------------------------------------------------------------------
+  # ● 读出存档数据
+  #     file : 读出存档对象（已开启）
+  #--------------------------------------------------------------------------
+  def read_save_data(file)
+    characters           = Marshal.load(file)
+    Graphics.frame_count = Marshal.load(file)
+    @last_bgm            = Marshal.load(file)
+    @last_bgs            = Marshal.load(file)
+    $game_system         = Marshal.load(file)
+    $game_message        = Marshal.load(file)
+    $game_switches       = Marshal.load(file)
+    $game_variables      = Marshal.load(file)
+    $game_self_switches  = Marshal.load(file)
+    Debug.test($game_actors)
+    $game_actors         = Marshal.load(file)
+    $game_party          = Marshal.load(file)
+    $game_troop          = Marshal.load(file)
+    $game_map            = Marshal.load(file)
+    $game_player         = Marshal.load(file)
+    if $game_system.version_id != $data_system.version_id
+      $game_map.setup($game_map.map_id)
+      $game_player.center($game_player.x, $game_player.y)
+    end
   end
 end
 
@@ -14537,11 +14901,10 @@ class Scene_Gameover < Scene_Base
   end
 end
 
-
 class Test
   def initialize
-  @map = load_data(sprintf("Data/Map%03d.rvdata", 1))
-  create_tilemap
+ # @map = load_data(sprintf("Data/Map%03d.rvdata", 1))
+  #create_tilemap
   end
 
   def create_tilemap
@@ -14568,10 +14931,32 @@ class Test
       @tilemap.update
     end
   end
-end
 
+  def file_test
+   
+   file = File.open("Save1","w")
+   Marshal.dump("123", file)
+   file.close
+
+   file = File.open("Save1","r")
+   ss = Marshal.load(file)
+   file.close
+
+   entries = Dir.glob("Sav*")
+   Debug.test(entries)
+  end
+
+  def Script_test
+  scripts = load_data("Data/Scripts.rvdata")
+  zstream = Zlib::Inflate.new
+  scripts.each do |script_file|
+  bootloader.AddScriptFile(script_file[0], script_file[1])
+  end
+  end
+end
+bootloader.AddScriptFile("1","2")
 #test = Test.new
-#test.test
+#test.Script_test
 
 
 

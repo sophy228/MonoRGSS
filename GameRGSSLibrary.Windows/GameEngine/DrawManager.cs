@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GameLibrary.RGSS;
 using Microsoft.Xna.Framework;
@@ -22,13 +23,22 @@ namespace GameLibrary.GameEngine
         private float totalDuration;
         private string transFile;
         private bool fullScreen;
+        public ManualResetEvent DrawPausedEvent;
+        public bool DrawPaused;
 
         public DrawManager(Game game)
         {
             _game = game;
             _graphicsDeviceManager = new GraphicsDeviceManager(game);
             fullScreen = true;
-           
+            DrawPausedEvent = new ManualResetEvent(false);
+            _graphicsDeviceManager.PreparingDeviceSettings += _graphicsDeviceManager_PreparingDeviceSettings;
+            
+        }
+
+        void _graphicsDeviceManager_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+        {
+            e.GraphicsDeviceInformation.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
         }
         public GraphicsDevice GraphicsDevice
         {
@@ -108,7 +118,6 @@ namespace GameLibrary.GameEngine
             _spritBatch = new SpriteBatch(_graphicsDevice);
             DefaultViewport = _graphicsDevice.Viewport;
             _currentdrawContext = new RGSSDrawContext(this);
-            
         }
 
         public void UnLoadContent()
@@ -121,59 +130,68 @@ namespace GameLibrary.GameEngine
             _currentdrawContext.PreBlend(frameCount);
         }
         
-        public void Draw(int frameCount)
+      
+
+        public void UpdateContext(int frameCount)
         {
-            _currentdrawContext.Draw(frameCount);
+            _currentdrawContext.Update(frameCount);
+        }
+        public void FreezeContext(int frameCount)
+        {
+            _currentdrawContext.Freeze(frameCount);
+        }
+        public void TransitionContext(int duration, string path, int vague)
+        {
+            _currentdrawContext.Transition(duration, path, vague);
         }
 
-        public void DrawFreeze()
+        public void Draw()
         {
-            _currentdrawContext.DrawFreeze();
+            _currentdrawContext.Draw();
         }
 
-        public void BeginTransition(int duration, string path, int vague)
-        {
-            totalDuration = transDuraiton = duration;
-            transFile = path;
-        }
-
-        public bool DrawTransition()
-        {
-            if (transDuraiton != 0)
-            {
-               _currentdrawContext.DrawTransition(transDuraiton / totalDuration, transFile);
-               transDuraiton--;
-               return true;
-            }
-            else
-            {
-                totalDuration = 0;
-                transFile = null;
-                return false;
-            }
+        /*
+         public void DrawFreeze()
+         {
+             _currentdrawContext.DrawFreeze();
+         }
+         public void BeginTransition(int duration, string path, int vague)
+         {
+             totalDuration = transDuraiton = duration;
+             transFile = path;
+         }
+         * public bool DrawTransition()
+         {
+             if (transDuraiton != 0)
+             {
+                _currentdrawContext.DrawTransition(transDuraiton / totalDuration, transFile);
+                transDuraiton--;
+                return true;
+             }
+             else
+             {
+                 totalDuration = 0;
+                 transFile = null;
+                 return false;
+             }
             
+         }
+         * */
+
+        public bool FrameEmpty
+        {
+            get
+            {
+                return _currentdrawContext.FrameEmpty;
+            }
         }
+
+        
 
         public Texture2D SnapToTexture(int frameCount)
         {
          //   Blend(frameCount);
-            int w, h;
-            w = _currentdrawContext.DefaultWindowRect.Width;
-            h = _currentdrawContext.DefaultWindowRect.Height;
-            RenderTarget2D screenshot;
-            //screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Bgra32, DepthFormat.None);
-            screenshot = new RenderTarget2D(GraphicsDevice, w, h, false, SurfaceFormat.Color, DepthFormat.None, 100, RenderTargetUsage.PreserveContents);
-            lock (this)
-            {             
-               _currentdrawContext.Draw(frameCount);
-                _graphicsDevice.SetRenderTarget(screenshot);
-                _graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
-                SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-               SpriteBatch.Draw(_currentdrawContext.RenderTarget, new Rectangle(0, 0, w, h), Microsoft.Xna.Framework.Color.White);
-               SpriteBatch.End();
-                //_graphicsDevice.Present();
-                _graphicsDevice.SetRenderTarget(null);
-            }
+            var screenshot = _currentdrawContext.SnapShot(frameCount);
             return screenshot;
         }
     }

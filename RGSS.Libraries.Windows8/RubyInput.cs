@@ -32,7 +32,12 @@ namespace RGSS.Libraries.Builtins
         public const int C = (int)Keys.C;
         [RubyConstant]
         public const int D = (int)Keys.D;
-
+        [RubyConstant]
+        public const int X = (int)Keys.X;
+        [RubyConstant]
+        public const int Y = (int)Keys.Y;
+        [RubyConstant]
+        public const int Z = (int)Keys.Z;
 
         [RubyMethodAttribute("update", RubyMethodAttributes.PublicSingleton)]
         public static void Update(object self)

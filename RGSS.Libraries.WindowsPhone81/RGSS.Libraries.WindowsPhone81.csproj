@@ -49,9 +49,6 @@
     <Compile Include="..\RGSS.Libraries.Windows8\RubyColor.cs">
       <Link>RubyColor.cs</Link>
     </Compile>
-    <Compile Include="..\RGSS.Libraries.Windows8\RubyDatabase.cs">
-      <Link>RubyDatabase.cs</Link>
-    </Compile>
     <Compile Include="..\RGSS.Libraries.Windows8\RubyDebug.cs">
       <Link>RubyDebug.cs</Link>
     </Compile>
@@ -97,30 +94,28 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="IronRuby">
-      <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries">
-      <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.Libraries.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Dynamic">
-      <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Dynamic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting">
-      <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\GameRGSSLibrary.WindowsPhone81\GameRGSSLibrary.WindowsPhone81.csproj">
       <Project>{6e143171-57cf-4772-95d8-c675c54965a1}</Project>
       <Name>GameRGSSLibrary.WindowsPhone81</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\RGSS.Libraries.Windows8\RubyScript\RPG.rb">
-      <Link>RubyScript\RPG.rb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Reference Include="IronRuby, Version=1.1.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries, Version=1.1.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.30, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.30, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

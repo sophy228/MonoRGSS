@@ -108,7 +108,6 @@
     <Compile Include="RubyBitmap.cs" />
     <Compile Include="RubyCache.cs" />
     <Compile Include="RubyColor.cs" />
-    <Compile Include="RubyDatabase.cs" />
     <Compile Include="RubyDebug.cs" />
     <Compile Include="RubyEngine.cs" />
     <Compile Include="RubyExtensions.cs" />
@@ -128,27 +127,28 @@
     <Compile Include="RubyTilemap.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="IronRuby">
-      <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries">
-      <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\IronRuby.Libraries.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.1.0.30, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\C#\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\GameRGSSLibrary.Windows\GameRGSSLibrary.Windows.csproj">
       <Project>{789ef9d0-a3b0-4f97-88ff-e6697dabe6a0}</Project>
       <Name>GameRGSSLibrary.Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="RubyScript\RPG.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Reference Include="IronRuby, Version=1.1.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries, Version=1.1.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.30, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.30, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\main-master\main-master\bin\Win8Debug\Microsoft.Scripting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

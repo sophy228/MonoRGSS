@@ -205,7 +205,8 @@ namespace GameLibrary.RGSS
                 flashAlphaStep = flashColor.Alpha / duration;
         }
 
-        public void Draw(DrawManager dm, int frameCount, float brightness = 255)
+        
+        public void Draw(DrawManager dm, int frameCount, float brightness = 255, int what=3)
         {
 #if DEBUGOUT
             if(_rect != null )
@@ -215,7 +216,7 @@ namespace GameLibrary.RGSS
                 Debug.WriteLine(string.Format("ViewPort#{0}- Z:({1}), draw@frameCount:{2}",
                              id, Z, frameCount));
 #endif
-            drawCount = 0;
+          //  drawCount = 0;
             if (!Visible || (flashing && flashColor == null))
                 return;
 
@@ -251,16 +252,21 @@ namespace GameLibrary.RGSS
                 viewport.Width = rect.Width;
                 viewport.Height = rect.Height;
                 dm.GraphicsDevice.Viewport = viewport;
-                foreach (Sprite sp in SpriteHeader)
+                if ((what & 0x1) != 0)
                 {
-                    sp.Draw(dm, frameCount);
-                    drawCount++;
+                    foreach (Sprite sp in SpriteHeader)
+                    {
+                        sp.Draw(dm, frameCount);
+                        drawCount++;
+                    }
                 }
-
-                foreach (Window wd in WindowHeader)
+                if((what & 0x2) !=0)
                 {
-                    wd.Draw(dm, frameCount);
-                    drawCount++;
+                    foreach (Window wd in WindowHeader)
+                    {
+                        wd.Draw(dm, frameCount);
+                        drawCount++;
+                    }
                 }
                 dm.SpriteBatch.End();
             }
